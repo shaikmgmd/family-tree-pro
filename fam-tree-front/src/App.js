@@ -1,25 +1,23 @@
 import logo from './logo.svg';
 import './App.css';
-
+import Home from "./pages/home/Home";
+import AppRoute from "./route/AppRoute";
+import {Link} from "react-router-dom";
+import {Layout} from "antd";
+import {CssBaseline, Container} from "@mui/material";
+import SideMenu from "./components/navbar/SideMenu";
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div>
+            <div style={{ display: 'flex' }} className='bg-gray-100'>
+                <CssBaseline />
+                <SideMenu />
+                <div style={{ flex: 1, overflow: 'auto', marginLeft: 210 }}>
+                    <AppRoute />
+                </div>
+            </div>
+        </div>
+    );
 }
 
 export default App;
