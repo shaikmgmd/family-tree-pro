@@ -2,7 +2,9 @@ package api.model.user;
 
 import api.model.BaseEntityWithAudit;
 import api.model.role.Role;
+import api.model.user_role.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +13,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Entity
 @Getter
@@ -24,7 +24,6 @@ public class User extends BaseEntityWithAudit {
     private String socialSecurityNumber;
     private String lastName;
     private String firstName;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd MMM yyyy")
     private Date birthDate;
     private String nationality;
     private String idCardPath;
@@ -37,9 +36,12 @@ public class User extends BaseEntityWithAudit {
     @Column(unique = true)
     private String email;
     private String password;
-    @Enumerated(EnumType.STRING)
-    private Role role;
     private boolean firstLogin = true;
+
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Set<UserRole> userRoles = new HashSet<>();
 
     public User(String email, String password) {
         this.email = email;

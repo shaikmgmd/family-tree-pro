@@ -7,6 +7,7 @@ import {useNavigate} from 'react-router-dom';
 import React, {useEffect, useState} from "react";
 import {createAdhesionAction} from "../../store/features/slices/adhesion";
 import axios from "axios";
+import {toast} from "react-toastify";
 
 const AdhesionSchema = Yup.object().shape({
     socialSecurityNumber: Yup.string().required('Requis'),
@@ -42,6 +43,15 @@ export const AdhesionForm = () => {
             values.idCardPath = values.idCardPath.uid;
             values.photoPath = values.photoPath.uid;
             await dispatch(createAdhesionAction({payload: values}));
+            toast.success("Votre demande d'adhésion a été crée!", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
             navigate("/adhesion/dashboard");
         },
     });

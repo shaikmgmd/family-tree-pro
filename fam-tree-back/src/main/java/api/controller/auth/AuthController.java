@@ -7,6 +7,7 @@ import api.model.auth.response.LoginRes;
 import api.model.user.PasswordUpdateRequest;
 import api.model.user.User;
 import api.service.auth.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

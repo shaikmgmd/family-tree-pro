@@ -20,7 +20,6 @@ public class AdhesionService {
     }
 
     public List<AdhesionRequest> getAllRequestsByStatus(AdhesionStatus status) {
-        System.out.println(status);
         return adhesionRepository.findByStatus(status);
     }
 

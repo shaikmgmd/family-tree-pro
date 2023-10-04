@@ -5,65 +5,45 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5fa6533-db79-460f-9073-dbaf731ebe6f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/config/JpaAuditingConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/config/SecurityConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/config/WebConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/adhesion/AdhesionController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/auth/AuthController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/user/UserController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/adhesion/AdhesionRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/adhesion/AdhesionStatus.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/auth/request/LoginReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/auth/request/SignUpReq.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/auth/response/ErrorRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/auth/response/LoginRes.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/role/Role.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/PasswordUpdateRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/User.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/UserUpdate.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/adhesion/AdhesionRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/user/UserRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/CustomUserDetailsService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/JwtAuthorizationFilter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/JwtUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/adhesion/AdhesionService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/auth/AuthService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/mail/MailService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/user/UserService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/utils/CodeUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V1__add_user_and_adhesion.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/rcb-settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/config/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/config/urls.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/feature/adhesion/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dev/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dev/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dev/palette.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dev/previews.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/dev/useInitial.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionDashboard.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/home/Home.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/route/AppRoute.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/features/slices/adhesion/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/rootReducer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tailwind.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/BaseEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/BaseEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/Utilisateur.java" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/CustomAuthentication.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user_role/UserRole.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/role/RoleRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V2__add_role_and_user_role.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/feature/auth/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/feature/user/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/wrapper/MainWrapper.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/authentication/LoginPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/authentication/LogoutPage.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/authentication/PasswordChange.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/profile/Profile.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/features/slices/auth/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/features/slices/user/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/auth/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/auth/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/user/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/user/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/auth/response/LoginRes.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/auth/response/LoginRes.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/role/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/role/Role.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/UserUpdate.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/UserUpdate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/user/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/user/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/CustomUserDetailsService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/CustomUserDetailsService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/JwtAuthorizationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/JwtAuthorizationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/JwtUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/JwtUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/adhesion/AdhesionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/adhesion/AdhesionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/auth/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/auth/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/user/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/config/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/config/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/config/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/config/urls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionDashboard.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/route/AppRoute.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/route/AppRoute.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/rootReducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,12 +53,12 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="com.haulmont.rcb.palette" />
         <option value="com.haulmont.rcb.previews" />
         <option value="com.haulmont.rcb.index" />
         <option value="com.haulmont.rcb.useInitial" />
         <option value="com.haulmont.rcb.README" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -142,7 +122,7 @@
       <workItem from="1696326018223" duration="134000" />
       <workItem from="1696326159634" duration="3118000" />
       <workItem from="1696348539714" duration="9445000" />
-      <workItem from="1696362536789" duration="6067000" />
+      <workItem from="1696362536789" duration="23844000" />
     </task>
     <servers />
   </component>

@@ -7,39 +7,39 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class JwtUtil {
-
-
-    /*@Value("${jwt.secret.key}")*/
     private String SECRET_KEY = "test";
-    private long accessTokenValidity = 60*60*1000;
+
+    private long accessTokenValidity = 7;
 
     private final JwtParser jwtParser;
 
     private final String TOKEN_HEADER = "Authorization";
     private final String TOKEN_PREFIX = "Bearer ";
 
-    public JwtUtil(){
+    public JwtUtil() {
         this.jwtParser = Jwts.parser().setSigningKey(SECRET_KEY);
     }
 
     public String createToken(User user) {
-        Claims claims = Jwts.claims().setSubject(user.getPrivateCode()); // change this from email to privateCode
+        Claims claims = Jwts.claims().setSubject(user.getPrivateCode());
         claims.put("firstName", user.getFirstName());
         claims.put("lastName", user.getLastName());
         Date tokenCreateTime = new Date();
-        Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.MINUTES.toMillis(accessTokenValidity));
+        Date tokenValidity = new Date(tokenCreateTime.getTime() + TimeUnit.DAYS.toMillis(accessTokenValidity));
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(tokenValidity)
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
+
 
     private Claims parseJwtClaims(String token) {
         return jwtParser.parseClaimsJws(token).getBody();
@@ -82,9 +82,11 @@ public class JwtUtil {
         return claims.getSubject();
     }
 
-    private List<String> getRoles(Claims claims) {
-        return (List<String>) claims.get("roles");
+    List<String> getRoles(Claims claims) {
+        Object rolesObj = claims.get("roles");
+        if (rolesObj instanceof List<?>) {
+            return (List<String>) rolesObj;
+        }
+        return Collections.emptyList();
     }
-
-
 }

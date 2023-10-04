@@ -89,7 +89,7 @@ const AdhesionTable = ({ data, showActions }) => {
         });
     }
 
-    return <Table columns={columns} dataSource={data}/>;
+    return <Table columns={columns} dataSource={data} />;
 };
 
 export default AdhesionTable;

@@ -11,3 +11,15 @@ export const adhesionUrl = {
     GET_APPROVED_ADHESIONS: '/adhesion/approved',
     GET_PENDING_ADHESIONS: '/adhesion/pending',
 }
+
+export const authUrl = {
+    LOGIN: '/auth/sign-in',
+    LOGOUT: '/auth/sign-out',
+    REGISTER: `/auth/sign-up`,
+    FIRST_LOGIN: `/auth/update-first-password`,
+}
+
+export const userUrl = {
+    GET_CONNECTED_USER: `/user`,
+    UPDATE_USER: `/user/update`,
+}

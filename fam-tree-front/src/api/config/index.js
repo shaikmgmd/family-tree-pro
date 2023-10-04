@@ -12,7 +12,7 @@ backend.interceptors.request.use((config) => {
     }
 
     let token = null;
-    const userStr = localStorage.getItem('user');
+    const userStr = localStorage.getItem('userData');
     if (userStr) {
         const userObj = JSON.parse(userStr);
         token = userObj?.token;

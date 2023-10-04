@@ -14,7 +14,16 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    public User getCurrentConnectedUser() {
+        String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("currentPrivateCode " + currentPrivateCode);
+        User currUser = userRepository.findByPrivateCode(currentPrivateCode);
+        return currUser;
+    }
+
     public User updateUser(UserUpdate userUpdate) {
+        System.out.println(userUpdate);
+
         // Récupérez le privateCode de l'utilisateur courant
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -24,11 +33,20 @@ public class UserService {
             throw new RuntimeException("User not found");
         }
 
+        if (null != userUpdate.getEmail()) {
+            // Vérifiez si l'email existe déjà
+            User existingUserWithEmail = userRepository.findByEmail(userUpdate.getEmail());
+
+            // Si l'email existe déjà et n'appartient pas à l'utilisateur actuel, lever une exception
+            if (existingUserWithEmail != null && !existingUserWithEmail.getPrivateCode().equals(currentPrivateCode)) {
+                throw new RuntimeException("L'email est déjà utilisé");
+            }
+
+            currUser.setEmail(userUpdate.getEmail());
+        }
+
         if (null != userUpdate.getAddress()) {
             currUser.setAddress(userUpdate.getAddress());
-        }
-        if (null != userUpdate.getEmail()) {
-            currUser.setEmail(userUpdate.getEmail());
         }
         if (null != userUpdate.getPhone()) {
             currUser.setPhone(userUpdate.getPhone());
@@ -37,5 +55,6 @@ public class UserService {
         userRepository.save(currUser);
         return currUser;
     }
+
 
 }
