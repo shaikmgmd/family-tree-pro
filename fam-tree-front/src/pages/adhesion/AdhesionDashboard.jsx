@@ -44,10 +44,10 @@ export const AdhesionDashboard = () => {
                     <AdhesionTable data={pendingAdhesions?.payload} showActions={true}/>
                 </TabPane>
                 <TabPane tab="Approved" key="2">
-                    <AdhesionTable data={approvedAdhesions?.payload} showActions={false}/>
+                    <AdhesionTable data={approvedAdhesions?.payload} showActions={false} showAdminAction={true}/>
                 </TabPane>
                 <TabPane tab="Rejected" key="3">
-                    <AdhesionTable data={rejectedAdhesions?.payload} showActions={false}/>
+                    <AdhesionTable data={rejectedAdhesions?.payload} showActions={false} />
                 </TabPane>
             </Tabs>
         </MainWrapper>

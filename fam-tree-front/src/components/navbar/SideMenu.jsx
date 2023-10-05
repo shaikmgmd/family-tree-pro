@@ -41,24 +41,34 @@ const SideMenu = () => {
                 selectedKeys={[location.pathname]}
                 style={{height: '100%', borderRight: 0, background: 'transparent', color: 'white'}}
             >
-                {user && user?.firstLogin === false && (
-                    <>
-                        <Menu.Item key="/home" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
-                            <Link to="/home"
-                                  style={{color: location.pathname === '/home' ? '#333' : 'white'}}>Home</Link>
-                        </Menu.Item>
-                        <Menu.Item key="/adhesion/dashboard" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
-                            <Link to="/adhesion/dashboard"
-                                  style={{color: location.pathname === '/adhesion/dashboard' ? '#333' : 'white'}}>Adhesion
-                                Dashboard</Link>
-                        </Menu.Item>
-                        <Menu.Item key="/adhesion/apply" icon={<UserOutlined/>}>
-                            <Link to="/adhesion/apply"
-                                  style={{color: location.pathname === '/adhesion/apply' ? '#333' : 'white'}}>Adhesion -
-                                Apply</Link>
-                        </Menu.Item>
-                    </>
+                {userData && (
+                    <Menu.Item key="/presentation" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
+                        <Link to="/presentation"
+                              style={{color: location.pathname === '/presentation' ? '#333' : 'white'}}>Presentation</Link>
+                    </Menu.Item>
                 )}
+
+                {!userData && (<Menu.Item key="/home" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
+                    <Link to="/home"
+                          style={{color: location.pathname === '/home' ? '#333' : 'white'}}>Accueil</Link>
+                </Menu.Item>)}
+                {user &&
+                    user?.userRoles.some((ur) => ur.id === 1) &&
+                    user?.firstLogin === false
+                    && (
+                        <>
+                            <Menu.Item key="/adhesion/dashboard" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
+                                <Link to="/adhesion/dashboard"
+                                      style={{color: location.pathname === '/adhesion/dashboard' ? '#333' : 'white'}}>Adhesion
+                                    Dashboard</Link>
+                            </Menu.Item>
+                        </>
+                    )}
+                {!userData && (<Menu.Item key="/adhesion/apply" icon={<UserOutlined/>}>
+                    <Link to="/adhesion/apply"
+                          style={{color: location.pathname === '/adhesion/apply' ? '#333' : 'white'}}>Demande
+                        d'adhésion</Link>
+                </Menu.Item>)}
 
             </Menu>
             <Menu

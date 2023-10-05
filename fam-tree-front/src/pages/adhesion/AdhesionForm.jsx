@@ -52,7 +52,7 @@ export const AdhesionForm = () => {
                 draggable: true,
                 progress: undefined,
             });
-            navigate("/adhesion/dashboard");
+            navigate("/home");
         },
     });
     const fetchCountries = async () => {

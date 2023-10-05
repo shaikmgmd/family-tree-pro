@@ -38,7 +38,7 @@ export const LoginPage = () => {
                     color: "white"
                 }*/
             });
-            navigate("/profile");
+            navigate("/presentation");
         } else {
             toast.error("Erreur lors de la connexion.", {
                 position: "top-right",

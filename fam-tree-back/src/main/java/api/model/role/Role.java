@@ -14,7 +14,10 @@ import java.util.Set;
 @Getter
 @Setter
 @Table(name = "role")
-public class Role extends BaseEntityWithAudit {
+public class Role {
+    @Id
+    @GeneratedValue
+    private Long id;
 
     @Column(name = "name", unique = true, nullable = false)
     private String name;

@@ -6,6 +6,7 @@ import {LoginPage} from "../pages/authentication/LoginPage";
 import {LogoutPage} from "../pages/authentication/LogoutPage";
 import PasswordChange from "../pages/authentication/PasswordChange";
 import Profile from "../pages/profile/Profile";
+import Presentation from "../pages/presentation/Presentation";
 
 const AppRoute = () => {
     return (
@@ -18,6 +19,7 @@ const AppRoute = () => {
             <Route path='/logout' element={<LogoutPage />}/>
             <Route path='/password-change' element={<PasswordChange />}/>
             <Route path='/profile' element={<Profile />}/>
+            <Route path='/presentation' element={<Presentation />}/>
         </Routes>
     )
 }

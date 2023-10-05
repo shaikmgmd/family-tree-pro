@@ -23,3 +23,8 @@ export const userUrl = {
     GET_CONNECTED_USER: `/user`,
     UPDATE_USER: `/user/update`,
 }
+
+export const roleUrl = {
+    ADD_ADMIN_BY_ID: (userId) => `/role/add-admin/${userId}`,
+    REMOVE_ADMIN_BY_ID: (userId) => `/role/remove-admin/${userId}`,
+}

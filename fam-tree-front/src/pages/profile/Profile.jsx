@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Form, Input, Button, Row, Col} from 'antd';
 import {useSelector, useDispatch} from 'react-redux';
 import {MainWrapper} from "../../components/wrapper/MainWrapper";
-import {updateUserAction} from "../../store/features/slices/user";
+import {getConnectedUserAction, updateUserAction} from "../../store/features/slices/user";
 import {toast} from "react-toastify";
 
 

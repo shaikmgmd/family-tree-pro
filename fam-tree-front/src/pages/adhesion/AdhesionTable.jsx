@@ -7,8 +7,10 @@ import {
     getPendingAdhesionAction,
     rejectAdhesionAction
 } from "../../store/features/slices/adhesion";
+import {addNewAdminAction, removeAdminAction} from "../../store/features/slices/role";
+import {toast} from "react-toastify";
 
-const AdhesionTable = ({ data, showActions }) => {
+const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
     const dispatch = useDispatch();
 
     const columns = [
@@ -58,28 +60,28 @@ const AdhesionTable = ({ data, showActions }) => {
             render: (text, record) => (
                 <Space size="middle">
                     <Button
-                        icon={<CheckOutlined />}
+                        icon={<CheckOutlined/>}
                         onClick={() => {
                             dispatch(approveAdhesionAction(record.id))
-                                .then(() => {
-                                    // Une fois l'adhésion approuvée, rechargez les données.
-                                    dispatch(getPendingAdhesionAction());
-                                    dispatch(getApprovedAdhesionAction());
-                                });
+                            /*                                .then(() => {
+                                                                // Une fois l'adhésion approuvée, rechargez les données.
+                                                                dispatch(getPendingAdhesionAction());
+                                                                dispatch(getApprovedAdhesionAction());
+                                                            });*/
                         }}
                     >
                         Accepter
                     </Button>
                     <Button
                         danger
-                        icon={<CloseOutlined />}
+                        icon={<CloseOutlined/>}
                         onClick={() => {
                             dispatch(rejectAdhesionAction(record.id))
-                                .then(() => {
-                                    // Une fois l'adhésion refusée, rechargez les données.
-                                    dispatch(getPendingAdhesionAction());
-                                    dispatch(getApprovedAdhesionAction());
-                                });
+                            /*                                .then(() => {
+                                                                // Une fois l'adhésion refusée, rechargez les données.
+                                                                dispatch(getPendingAdhesionAction());
+                                                                dispatch(getApprovedAdhesionAction());
+                                                            });*/
                         }}
                     >
                         Refuser
@@ -88,8 +90,57 @@ const AdhesionTable = ({ data, showActions }) => {
             ),
         });
     }
+    if (showAdminAction) {
+        columns.push({
+            title: 'Actions',
+            dataIndex: 'actions',
+            render: (text, record) => (
+                <Space size="middle">
+                    <Button
+                        icon={<CheckOutlined/>}
+                        onClick={() => {
+                            dispatch(addNewAdminAction(record.id))
+                                .then(() => {
+                                toast.success("Nouveau admin ajouté!", {
+                                    position: "top-right",
+                                    autoClose: 5000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                });
+                            })
+                        }}
+                    >
+                        Admin
+                    </Button>
+                    <Button
+                        danger
+                        icon={<CloseOutlined/>}
+                        onClick={() => {
+                            dispatch(removeAdminAction(record.id))
+                                .then(() => {
+                                    toast.success("Nouveau admin retiré!", {
+                                        position: "top-right",
+                                        autoClose: 5000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                    });
+                                })
+                        }}
+                    >
+                        Admin
+                    </Button>
+                </Space>
+            ),
+        });
+    }
 
-    return <Table columns={columns} dataSource={data} />;
+    return <Table columns={columns} dataSource={data}/>;
 };
 
 export default AdhesionTable;

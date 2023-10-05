@@ -1,5 +1,6 @@
 package api.model.user_role;
 
+import api.model.BaseEntityWithAudit;
 import api.model.role.Role;
 import api.model.user.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -11,12 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "user_role")
-public class UserRole {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+public class UserRole extends BaseEntityWithAudit {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @JsonBackReference
