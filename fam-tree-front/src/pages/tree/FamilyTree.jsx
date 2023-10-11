@@ -20,6 +20,7 @@ const FamilyTree = ({userId}) => {
 
     const dispatch = useDispatch();
     const tree = useSelector((state) => state.tree.getUserTree.payload);
+    const user = useSelector((state) => state.user.getConnectedUser);
 
     const getDynamicPathClass = ({source, target}, orientation) => {
         if (!target.children) {
@@ -39,7 +40,7 @@ const FamilyTree = ({userId}) => {
     const fetcher = async () => {
         try {
             setIsLoading(true);
-            await dispatch(getTreeByUserIdAction(3));
+            await dispatch(getTreeByUserIdAction(user?.payload.id));
         } catch (error) {
             console.error("Erreur lors de la récupération de l'arbre:", error);
         } finally {

@@ -4,7 +4,7 @@ import {CheckOutlined, CloseOutlined} from '@ant-design/icons';
 import {useDispatch} from 'react-redux';
 import {
     approveAdhesionAction, getApprovedAdhesionAction,
-    getPendingAdhesionAction,
+    getPendingAdhesionAction, getRejectedAdhesionAction,
     rejectAdhesionAction
 } from "../../store/features/slices/adhesion";
 import {addNewAdminAction, removeAdminAction} from "../../store/features/slices/role";
@@ -63,11 +63,10 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                         icon={<CheckOutlined/>}
                         onClick={() => {
                             dispatch(approveAdhesionAction(record.id))
-                            /*                                .then(() => {
-                                                                // Une fois l'adhésion approuvée, rechargez les données.
-                                                                dispatch(getPendingAdhesionAction());
-                                                                dispatch(getApprovedAdhesionAction());
-                                                            });*/
+                                .then(() => {
+                                    // Une fois l'adhésion approuvée, rechargez les données.
+                                    dispatch(getApprovedAdhesionAction());
+                                });
                         }}
                     >
                         Accepter
@@ -77,11 +76,10 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                         icon={<CloseOutlined/>}
                         onClick={() => {
                             dispatch(rejectAdhesionAction(record.id))
-                            /*                                .then(() => {
-                                                                // Une fois l'adhésion refusée, rechargez les données.
-                                                                dispatch(getPendingAdhesionAction());
-                                                                dispatch(getApprovedAdhesionAction());
-                                                            });*/
+                                .then(() => {
+                                    // Une fois l'adhésion refusée, rechargez les données.
+                                    dispatch(getRejectedAdhesionAction());
+                                });
                         }}
                     >
                         Refuser
@@ -101,16 +99,16 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                         onClick={() => {
                             dispatch(addNewAdminAction(record.id))
                                 .then(() => {
-                                toast.success("Nouveau admin ajouté!", {
-                                    position: "top-right",
-                                    autoClose: 5000,
-                                    hideProgressBar: false,
-                                    closeOnClick: true,
-                                    pauseOnHover: true,
-                                    draggable: true,
-                                    progress: undefined,
-                                });
-                            })
+                                    toast.success("Nouveau admin ajouté!", {
+                                        position: "top-right",
+                                        autoClose: 5000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                    });
+                                })
                         }}
                     >
                         Admin
