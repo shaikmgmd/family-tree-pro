@@ -5,9 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5fa6533-db79-460f-9073-dbaf731ebe6f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/login/login-page-2.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/login/login-page.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/link/links.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/authentication/LoginPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/authentication/LoginPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/presentation/Presentation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/presentation/Presentation.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +81,11 @@
       </map>
     </option>
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="H:\Programs\Projects\family-tree-pro\fam-tree-front\src\assets\ui\svg\login" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -87,12 +98,23 @@
       <workItem from="1696326018223" duration="134000" />
       <workItem from="1696326159634" duration="3118000" />
       <workItem from="1696348539714" duration="9445000" />
-      <workItem from="1696362536789" duration="57001000" />
+      <workItem from="1696362536789" duration="59522000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />

@@ -4,6 +4,7 @@ import {Input, Button, Divider, Typography} from 'antd';
 import {userLoginAction} from "../../store/features/slices/auth";
 import {useNavigate, Link} from "react-router-dom";
 import {toast} from 'react-toastify';
+import { ReactComponent as LoginIcon } from '../../assets/ui/svg/login/login-page-3.svg';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const LoginPage = () => {
@@ -55,9 +56,7 @@ export const LoginPage = () => {
     return (
         <div className="flex h-screen">
             <div className="w-1/2 flex items-center justify-center border-r">
-                <Typography.Title level={1} className="text-white">
-                    mettre photo
-                </Typography.Title>
+                <LoginIcon />
             </div>
             <div className="w-1/2 flex items-center justify-center p-10">
                 <form onSubmit={handleSubmit} className="w-full max-w-lg">
