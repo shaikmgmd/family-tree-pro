@@ -8,6 +8,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -35,10 +37,11 @@ public class UserService {
 
         if (null != userUpdate.getEmail()) {
             // Vérifiez si l'email existe déjà
-            User existingUserWithEmail = userRepository.findByEmail(userUpdate.getEmail());
+            Optional<User> existingUserWithEmail = userRepository.findByEmail(userUpdate.getEmail());
 
             // Si l'email existe déjà et n'appartient pas à l'utilisateur actuel, lever une exception
-            if (existingUserWithEmail != null && !existingUserWithEmail.getPrivateCode().equals(currentPrivateCode)) {
+            if (existingUserWithEmail.isPresent() &&
+                    !existingUserWithEmail.get().getPrivateCode().equals(currentPrivateCode)) {
                 throw new RuntimeException("L'email est déjà utilisé");
             }
 

@@ -9,22 +9,25 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @Table(name = "ftpro_user")
 public class User extends BaseEntityWithAudit {
     private String socialSecurityNumber;
     private String lastName;
     private String firstName;
-    private Date birthDate;
+    private LocalDate birthDate;
     private String nationality;
     private String idCardPath;
     private String photoPath;
@@ -48,7 +51,7 @@ public class User extends BaseEntityWithAudit {
         this.password = password;
     }
 
-    public User(String lastName, String firstName, Date birthDate, String nationality,
+    public User(String lastName, String firstName, LocalDate birthDate, String nationality,
                 String publicCode, String privateCode,
                 String socialSecurityNumber, String idCardPath, String photoPath,
                 String email, String password) {

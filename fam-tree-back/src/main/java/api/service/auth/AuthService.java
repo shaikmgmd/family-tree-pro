@@ -6,10 +6,14 @@ import api.model.auth.request.SignUpReq;
 import api.model.auth.response.ErrorRes;
 import api.model.auth.response.LoginRes;
 import api.model.role.Role;
+import api.model.tree.FamilyMember;
+import api.model.tree.FamilyTree;
 import api.model.user.User;
 import api.model.user_role.UserRole;
 import api.repository.adhesion.AdhesionRepository;
 import api.repository.role.RoleRepository;
+import api.repository.tree.FamilyMemberRepository;
+import api.repository.tree.FamilyTreeRepository;
 import api.repository.user.UserRepository;
 import api.security.JwtUtil;
 import api.service.mail.MailService;
@@ -36,6 +40,8 @@ import java.util.stream.Collectors;
 public class AuthService {
     private final UserRepository userRepository;
     private final AdhesionRepository adhesionRepository;
+    private final FamilyMemberRepository familyMemberRepository;
+    private final FamilyTreeRepository familyTreeRepository;
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
@@ -86,9 +92,20 @@ public class AuthService {
         newUserRole.setRole(userRole);
         newUser.getUserRoles().add(newUserRole);
 
-        userRepository.save(newUser);
-
         User user = userRepository.save(newUser);
+
+        // Initialize Family Tree for the user
+        FamilyTree tree = new FamilyTree();
+        tree.setUser(user);
+        familyTreeRepository.save(tree);
+
+        // Add the user as the first node/member in the tree
+        FamilyMember member = new FamilyMember();
+        member.setUser(user);
+        member.setTree(tree);
+        member.setName(user.getFirstName());
+        member.setBirthDate(user.getBirthDate());
+        familyMemberRepository.save(member);
 
         emailService.sendCodesByEmail(user.getEmail(), user.getPublicCode(), user.getPrivateCode());
     }

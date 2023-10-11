@@ -16,7 +16,7 @@ const Home = () => {
                 color="primary"
                 className="text-white"
             >
-                <Link to={'/adhesion/dashboard'}>Faire une demande d'adhésion</Link>
+                <Link to={'/adhesion/apply'}>Faire une demande d'adhésion</Link>
             </Button>
         </div>
     );

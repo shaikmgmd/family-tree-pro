@@ -8,6 +8,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -18,7 +19,7 @@ public class AdhesionRequest extends BaseEntityWithAudit {
     private String socialSecurityNumber;
     private String lastName;
     private String firstName;
-    private Date birthDate;
+    private LocalDate birthDate;
     private String nationality;
     private String idCardPath;
     private String photoPath;

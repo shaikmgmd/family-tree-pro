@@ -1,5 +1,6 @@
 package api.service.mail;
 
+import api.model.tree.FamilyMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,7 +14,7 @@ public class MailService {
     private final JavaMailSender mailSender;
 
     public void sendCodesByEmail(String email, String publicCode, String privateCode) {
-        System.out.println("envoie de mail à "+email+ " le code privée : "+privateCode);
+        System.out.println("envoie de mail à " + email + " le code privée : " + privateCode);
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("familytree.pro2024@gmail.com");
         message.setTo(email);
@@ -22,6 +23,21 @@ public class MailService {
                 + "Code Public: " + publicCode + "\n"
                 + "Code Privé: " + privateCode + "\n\n"
                 + "Veuillez conserver ces codes en lieu sûr.");
+
+        mailSender.send(message);
+    }
+
+    public void sendRelationshipConfirmationEmail(FamilyMember sourceMember, String sourceMemberEmail, String confirmationCode) {
+        String confirmationUrl = "http://localhost:8080/api/relationship-confirmation/" + confirmationCode;
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("familytree.pro2024@gmail.com");
+        message.setTo(sourceMemberEmail);
+        message.setSubject("Vous avez une demande d'ajout dans un arbre généalogique !");
+        message.setText("Merci de vous intéresser à Arbre Généalogique Pro++.\n\n" +
+                " Voici votre lien de confirmation pour intégrer un arbre " +
+                /*+ sourceMember + " :\n\n"*/
+                 confirmationUrl + "\n"
+                + "Veuillez conserver ce lien en lieu sûr.");
 
         mailSender.send(message);
     }

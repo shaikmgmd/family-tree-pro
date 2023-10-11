@@ -1,0 +1,24 @@
+.node__root > circle {
+    fill: blue; /* changé la couleur de racine en bleu */
+    r: 20; /* Taille de la racine */
+}
+
+.node__branch > circle {
+    fill: yellow;
+    r: 15; /* Taille des noeuds intermédiaires */
+}
+
+.node__leaf > circle {
+    fill: green;
+    r: 10; /* Taille des feuilles */
+}
+
+.link__to-leaf {
+    stroke: green;
+    stroke-width: 2;
+}
+
+.link__to-branch {
+    stroke: black;
+    stroke-width: 2;
+}

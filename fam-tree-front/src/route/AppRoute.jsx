@@ -7,6 +7,7 @@ import {LogoutPage} from "../pages/authentication/LogoutPage";
 import PasswordChange from "../pages/authentication/PasswordChange";
 import Profile from "../pages/profile/Profile";
 import Presentation from "../pages/presentation/Presentation";
+import FamilyTree from "../pages/tree/FamilyTree";
 
 const AppRoute = () => {
     return (
@@ -20,6 +21,7 @@ const AppRoute = () => {
             <Route path='/password-change' element={<PasswordChange />}/>
             <Route path='/profile' element={<Profile />}/>
             <Route path='/presentation' element={<Presentation />}/>
+            <Route path='/family-tree' element={<FamilyTree />}/>
         </Routes>
     )
 }

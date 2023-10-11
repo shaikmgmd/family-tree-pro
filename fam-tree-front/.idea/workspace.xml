@@ -5,23 +5,45 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5fa6533-db79-460f-9073-dbaf731ebe6f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/role/RoleController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/user_role/UserRoleRepository.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/role/RoleService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V3__add_default_roles.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V4__edit_role_and_user_role_colums.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/feature/role/index.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/presentation/Presentation.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/store/features/slices/role/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/role/Role.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/role/Role.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user_role/UserRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user_role/UserRole.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/tree/FamilyTreeController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/tree/confirmation/RelationshipConfirmationController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/exception/UserNotFoundException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/FamilyMember.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/FamilyTree.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/TreeNode.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/relationship/AddMemberRequest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/relationship/Relationship.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/relationship/RelationshipConfirmation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/relationship/RelationshipType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/FamilyMemberRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/FamilyTreeRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/RelationshipConfirmationRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/RelationshipRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/relationship/RelationshipConfirmationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/relationship/RelationshipService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/FamilyTreeService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/feature/tree/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/loader/FTProLoader.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/tree/AddMemberForm.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/tree/ExistingMemberForm.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/tree/custom-tree.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/features/slices/tree/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/utils/RelationshipTypes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/adhesion/AdhesionRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/adhesion/AdhesionRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/user/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/user/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/auth/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/auth/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/mail/MailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/mail/MailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/config/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/config/urls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionDashboard.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/authentication/LoginPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/authentication/LoginPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/Home.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/profile/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/profile/Profile.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/route/AppRoute.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/route/AppRoute.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/rootReducer.js" afterDir="false" />
@@ -64,25 +86,26 @@
     <option name="showLibraryContents" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;ReactCreateComponentLastSelected&quot;: &quot;arrowFunctionComponent&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;develop&quot;,
-    &quot;last_opened_file_path&quot;: &quot;H:/Programs/Projects/family-tree-pro/fam-tree-back&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "ReactCreateComponentLastSelected": "arrowFunctionComponent",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "develop",
+    "last_opened_file_path": "H:/Programs/Projects/family-tree-pro/fam-tree-back",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "ts.external.directory.path": "H:\\Programs\\IntelliJ IDEA 2023.2.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="ReactDesignerToolWindowState">
     <option name="myId2Visible">
       <map>
@@ -103,7 +126,7 @@
       <workItem from="1696326018223" duration="134000" />
       <workItem from="1696326159634" duration="3118000" />
       <workItem from="1696348539714" duration="9445000" />
-      <workItem from="1696362536789" duration="28412000" />
+      <workItem from="1696362536789" duration="55553000" />
     </task>
     <servers />
   </component>

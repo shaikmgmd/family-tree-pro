@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { Input, Button, Divider, Typography } from 'antd';
+import React, {useState} from 'react';
+import {useDispatch} from 'react-redux';
+import {Input, Button, Divider, Typography} from 'antd';
 import {userLoginAction} from "../../store/features/slices/auth";
-import {useNavigate} from "react-router-dom";
-import { toast } from 'react-toastify';
+import {useNavigate, Link} from "react-router-dom";
+import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const LoginPage = () => {
@@ -15,13 +15,13 @@ export const LoginPage = () => {
     });
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setLoginInfo(prev => ({ ...prev, [name]: value }));
+        const {name, value} = e.target;
+        setLoginInfo(prev => ({...prev, [name]: value}));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await dispatch(userLoginAction({payload:loginInfo}));
+        const response = await dispatch(userLoginAction({payload: loginInfo}));
 
         if (response && typeof response === "object" && response.type === "user-login/fulfilled") {
             localStorage.setItem("userData", JSON.stringify(response.payload));
@@ -33,10 +33,10 @@ export const LoginPage = () => {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-/*                style: {
-                    background: "#6dc3ef",
-                    color: "white"
-                }*/
+                /*                style: {
+                                    background: "#6dc3ef",
+                                    color: "white"
+                                }*/
             });
             navigate("/presentation");
         } else {
@@ -81,6 +81,12 @@ export const LoginPage = () => {
                     <Button type="default" htmlType="submit" className="mt-4">
                         Se connecter
                     </Button>
+                    <Divider/>
+                    <div className="block text-center text-sm text-gray-400 font-extralight mt-4">
+                        <Link to="/adhesion/apply" className="hover:text-gray-500 hover:transition">
+                            Pas inscrit ? Faites une demande d'adhésion
+                        </Link>
+                    </div>
                 </form>
             </div>
         </div>

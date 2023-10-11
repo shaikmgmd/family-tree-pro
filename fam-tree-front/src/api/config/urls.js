@@ -28,3 +28,8 @@ export const roleUrl = {
     ADD_ADMIN_BY_ID: (userId) => `/role/add-admin/${userId}`,
     REMOVE_ADMIN_BY_ID: (userId) => `/role/remove-admin/${userId}`,
 }
+
+export const treeUrl = {
+    GET_TREE_BY_USER_ID: (userId) => `/family-tree/${userId}`,
+    ADD_USER_ON_TREE : (userId, sourceMemberId) => `/family-tree/${userId}/${sourceMemberId}`,
+}

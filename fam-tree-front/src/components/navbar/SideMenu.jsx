@@ -1,11 +1,11 @@
 import React from 'react';
 import {Link, useLocation} from 'react-router-dom';
-import {Layout, Menu} from 'antd';
+import {Layout, Menu, Typography} from 'antd';
 import {UserOutlined} from '@ant-design/icons';
 import {useSelector} from "react-redux";
 
 const {Sider} = Layout;
-
+const {SubMenu} = Menu;
 const SideMenu = () => {
     const location = useLocation();
     const userData = JSON.parse(localStorage.getItem('userData'));
@@ -42,10 +42,17 @@ const SideMenu = () => {
                 style={{height: '100%', borderRight: 0, background: 'transparent', color: 'white'}}
             >
                 {userData && (
-                    <Menu.Item key="/presentation" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
-                        <Link to="/presentation"
-                              style={{color: location.pathname === '/presentation' ? '#333' : 'white'}}>Presentation</Link>
-                    </Menu.Item>
+                    <>
+                        <Menu.Item key="/presentation" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
+                            <Link to="/presentation"
+                                  style={{color: location.pathname === '/presentation' ? '#333' : 'white'}}>Presentation</Link>
+                        </Menu.Item>
+                        <Menu.Item key="/family-tree" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
+                            <Link to="/family-tree"
+                                  style={{color: location.pathname === '/family-tree' ? '#333' : 'white'}}>Arbre
+                                généalogique</Link>
+                        </Menu.Item>
+                    </>
                 )}
 
                 {!userData && (<Menu.Item key="/home" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
@@ -57,18 +64,25 @@ const SideMenu = () => {
                     user?.firstLogin === false
                     && (
                         <>
-                            <Menu.Item key="/adhesion/dashboard" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
-                                <Link to="/adhesion/dashboard"
-                                      style={{color: location.pathname === '/adhesion/dashboard' ? '#333' : 'white'}}>Adhesion
-                                    Dashboard</Link>
-                            </Menu.Item>
+                            <SubMenu key="admin" title={<span style={{color: 'white'}}
+                            >Administrateur</span>}
+                                     icon={<UserOutlined style={{color: "white"}}/>} style={{background: 'transparent'}}>
+                                <Menu.Item key="/adhesion/dashboard">
+                                    <Link to="/adhesion/dashboard"
+                                          style={{color: location.pathname === '/adhesion/dashboard' ? 'black' : 'black'}}>Adhesion
+                                        Dashboard</Link>
+                                </Menu.Item>
+                            </SubMenu>
                         </>
                     )}
-                {!userData && (<Menu.Item key="/adhesion/apply" icon={<UserOutlined/>}>
-                    <Link to="/adhesion/apply"
-                          style={{color: location.pathname === '/adhesion/apply' ? '#333' : 'white'}}>Demande
-                        d'adhésion</Link>
-                </Menu.Item>)}
+                {!userData && (
+                    <Menu.Item key="/adhesion/apply" icon={<UserOutlined/>}>
+                        <Link to="/adhesion/apply"
+                              style={{color: location.pathname === '/adhesion/apply' ? '#333' : 'white'}}>Demande
+                            d'adhésion
+                        </Link>
+                    </Menu.Item>
+                )}
 
             </Menu>
             <Menu
