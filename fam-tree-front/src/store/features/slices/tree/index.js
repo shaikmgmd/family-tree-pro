@@ -4,12 +4,13 @@ import {userLoginAction} from "../auth";
 
 export const getTreeByUserIdAction = createAsyncThunk('get-tree-by-user-id', async (id) => {
     const response = await getTreeByUserId(id);
+    console.log("GET TREE",response.data.content);
     return response.data.content;
 });
 
-export const addMemberToTreeAction = createAsyncThunk('add-member-to-tree', async ({sourceMemberId, data}) => {
-    console.log(sourceMemberId, data);
-    const response = await addUserOnTree(3, sourceMemberId, data);
+export const addMemberToTreeAction = createAsyncThunk('add-member-to-tree', async ({data}) => {
+    console.log(data);
+    const response = await addUserOnTree(3, data);
     return response.data.content;
 });
 

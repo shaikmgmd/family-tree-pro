@@ -31,5 +31,5 @@ export const roleUrl = {
 
 export const treeUrl = {
     GET_TREE_BY_USER_ID: (userId) => `/family-tree/${userId}`,
-    ADD_USER_ON_TREE : (userId, sourceMemberId) => `/family-tree/${userId}/${sourceMemberId}`,
+    ADD_USER_ON_TREE : (userId) => `/family-tree/${userId}`,
 }

@@ -5,15 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5fa6533-db79-460f-9073-dbaf731ebe6f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/login/login-page-2.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/login/login-page.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/link/links.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FamtreeApplication.png" beforeDir="false" afterPath="$PROJECT_DIR$/../FamtreeApplication.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/fam-tree-front.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fam-tree-front.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/authentication/LoginPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/authentication/LoginPage.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/presentation/Presentation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/presentation/Presentation.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/config/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/config/urls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/feature/tree/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/feature/tree/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTreeComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTreeComponent.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTreeJS/familytree.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTreeJS/familytree.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/tree/familyTreeComp.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/familyTreeComp.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/features/slices/tree/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/features/slices/tree/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/RelationshipTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/RelationshipTypes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +34,8 @@
         <option value="com.haulmont.rcb.useInitial" />
         <option value="com.haulmont.rcb.README" />
         <option value="JavaScript File" />
+        <option value="JSX File" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -61,8 +68,10 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "develop",
-    "last_opened_file_path": "H:/Programs/Projects/family-tree-pro/fam-tree-back",
+    "git-widget-placeholder": "refonte-arbre-bdd-back-front",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "H:/Programs/Projects/family-tree-pro/fam-tree-front",
+    "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -78,11 +87,15 @@
       <map>
         <entry key="com.haulmont.rcb.reactComponents" value="false" />
         <entry key="com.haulmont.rcb.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
       </map>
     </option>
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="H:\Programs\Projects\family-tree-pro\fam-tree-front\src\pages\tree\FamilyTreeJS" />
       <recent name="H:\Programs\Projects\family-tree-pro\fam-tree-front\src\assets\ui\svg\login" />
     </key>
   </component>
@@ -99,6 +112,19 @@
       <workItem from="1696326159634" duration="3118000" />
       <workItem from="1696348539714" duration="9445000" />
       <workItem from="1696362536789" duration="59522000" />
+      <workItem from="1701078174422" duration="2264000" />
+      <workItem from="1701175848700" duration="598000" />
+      <workItem from="1701177112069" duration="12837000" />
+      <workItem from="1701895014541" duration="6000" />
+      <workItem from="1701940811865" duration="23602000" />
+      <workItem from="1702150861874" duration="363000" />
+      <workItem from="1702151258096" duration="1044000" />
+      <workItem from="1702152482673" duration="77000" />
+      <workItem from="1702152588606" duration="654000" />
+      <workItem from="1702483909777" duration="379000" />
+      <workItem from="1702484319017" duration="2866000" />
+      <workItem from="1702493426731" duration="7001000" />
+      <workItem from="1702676809246" duration="3188000" />
     </task>
     <servers />
   </component>
