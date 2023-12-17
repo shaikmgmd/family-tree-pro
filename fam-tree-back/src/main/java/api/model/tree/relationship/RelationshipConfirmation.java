@@ -4,12 +4,14 @@ import api.model.tree.FamilyMember;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @Setter
+@ToString
 @Table(name = "relationship_confirmation")
 public class RelationshipConfirmation {
 
@@ -41,17 +43,4 @@ public class RelationshipConfirmation {
     @Column(name = "is_processed")
     private Boolean isProcessed = false;  // Indique si cette demande a été traitée ou non.
 
-    @Override
-    public String toString() {
-        return "RelationshipConfirmation{" +
-                "id=" + id +
-                ", confirmationCode='" + confirmationCode + '\'' +
-                ", sourceMember=" + sourceMember +
-                ", targetMember=" + targetMember +
-                ", relationshipType=" + relationshipType +
-                ", expiryDate=" + expiryDate +
-                ", isConfirmed=" + isConfirmed +
-                ", isProcessed=" + isProcessed +
-                '}';
-    }
 }
