@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import Tree from 'react-d3-tree';
 import {Modal, Button, Switch} from 'antd';
 import {MainWrapper} from "../../components/wrapper/MainWrapper";
-import {addUserOnTree, getTreeByUserId} from "../../api/feature/tree";
 import AddMemberForm from "./AddMemberForm";
 import {addMemberToTreeAction, getTreeByUserIdAction} from "../../store/features/slices/tree";
 import {useDispatch, useSelector} from "react-redux";
@@ -10,6 +9,7 @@ import ExistingMemberForm from "./ExistingMemberForm";
 import './custom-tree.css'
 import {Circles} from "react-loader-spinner";
 import {FTProLoader} from "../../components/loader/FTProLoader";
+import FamilyTreeComponent from "./FamilyTreeComponent";
 
 const FamilyTree = ({userId}) => {
     const [treeData, setTreeData] = useState(null);
@@ -40,7 +40,8 @@ const FamilyTree = ({userId}) => {
     const fetcher = async () => {
         try {
             setIsLoading(true);
-            await dispatch(getTreeByUserIdAction(user?.payload.id));
+            console.log("user =>" , user)
+            await dispatch(getTreeByUserIdAction(user.payload.id));
         } catch (error) {
             console.error("Erreur lors de la récupération de l'arbre:", error);
         } finally {
@@ -76,24 +77,26 @@ const FamilyTree = ({userId}) => {
         }
     }
 
+    const nodeStyleCallback = (nodeData) => {
+        return {
+            circle: {
+                fill: nodeData.data.isRegistered ? '#28a745' : '#dc3545' // Vert pour inscrit, Rouge pour non-inscrit
+            },
+            // autres styles si nécessaire
+        };
+    };
+
+
+
     return (
         <MainWrapper title={"Votre arbre généalogique"}
                      description={"Consultez ou modifiez votre arbre généalogique :"}>
             {isLoading ? (
                 <FTProLoader />
             ) : tree && (
-                <Tree
-                    data={convertToTreeData(tree)}
-                    rootNodeClassName="node__root"
-                    branchNodeClassName="node__branch"
-                    leafNodeClassName="node__leaf"
-                    pathClassFunc={getDynamicPathClass}
-                    translate={{x: window.innerWidth / 3.5, y: window.innerHeight / 3}}
-                    onNodeClick={node => {
-                        setSelectedNodeId(node.data.attributes.id);
-                        showModal();
-                    }}
-                />
+                <div id="treeWrapper" style={{ width: '100%', height: '100%' }}>
+                    <FamilyTreeComponent />
+                </div>
 
             )}
             <Modal title={
@@ -123,3 +126,24 @@ const FamilyTree = ({userId}) => {
 }
 
 export default FamilyTree;
+
+/*<Tree data={convertToTreeData(tree)} nodeSvgShape={{shape: 'circle'}} nodeSize={{x: 200, y: 200}}
+      styles={{ nodes: { node: { circle: { fill: "#fff" } } }}}
+      pathFunc="straight" orientation="vertical"
+      allowForeignObjects nodeLabelComponent={{
+    /!*render: <MyCustomLabelComponent />, // Ton composant personnalisé pour les étiquettes*!/
+    foreignObjectWrapper: { x: 10, y: 10 }
+}}
+      transitionDuration={0}
+      nodeSvgShape={{ shape: 'circle', shapeProps: { r: 10 } }}
+      rootNodeClassName="node__root"
+      branchNodeClassName="node__branch"
+      leafNodeClassName="node__leaf"
+      nodeStyle={nodeStyleCallback}
+      pathClassFunc={getDynamicPathClass}
+      translate={{x: window.innerWidth / 3.5, y: window.innerHeight / 3}}
+      onNodeClick={node => {
+          setSelectedNodeId(node.data.attributes.id);
+          showModal();
+      }}
+/>*/
