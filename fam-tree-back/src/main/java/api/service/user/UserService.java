@@ -18,23 +18,18 @@ public class UserService {
 
     public User getCurrentConnectedUser() {
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("currentPrivateCode " + currentPrivateCode);
         User currUser = userRepository.findByPrivateCode(currentPrivateCode);
         return currUser;
     }
 
     public User updateUser(UserUpdate userUpdate) {
-        System.out.println(userUpdate);
-
         // Récupérez le privateCode de l'utilisateur courant
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         // Récupérez l'utilisateur à partir de la base de données
         User currUser = userRepository.findByPrivateCode(currentPrivateCode);
         if (currUser == null) {
             throw new RuntimeException("User not found");
         }
-
         if (null != userUpdate.getEmail()) {
             // Vérifiez si l'email existe déjà
             Optional<User> existingUserWithEmail = userRepository.findByEmail(userUpdate.getEmail());

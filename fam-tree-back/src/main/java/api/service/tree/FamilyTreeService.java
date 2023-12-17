@@ -1,9 +1,7 @@
 package api.service.tree;
 
 import api.exception.UserNotFoundException;
-import api.model.tree.FamilyMember;
-import api.model.tree.FamilyTree;
-import api.model.tree.TreeNode;
+import api.model.tree.*;
 import api.model.tree.relationship.AddMemberRequest;
 import api.model.tree.relationship.Relationship;
 import api.model.tree.relationship.RelationshipType;
@@ -14,8 +12,10 @@ import api.repository.tree.RelationshipRepository;
 import api.repository.user.UserRepository;
 import api.service.relationship.RelationshipConfirmationService;
 import api.service.relationship.RelationshipService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
 
@@ -26,117 +26,48 @@ public class FamilyTreeService {
     private final FamilyTreeRepository familyTreeRepository;
     private final FamilyMemberRepository familyMemberRepository;
     private final RelationshipRepository relationshipRepository;
-    private final UserRepository userRepository;
-    private final RelationshipService relationshipService;
-    private final RelationshipConfirmationService relationshipConfirmationService;
+    private final PersonneService personneService;
+    private final UserRepository userRepository; // Assumé qu'il existe pour gérer les utilisateurs
 
-
-    public void addMemberToTree(Long userId, Long sourceMemberId, AddMemberRequest request) {
-        System.out.println("TYPE => "+request.getType());
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
-        FamilyTree tree = familyTreeRepository.findByUser(user).orElseThrow(() -> new RuntimeException("Tree not found"));
-        FamilyMember sourceMember;
-        if (sourceMemberId == null) {
-            sourceMember = familyMemberRepository.findByUserId(userId)
-                    .orElseThrow(() -> new UserNotFoundException("Source user not found"));
-        } else {
-            sourceMember = familyMemberRepository.findById(sourceMemberId)
-                    .orElseThrow(() -> new UserNotFoundException("Source member not found"));
+    public List<Map<String, Object>> getFamilyTreeByUserId(Long userId) {
+        Optional<FamilyTree> optTree = familyTreeRepository.findByUserId(userId);
+        FamilyTree tree = optTree.get();
+        if (tree == null) {
+            throw new EntityNotFoundException("Arbre généalogique non trouvé pour l'utilisateur avec ID " + userId);
         }
-
-
-        Optional<User> existingUserWithEmail = userRepository.findByEmail(request.getEmail());
-        if (existingUserWithEmail.isPresent()) {
-            // L'utilisateur existe, envoyons une demande de confirmation
-            relationshipConfirmationService.requestRelationshipConfirmation(existingUserWithEmail.get().getEmail(), sourceMember, request.getType());
-            return;  // Terminer ici car nous devons attendre la confirmation
-        }
-
-        /*if (hasInverseRelationship(sourceMember, targetMember, request.getType())) {
-            throw new RuntimeException("Inverse relationship already exists!");
-        }*/
-
-        // Si l'utilisateur n'existe pas, créez un nouveau membre et ajoutez-le à l'arbre directement
-        FamilyMember targetMember = new FamilyMember();
-        targetMember.setName(request.getName());
-        targetMember.setBirthDate(request.getBirthDate());
-        targetMember.setUser(null);  // Cette personne n'est pas un utilisateur enregistré
-        familyMemberRepository.save(targetMember);
-
-        addMemberDirectlyToTree(tree, sourceMember, targetMember, request.getType());
+        List<Map<String, Object>> lp = personneService.findByTreeId(tree.getId());
+        return lp; // Assumé qu'il y a une méthode getRootMember() dans FamilyTree
     }
 
-    private void addMemberDirectlyToTree(FamilyTree tree, FamilyMember sourceMember, FamilyMember targetMember, RelationshipType relationshipType) {
-        // Ajouter le membre à l'arbre
-        targetMember.setTree(tree);
-        familyMemberRepository.save(targetMember);
-
-        // Maintenant, dépendant de la demande, nous devons créer une relation
-        Relationship relationship = new Relationship();
-        switch (relationshipType) {
-            case PARENT:
-                relationship.setSourceMember(targetMember); // Inverser les rôles
-                relationship.setTargetMember(sourceMember);
-                relationship.setType(RelationshipType.CHILD);
-                break;
-            default:
-                relationship.setSourceMember(sourceMember);
-                relationship.setTargetMember(targetMember);
-                relationship.setType(relationshipType);
-                break;
-        }
-        relationshipRepository.save(relationship);
-    }
-
-
-    public void addExistingMemberToTree(FamilyTree tree, FamilyMember sourceMember, FamilyMember targetMember, RelationshipType relationshipType) {
-        System.out.println("TREE USER \n\n");
-        System.out.println(tree.getUser());
-        FamilyMember treeOwner = familyMemberRepository.findByUserId(tree.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("Tree owner not found"));
-
-        // Ajouter le membre existant à l'arbre
-        targetMember.setTree(tree);
-        familyMemberRepository.save(targetMember);
-
-        // Maintenant, dépendant de la demande, nous devons créer une relation
-        Relationship relationship = new Relationship();
-        relationship.setSourceMember(sourceMember);
-        relationship.setTargetMember(targetMember);
-        relationship.setType(relationshipType);
-
-        // Valider la relation
-        /*if (!relationshipService.isValidRelationship(treeOwner, targetMember, relationshipType)) {
-            throw new RuntimeException("Invalid relationship");
-        }*/
-
-        relationshipRepository.save(relationship);
-    }
-
-    public TreeNode getFamilyTreeByUserId(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found"));
-        System.out.println(user);
-        FamilyMember rootMember = familyMemberRepository.findByUserId(user.getId())
-                .orElseThrow(() -> new RuntimeException("Family member not found"));
-        System.out.println(rootMember);
+    private TreeNode buildTree(FamilyMember rootMember) {
         TreeNode rootNode = new TreeNode(rootMember);
-        populateChildNodes(rootNode, new HashSet<>());
-
-        System.out.println(rootNode);
+        List<Relationship> childRelationships = relationshipRepository.findBySourceMember(rootMember);
+        for (Relationship relationship : childRelationships) {
+            TreeNode childNode = buildTree(relationship.getTargetMember());
+            rootNode.addChild(childNode);
+        }
         return rootNode;
     }
 
-    private void populateChildNodes(TreeNode parentNode, Set<Long> processedMembers) {
-        if (processedMembers.contains(parentNode.getMember().getId())) {
-            return; // Ce membre a déjà été traité
-        }
-        processedMembers.add(parentNode.getMember().getId());
+    public void addMemberToTree(Long userId, Long sourceMemberId, AddMemberRequest request) {
+        FamilyMember sourceMember = familyMemberRepository.findById(sourceMemberId)
+                .orElseThrow(() -> new EntityNotFoundException("Membre source non trouvé avec ID " + sourceMemberId));
+        FamilyMember newMember = new FamilyMember();
+        newMember.setName(request.getName());
+        newMember.setBirthDate(request.getBirthDate());
 
-        List<Relationship> relationships = relationshipRepository.findBySourceMember(parentNode.getMember());
-        for (Relationship relationship : relationships) {
-            TreeNode childNode = new TreeNode(relationship.getTargetMember());
-            parentNode.addChild(childNode);
-            populateChildNodes(childNode, processedMembers);  // Récursion pour parcourir les descendants du membre actuel
-        }
+        // Mettre à jour les autres champs de newMember ici
+
+        // Sauvegarder le nouveau membre
+        newMember = familyMemberRepository.save(newMember);
+
+        // Créer une relation
+        Relationship relationship = new Relationship();
+        relationship.setSourceMember(sourceMember);
+        relationship.setTargetMember(newMember);
+        relationship.setType(request.getType());
+
+        // Sauvegarder la relation
+        relationshipRepository.save(relationship);
     }
 }

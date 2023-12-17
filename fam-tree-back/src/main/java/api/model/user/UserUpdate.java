@@ -2,9 +2,11 @@ package api.model.user;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class UserUpdate {
     private String phone;
     private String address;
@@ -14,14 +16,5 @@ public class UserUpdate {
         this.phone = phone;
         this.address = address;
         this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return "UserUpdate{" +
-                "phone='" + phone + '\'' +
-                ", address='" + address + '\'' +
-                ", email='" + email + '\'' +
-                '}';
     }
 }

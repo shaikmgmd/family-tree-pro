@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -12,6 +13,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@ToString
 @Table(name = "family_member")
 public class FamilyMember {
     @Id
@@ -33,16 +35,5 @@ public class FamilyMember {
 
     @Column(name = "birthdate")
     private LocalDate birthDate;
-
-    @Override
-    public String toString() {
-        return "FamilyMember{" +
-                "id=" + id +
-                ", treeId=" + (tree != null ? tree.getId() : "null") +
-                ", userId=" + (user != null ? user.getId() : "null") +
-                ", name='" + name + '\'' +
-                ", birthDate=" + birthDate +
-                '}';
-    }
 
 }

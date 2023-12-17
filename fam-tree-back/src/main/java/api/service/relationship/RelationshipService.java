@@ -3,7 +3,9 @@ package api.service.relationship;
 import api.model.tree.FamilyMember;
 import api.model.tree.relationship.Relationship;
 import api.model.tree.relationship.RelationshipType;
+import api.repository.tree.FamilyMemberRepository;
 import api.repository.tree.RelationshipRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,64 +15,48 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RelationshipService {
 
-    private final RelationshipRepository relationshipRepository;  // Supposons que cela existe pour gérer les relations dans votre base de données
+    private final RelationshipRepository relationshipRepository;
+    private final FamilyMemberRepository familyMemberRepository;
 
-    // ... autres dépendances ...
+    public void addRelationship(Long sourceMemberId, Long targetMemberId, RelationshipType type) {
+        FamilyMember sourceMember = familyMemberRepository.findById(sourceMemberId)
+                .orElseThrow(() -> new EntityNotFoundException("Membre source non trouvé avec ID " + sourceMemberId));
+        FamilyMember targetMember = familyMemberRepository.findById(targetMemberId)
+                .orElseThrow(() -> new EntityNotFoundException("Membre cible non trouvé avec ID " + targetMemberId));
 
-    public boolean isValidRelationship(FamilyMember source, FamilyMember target, RelationshipType type) {
-        // Si le type est PARENT
-        if (type == RelationshipType.PARENT) {
-            return isValidParentRelationship(source, target);
+        if (!isValidRelationship(sourceMember, targetMember, type)) {
+            throw new IllegalArgumentException("Relation invalide entre les membres fournis");
         }
 
-        // Si le type est CHILD
-        if (type == RelationshipType.CHILD) {
-            return isValidChildRelationship(source, target);
-        }
+        Relationship relationship = new Relationship();
+        relationship.setSourceMember(sourceMember);
+        relationship.setTargetMember(targetMember);
+        relationship.setType(type);
 
-        // Si le type est SIBLING ( Frr / Soeur )
-        if (type == RelationshipType.SIBLING) {
-            return isValidSiblingRelationship(source, target);
-        }
-
-        return false;  // Retourner faux pour d'autres types ou si aucune vérification n'est définie pour ce type
+        relationshipRepository.save(relationship);
     }
 
-    private boolean isValidParentRelationship(FamilyMember source, FamilyMember target) {
-        // Un parent ne peut pas être un enfant ou un frère/soeur du target
-        if (source.getBirthDate().isAfter(target.getBirthDate())) {
-            return false;
-        }
-
-        List<Relationship> conflictingRelations = relationshipRepository.findBySourceMemberAndType(target, RelationshipType.PARENT);
-        conflictingRelations.addAll(relationshipRepository.findBySourceMemberAndType(target, RelationshipType.SIBLING));
-
-        for (Relationship rel : conflictingRelations) {
-            if (rel.getTargetMember().equals(source)) {
+    private boolean isValidRelationship(FamilyMember source, FamilyMember target, RelationshipType type) {
+        switch (type) {
+            case PARENT:
+                return isValidParentChildRelationship(source, target);
+            case CHILD:
+                return isValidParentChildRelationship(target, source);
+            case SIBLING:
+                return isValidSiblingRelationship(source, target);
+            // Ajouter d'autres cas si nécessaire
+            default:
                 return false;
-            }
         }
-
-        return true;
     }
 
-    private boolean isValidChildRelationship(FamilyMember source, FamilyMember target) {
-        if (source.getBirthDate().isBefore(target.getBirthDate())) {
-            return false;
-        }
-        return isValidParentRelationship(target, source);
+    private boolean isValidParentChildRelationship(FamilyMember parent, FamilyMember child) {
+        return parent.getBirthDate().isBefore(child.getBirthDate());
     }
 
-    private boolean isValidSiblingRelationship(FamilyMember source, FamilyMember target) {
-        // Vérifier si l'un des membres est un parent de l'autre
-        if (relationshipRepository.existsBySourceMemberAndTargetMemberAndType(source, target, RelationshipType.PARENT) ||
-                relationshipRepository.existsBySourceMemberAndTargetMemberAndType(target, source, RelationshipType.PARENT)) {
-            return false;
-        }
-
-        return true;
+    private boolean isValidSiblingRelationship(FamilyMember sibling1, FamilyMember sibling2) {
+        // Vérifie si les deux membres ont au moins un parent en commun
+        return relationshipRepository.findCommonParents(sibling1.getId(), sibling2.getId()).size() > 0;
     }
-
-
 }
 

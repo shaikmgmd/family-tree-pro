@@ -39,6 +39,7 @@ public class User extends BaseEntityWithAudit {
     @Column(unique = true)
     private String email;
     private String password;
+    private String role;
     private boolean firstLogin = true;
 
 

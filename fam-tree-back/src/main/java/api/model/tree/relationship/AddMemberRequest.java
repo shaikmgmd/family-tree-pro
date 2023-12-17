@@ -3,11 +3,13 @@ package api.model.tree.relationship;
 import api.model.tree.FamilyMember;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
+@ToString
 public class AddMemberRequest {
     private String name;
     private LocalDate birthDate;
@@ -21,18 +23,4 @@ public class AddMemberRequest {
     private FamilyMember targetMember;
     private RelationshipType type;
 
-    @Override
-    public String toString() {
-        return "AddMemberRequest{" +
-                "name='" + name + '\'' +
-                ", birthDate=" + birthDate +
-                ", email='" + email + '\'' +
-                ", socialSecurityNumber='" + socialSecurityNumber + '\'' +
-                ", address='" + address + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", sourceMember=" + sourceMember +
-                ", targetMember=" + targetMember +
-                ", type=" + type +
-                '}';
-    }
 }

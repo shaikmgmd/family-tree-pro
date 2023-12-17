@@ -7,6 +7,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@ToString
 @Table(name="adhesion_request")
 public class AdhesionRequest extends BaseEntityWithAudit {
     private String socialSecurityNumber;
@@ -26,23 +28,6 @@ public class AdhesionRequest extends BaseEntityWithAudit {
     private String email;
     @Enumerated(EnumType.STRING)
     private AdhesionStatus status = AdhesionStatus.PENDING;
-
-    @Override
-    public String toString() {
-        return "AdhesionRequest{" +
-                "socialSecurityNumber='" + socialSecurityNumber + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", birthDate=" + birthDate +
-                ", nationality='" + nationality + '\'' +
-                ", idCardPath='" + idCardPath + '\'' +
-                ", photoPath='" + photoPath + '\'' +
-                ", email='" + email + '\'' +
-                ", status=" + status +
-                ", id=" + id +
-                ", version=" + version +
-                '}';
-    }
 }
 
 
