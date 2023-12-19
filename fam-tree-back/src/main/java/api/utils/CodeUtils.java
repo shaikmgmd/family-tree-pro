@@ -26,7 +26,7 @@ public class CodeUtils {
         CodeUtils.userRepository = userRepository;
     }
 
-    private static String generateCode() {
+    public static String generateCode() {
         int randomCode = 10000000 + RANDOM.nextInt(90000000);
         return String.valueOf(randomCode);
     }
