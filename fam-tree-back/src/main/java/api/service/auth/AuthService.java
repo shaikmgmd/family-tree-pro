@@ -72,6 +72,10 @@ public class AuthService {
     }
 
     public void approveAdhesion(AdhesionRequest request) {
+        if (request == null || request.getEmail() == null || request.getEmail().isEmpty()) {
+            throw new IllegalArgumentException("L'adresse e-mail ne peut pas être nulle ou vide.");
+        }
+
         User newUser = new User(
                 request.getLastName(), request.getFirstName(), request.getBirthDate(), request.getNationality(),
                 generatePublicCode(), generatePrivateCode(),

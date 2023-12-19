@@ -36,7 +36,7 @@ public class RelationshipService {
         relationshipRepository.save(relationship);
     }
 
-    private boolean isValidRelationship(FamilyMember source, FamilyMember target, RelationshipType type) {
+    public boolean isValidRelationship(FamilyMember source, FamilyMember target, RelationshipType type) {
         switch (type) {
             case PARENT:
                 return isValidParentChildRelationship(source, target);
@@ -50,11 +50,11 @@ public class RelationshipService {
         }
     }
 
-    private boolean isValidParentChildRelationship(FamilyMember parent, FamilyMember child) {
+    public boolean isValidParentChildRelationship(FamilyMember parent, FamilyMember child) {
         return parent.getBirthDate().isBefore(child.getBirthDate());
     }
 
-    private boolean isValidSiblingRelationship(FamilyMember sibling1, FamilyMember sibling2) {
+    public boolean isValidSiblingRelationship(FamilyMember sibling1, FamilyMember sibling2) {
         // Vérifie si les deux membres ont au moins un parent en commun
         return relationshipRepository.findCommonParents(sibling1.getId(), sibling2.getId()).size() > 0;
     }
