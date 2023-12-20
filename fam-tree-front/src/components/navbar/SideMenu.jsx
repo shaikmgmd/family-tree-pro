@@ -19,7 +19,8 @@ const SideMenu = () => {
                 height: '100vh',
                 position: 'fixed',
                 left: 0,
-                background: 'linear-gradient(to bottom, #4CC425, #A4B631)'
+                background: 'linear-gradient(to bottom, #4CC425, #A4B631)',
+                fontFamily: 'Montserrat',
             }}
         >
             <div
@@ -30,7 +31,6 @@ const SideMenu = () => {
                     fontWeight: 'bold',
                     fontSize: '24px',
                     color: 'white',
-                    fontFamily: "'Lucida Console', Monaco, monospace"  // Une belle police d'exemple
                 }}
             >
                 FTPro++
@@ -112,7 +112,7 @@ const SideMenu = () => {
                             </Menu.Item>
                         </div>
                         :
-                        <Menu.Item key="/login" icon={<UserOutlined/>}>
+                        <Menu.Item key="/login" icon={<UserOutlined />}>
                             <Link to="/login"
                                   style={{color: location.pathname === '/login' ? '#333' : 'white'}}>Connexion</Link>
                         </Menu.Item>
