@@ -23,7 +23,7 @@ function PasswordChange() {
                     newPassword: password
                 }
             }));
-            toast.success("Votre mot de passe a été modifié!", {
+            toast.success("Votre mot de passe a été modifié !", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,

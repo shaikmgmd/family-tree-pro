@@ -4,7 +4,7 @@ import {Input, Button, Divider, Typography} from 'antd';
 import {userLoginAction} from "../../store/features/slices/auth";
 import {useNavigate, Link} from "react-router-dom";
 import {toast} from 'react-toastify';
-import { ReactComponent as LoginIcon } from '../../assets/ui/svg/login/login-page-3.svg';
+import { ReactComponent as SecureLoginIcon } from '../../assets/ui/svg/login/secure_login.svg';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const LoginPage = () => {
@@ -26,7 +26,7 @@ export const LoginPage = () => {
 
         if (response && typeof response === "object" && response.type === "user-login/fulfilled") {
             localStorage.setItem("userData", JSON.stringify(response.payload));
-            toast.success("Vous êtes connecté avec succès!", {
+            toast.success("Bienvenue à bord ! Votre connexion a été un succès !", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -41,7 +41,7 @@ export const LoginPage = () => {
             });
             navigate("/presentation");
         } else {
-            toast.error("Erreur lors de la connexion.", {
+            toast.error("Oops ! Petit souci de connexion. Tentons à nouveau !", {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -56,7 +56,7 @@ export const LoginPage = () => {
     return (
         <div className="flex h-screen">
             <div className="w-1/2 flex items-center justify-center border-r">
-                <LoginIcon />
+                <SecureLoginIcon />
             </div>
             <div className="w-1/2 flex items-center justify-center p-10">
                 <form onSubmit={handleSubmit} className="w-full max-w-lg">
@@ -83,7 +83,7 @@ export const LoginPage = () => {
                     <Divider/>
                     <div className="block text-center text-sm text-gray-400 font-extralight mt-4">
                         <Link to="/adhesion/apply" className="hover:text-gray-500 hover:transition">
-                            Pas inscrit ? Faites une demande d'adhésion
+                            Prêt à nous rejoindre ? Lancez votre demande d'adhésion dès maintenant !
                         </Link>
                     </div>
                 </form>

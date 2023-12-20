@@ -19,7 +19,7 @@ const SideMenu = () => {
                 height: '100vh',
                 position: 'fixed',
                 left: 0,
-                background: 'linear-gradient(to bottom, #007BFF, #00C0FF)'
+                background: 'linear-gradient(to bottom, #4CC425, #A4B631)'
             }}
         >
             <div
@@ -45,12 +45,12 @@ const SideMenu = () => {
                     <>
                         <Menu.Item key="/presentation" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
                             <Link to="/presentation"
-                                  style={{color: location.pathname === '/presentation' ? '#333' : 'white'}}>Presentation</Link>
+                                  style={{color: location.pathname === '/presentation' ? '#333' : 'white'}}>Présentation</Link>
                         </Menu.Item>
                         <Menu.Item key="/family-tree" icon={<UserOutlined/>} style={{marginBottom: '15px'}}>
                             <Link to="/family-tree"
                                   style={{color: location.pathname === '/family-tree' ? '#333' : 'white'}}>Arbre
-                                généalogique</Link>
+                                Généalogique</Link>
                         </Menu.Item>
                     </>
                 )}
@@ -69,7 +69,7 @@ const SideMenu = () => {
                                      icon={<UserOutlined style={{color: "white"}}/>} style={{background: 'transparent'}}>
                                 <Menu.Item key="/adhesion/dashboard">
                                     <Link to="/adhesion/dashboard"
-                                          style={{color: location.pathname === '/adhesion/dashboard' ? 'black' : 'black'}}>Adhesion
+                                          style={{color: location.pathname === '/adhesion/dashboard' ? 'black' : 'black'}}>Adhésion
                                         Dashboard</Link>
                                 </Menu.Item>
                             </SubMenu>
