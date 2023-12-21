@@ -12,8 +12,12 @@ const Profile = () => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
 
-    const handleSubmit = async () => {
-        const values = form.getFieldsValue(['phone', 'address', 'email']);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const phone = e.target.phone.value;
+        const address = e.target.address.value;
+        const email = e.target.email.value;
+        const values = { phone, address, email };
         await dispatch(updateUserAction({payload: values}));
         toast.success("Votre profil a été mis à jour!", {
             position: "top-right",
@@ -32,78 +36,6 @@ const Profile = () => {
             {!user ? (
                 <FTProLoader/>
             ) : (
-                // <Form layout="vertical" form={form} onFinish={handleSubmit}>
-                //     <Row gutter={16}>
-                //         <Col span={12}>
-                //             <Form.Item label="Nom de famille">
-                //                 <Input value={user?.lastName} disabled/>
-                //             </Form.Item>
-                //         </Col>
-                //         <Col span={12}>
-                //             <Form.Item label="Prénom">
-                //                 <Input value={user?.firstName} disabled/>
-                //             </Form.Item>
-                //         </Col>
-                //     </Row>
-                //
-                //     <Row gutter={16}>
-                //         <Col span={12}>
-                //             <Form.Item label="Numéro de sécurité sociale">
-                //                 <Input value={user?.socialSecurityNumber} disabled/>
-                //             </Form.Item>
-                //         </Col>
-                //         <Col span={12}>
-                //             <Form.Item label="Nationalité">
-                //                 <Input value={user?.nationality} disabled/>
-                //             </Form.Item>
-                //         </Col>
-                //     </Row>
-                //
-                //     <Row gutter={16}>
-                //         <Col span={12}>
-                //             <Form.Item label="Code Public">
-                //                 <Input value={user?.publicCode} disabled/>
-                //             </Form.Item>
-                //         </Col>
-                //         <Col span={12}>
-                //             <Form.Item label="Code Privé">
-                //                 <Input value={user?.privateCode} disabled/>
-                //             </Form.Item>
-                //         </Col>
-                //     </Row>
-                //
-                //     <Row gutter={16}>
-                //         <Col span={12}>
-                //             <Form.Item label="Adresse" name="address">
-                //                 <Input defaultValue={user?.address}/>
-                //             </Form.Item>
-                //         </Col>
-                //         <Col span={12}>
-                //             <Form.Item label="Téléphone" name="phone">
-                //                 <Input defaultValue={user?.phone}/>
-                //             </Form.Item>
-                //         </Col>
-                //     </Row>
-                //
-                //     <Row gutter={16}>
-                //         <Col span={12}>
-                //             <Form.Item label="Email" name="email">
-                //                 <Input defaultValue={user?.email}/>
-                //             </Form.Item>
-                //         </Col>
-                //     </Row>
-                //
-                //     <Row>
-                //         <Col span={24} style={{textAlign: 'right'}}>
-                //             <Form.Item>
-                //                 <Button type="default" htmlType="submit">
-                //                     Mettre à jour
-                //                 </Button>
-                //             </Form.Item>
-                //         </Col>
-                //     </Row>
-                //
-                // </Form>
                 <form onSubmit={handleSubmit}
                       className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
                     {/* Nom de famille et Prénom */}

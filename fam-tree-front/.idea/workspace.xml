@@ -5,11 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5fa6533-db79-460f-9073-dbaf731ebe6f" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/wrapper/MainWrapper.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/wrapper/MainWrapper.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/Home.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/presentation/Presentation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/presentation/Presentation.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/profile/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/profile/Profile.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -73,7 +73,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;ts.external.directory.path&quot;: &quot;C:\\Program Files\\JetBrains\\IntelliJ IDEA 2023.2.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;H:\\Programs\\IntelliJ IDEA 2023.2.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -129,6 +129,7 @@
       <workItem from="1703102794391" duration="376000" />
       <workItem from="1703153699492" duration="19825000" />
       <workItem from="1703180474875" duration="329000" />
+      <workItem from="1703191098633" duration="308000" />
     </task>
     <servers />
   </component>

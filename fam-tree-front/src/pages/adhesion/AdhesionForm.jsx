@@ -25,8 +25,8 @@ export const AdhesionForm = () => {
     const navigate = useNavigate();
     const [countries, setCountries] = useState([]);
     const {Option} = Select;
-    const [idCardFile, setIdCardFile] = useState(null);
-    const [photoFile, setPhotoFile] = useState(null);
+    const [idCardFile, setIdCardFile] = useState(null); // TODO : utiliser le setIdCardFile dans le .then(data) du cloud
+    const [photoFile, setPhotoFile] = useState(null); // TODO : utiliser le setPhotoFile dans le .then(data) du cloud
 
     const formik = useFormik({
         initialValues: {
@@ -57,6 +57,51 @@ export const AdhesionForm = () => {
             navigate("/home");
         },
     });
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(e.target)
+        // Créer un objet FormData pour soumettre les fichiers et les autres champs
+        const socialSecurityNumber = e.target.socialSecurityNumber.value;
+        const lastName = e.target.lastName.value;
+        const firstName = e.target.firstName.value;
+        const birthDate = e.target.birthDate.value;
+        const nationality = e.target.nationality.value;
+        const email = e.target.email.value;
+        let idCardPath;
+        if (idCardFile) {
+            idCardPath = idCardFile; // TODO : ajouter le lien du cloud
+        } else {
+            idCardPath = '';
+        }
+        let photoPath;
+        if (photoFile) {
+            photoPath = photoFile; // TODO : ajouter le lien du cloud
+        } else {
+            photoPath = '';
+        }
+
+        const values = {
+            socialSecurityNumber,
+            lastName,
+            firstName,
+            birthDate,
+            nationality,
+            email,
+            idCardPath,
+            photoPath
+        };
+
+        const response = await dispatch(createAdhesionAction({payload: values}));
+        toast.success("Votre demande d'adhésion a été crée!", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    };
     const fetchCountries = async () => {
         try {
             const response = await axios.get('https://restcountries.com/v3.1/all');
@@ -116,100 +161,8 @@ export const AdhesionForm = () => {
             <h1 className="text-2xl font-bold mb-2">Demande d'adhésion</h1>
             <h2 className="italic text-sm">Veuillez remplir le formulaire suivant :</h2>
             <Divider/>
-            {/*<form onSubmit={formik.handleSubmit}>*/}
 
-            {/*    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">*/}
-            {/*        <Input*/}
-            {/*            name="firstName"*/}
-            {/*            placeholder="Prénom"*/}
-            {/*            onChange={formik.handleChange}*/}
-            {/*            value={formik.values.firstName}*/}
-            {/*            className={formik.touched.firstName && formik.errors.firstName ? 'border-red-500' : ''}*/}
-            {/*        />*/}
-            {/*        <Input*/}
-            {/*            name="lastName"*/}
-            {/*            placeholder="Nom de famille"*/}
-            {/*            onChange={formik.handleChange}*/}
-            {/*            value={formik.values.lastName}*/}
-            {/*            className={formik.touched.lastName && formik.errors.lastName ? 'border-red-500' : ''}*/}
-            {/*        />*/}
-            {/*        <Input*/}
-            {/*            className="col-span-2"*/}
-            {/*            name="socialSecurityNumber"*/}
-            {/*            placeholder="Numéro de sécurité sociale"*/}
-            {/*            onChange={formik.handleChange}*/}
-            {/*            value={formik.values.socialSecurityNumber}*/}
-            {/*            className={formik.touched.socialSecurityNumber && formik.errors.socialSecurityNumber ? 'border-red-500' : ''}*/}
-            {/*        />*/}
-            {/*        <Input*/}
-            {/*            name="email"*/}
-            {/*            placeholder="Email"*/}
-            {/*            onChange={formik.handleChange}*/}
-            {/*            value={formik.values.email}*/}
-            {/*            className={formik.touched.email && formik.errors.email ? 'border-red-500' : ''}*/}
-            {/*        />*/}
-            {/*        <Input*/}
-            {/*            type="date"*/}
-            {/*            name="birthDate"*/}
-            {/*            placeholder="Date de naissance"*/}
-            {/*            onChange={formik.handleChange}*/}
-            {/*            value={formik.values.birthDate}*/}
-            {/*            className={formik.touched.birthDate && formik.errors.birthDate ? 'border-red-500' : ''}*/}
-            {/*        />*/}
-            {/*        <Select*/}
-            {/*            showSearch*/}
-            {/*            placeholder="Nationalité"*/}
-            {/*            name="nationality"*/}
-            {/*            value={formik.values.nationality}*/}
-            {/*            onChange={value => formik.setFieldValue('nationality', value)}*/}
-            {/*            filterOption={(input, option) =>*/}
-            {/*                option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0*/}
-            {/*            }*/}
-            {/*            className={formik.touched.nationality && formik.errors.nationality ? 'border-red-500' : ''}*/}
-            {/*        >*/}
-            {/*            {countries.map(country => (*/}
-            {/*                <Option key={country.code} value={country.name}>*/}
-            {/*                    {country.name}*/}
-            {/*                </Option>*/}
-            {/*            ))}*/}
-            {/*        </Select>*/}
-            {/*    </div>*/}
-            {/*    <Divider/>*/}
-            {/*    <div>*/}
-            {/*        <h1 className="text-2xl font-bold mb-2">Documents d'identité</h1>*/}
-            {/*        <h2 className="italic text-sm mb-3">Veuillez fournir les pièces nécessaires :</h2>*/}
-            {/*        <div className="flex flex-row space-x-5">*/}
-            {/*            <div className="">*/}
-            {/*                <Upload*/}
-            {/*                    beforeUpload={file => {*/}
-            {/*                        formik.setFieldValue("idCardPath", file);*/}
-            {/*                        return false;*/}
-            {/*                    }}*/}
-            {/*                >*/}
-            {/*                    <Button icon={<UploadOutlined/>}>Charger la carte d'identité</Button>*/}
-            {/*                </Upload>*/}
-            {/*            </div>*/}
-            {/*            <div>*/}
-            {/*                <Upload*/}
-            {/*                    beforeUpload={file => {*/}
-            {/*                        formik.setFieldValue("photoPath", file);*/}
-            {/*                        return false;*/}
-            {/*                    }}*/}
-            {/*                >*/}
-            {/*                    <Button icon={<UploadOutlined/>}>Charger la photo</Button>*/}
-            {/*                </Upload>*/}
-            {/*            </div>*/}
-
-            {/*        </div>*/}
-            {/*        <div className="mt-4">*/}
-            {/*            <Button type="default" htmlType="submit">*/}
-            {/*                Envoyer*/}
-            {/*            </Button>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</form>*/}
-
-            <form onSubmit={formik.handleSubmit}
+            <form onSubmit={handleSubmit}
                   className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
                 {/* Nom de famille et Prénom */}
                 <div className="-mx-3 md:flex mb-6">
@@ -288,32 +241,6 @@ export const AdhesionForm = () => {
                             value={formik.values.email}/>
                     </div>
                 </div>
-
-                {/* Documents d'identité */}
-                {/* Note: This is a simple input for file, you might want to implement file handling logic */}
-                {/*<div className="-mx-3 md:flex mb-6">*/}
-                {/*    <div className="md:w-1/2 px-3 mb-6 md:mb-0">*/}
-                {/*        <label className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2"*/}
-                {/*               htmlFor="idCardPath">*/}
-                {/*            Carte d'identité*/}
-                {/*        </label>*/}
-                {/*        <input*/}
-                {/*            className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4"*/}
-                {/*            id="idCardPath" name="idCardPath" type="file"*/}
-                {/*            onChange={(event) => formik.setFieldValue('idCardPath', event.currentTarget.files[0])}/>*/}
-                {/*    </div>*/}
-                {/*    <div className="md:w-1/2 px-3">*/}
-                {/*        <label className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2"*/}
-                {/*               htmlFor="photoPath">*/}
-                {/*            Photo*/}
-                {/*        </label>*/}
-                {/*        <input*/}
-                {/*            className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4"*/}
-                {/*            id="photoPath" name="photoPath" type="file"*/}
-                {/*            onChange={(event) => formik.setFieldValue('photoPath', event.currentTarget.files[0])}/>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-
                 <Divider/>
                 {/* Champ de téléchargement de la carte d'identité */}
                 <div className="-mx-3 md:flex mb-6">
@@ -349,6 +276,7 @@ export const AdhesionForm = () => {
                             )}
                             <input id="idCardPath" name="idCardPath" type="file" className="hidden"
                                    onChange={(e) => handleFileChange(e, setIdCardFile)}/>
+                            {/* TODO : ajouter ici la fonction pour uploader */}
                         </div>
                     </div>
 
@@ -386,6 +314,7 @@ export const AdhesionForm = () => {
                             )}
                             <input id="photoPath" name="photoPath" type="file" className="hidden"
                                    onChange={(e) => handleFileChange(e, setPhotoFile)}/>
+                            {/* TODO : ajouter ici la fonction pour uploader */}
                         </div>
                     </div>
 

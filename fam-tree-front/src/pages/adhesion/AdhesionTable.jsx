@@ -63,9 +63,11 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                         icon={<CheckOutlined/>}
                         onClick={() => {
                             dispatch(approveAdhesionAction(record.id))
-                                .then(() => {
+                                .then(async () => {
                                     // Une fois l'adhésion approuvée, rechargez les données.
                                     dispatch(getApprovedAdhesionAction());
+                                    dispatch(getPendingAdhesionAction());
+                                    dispatch(getRejectedAdhesionAction());
                                 });
                         }}
                     >
@@ -78,6 +80,8 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                             dispatch(rejectAdhesionAction(record.id))
                                 .then(() => {
                                     // Une fois l'adhésion refusée, rechargez les données.
+                                    dispatch(getApprovedAdhesionAction());
+                                    dispatch(getPendingAdhesionAction());
                                     dispatch(getRejectedAdhesionAction());
                                 });
                         }}
