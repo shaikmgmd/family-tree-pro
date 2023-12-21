@@ -32,80 +32,206 @@ const Profile = () => {
             {!user ? (
                 <FTProLoader/>
             ) : (
-                <Form layout="vertical" form={form} onFinish={handleSubmit}>
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item label="Nom de famille">
-                                <Input value={user?.lastName} disabled/>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Prénom">
-                                <Input value={user?.firstName} disabled/>
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                // <Form layout="vertical" form={form} onFinish={handleSubmit}>
+                //     <Row gutter={16}>
+                //         <Col span={12}>
+                //             <Form.Item label="Nom de famille">
+                //                 <Input value={user?.lastName} disabled/>
+                //             </Form.Item>
+                //         </Col>
+                //         <Col span={12}>
+                //             <Form.Item label="Prénom">
+                //                 <Input value={user?.firstName} disabled/>
+                //             </Form.Item>
+                //         </Col>
+                //     </Row>
+                //
+                //     <Row gutter={16}>
+                //         <Col span={12}>
+                //             <Form.Item label="Numéro de sécurité sociale">
+                //                 <Input value={user?.socialSecurityNumber} disabled/>
+                //             </Form.Item>
+                //         </Col>
+                //         <Col span={12}>
+                //             <Form.Item label="Nationalité">
+                //                 <Input value={user?.nationality} disabled/>
+                //             </Form.Item>
+                //         </Col>
+                //     </Row>
+                //
+                //     <Row gutter={16}>
+                //         <Col span={12}>
+                //             <Form.Item label="Code Public">
+                //                 <Input value={user?.publicCode} disabled/>
+                //             </Form.Item>
+                //         </Col>
+                //         <Col span={12}>
+                //             <Form.Item label="Code Privé">
+                //                 <Input value={user?.privateCode} disabled/>
+                //             </Form.Item>
+                //         </Col>
+                //     </Row>
+                //
+                //     <Row gutter={16}>
+                //         <Col span={12}>
+                //             <Form.Item label="Adresse" name="address">
+                //                 <Input defaultValue={user?.address}/>
+                //             </Form.Item>
+                //         </Col>
+                //         <Col span={12}>
+                //             <Form.Item label="Téléphone" name="phone">
+                //                 <Input defaultValue={user?.phone}/>
+                //             </Form.Item>
+                //         </Col>
+                //     </Row>
+                //
+                //     <Row gutter={16}>
+                //         <Col span={12}>
+                //             <Form.Item label="Email" name="email">
+                //                 <Input defaultValue={user?.email}/>
+                //             </Form.Item>
+                //         </Col>
+                //     </Row>
+                //
+                //     <Row>
+                //         <Col span={24} style={{textAlign: 'right'}}>
+                //             <Form.Item>
+                //                 <Button type="default" htmlType="submit">
+                //                     Mettre à jour
+                //                 </Button>
+                //             </Form.Item>
+                //         </Col>
+                //     </Row>
+                //
+                // </Form>
+                <form onSubmit={handleSubmit}
+                      className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
+                    {/* Nom de famille et Prénom */}
+                    <div className="-mx-3 md:flex mb-6">
+                        <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+                            <label
+                                className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2 text-gray-500"
+                                htmlFor="lastName">
+                                Nom de famille
+                            </label>
+                            <input
+                                className="appearance-none block w-full bg-gray-200 text-gray-500 border border-gray-200 rounded py-3 px-4"
+                                id="lastName" type="text" value={user.lastName} disabled/>
+                        </div>
+                        <div className="md:w-1/2 px-3">
+                            <label
+                                className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2 text-gray-500"
+                                htmlFor="firstName">
+                                Prénom
+                            </label>
+                            <input
+                                className="appearance-none block w-full bg-gray-200 text-gray-500 border border-gray-200 rounded py-3 px-4"
+                                id="firstName" type="text" value={user.firstName} disabled/>
+                        </div>
+                    </div>
 
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item label="Numéro de sécurité sociale">
-                                <Input value={user?.socialSecurityNumber} disabled/>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Nationalité">
-                                <Input value={user?.nationality} disabled/>
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                    {/* Numéro de sécurité sociale et Nationalité */}
+                    <div className="-mx-3 md:flex mb-6">
+                        <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+                            <label
+                                className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2 text-gray-500"
+                                htmlFor="socialSecurityNumber">
+                                Numéro de sécurité sociale
+                            </label>
+                            <input
+                                className="appearance-none block w-full bg-gray-200 text-gray-500 border border-gray-200 rounded py-3 px-4"
+                                id="socialSecurityNumber" type="text" value={user.socialSecurityNumber} disabled/>
+                        </div>
+                        <div className="md:w-1/2 px-3">
+                            <label
+                                className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2 text-gray-500"
+                                htmlFor="nationality">
+                                Nationalité
+                            </label>
+                            <input
+                                className="appearance-none block w-full bg-gray-200 text-gray-500 border border-gray-200 rounded py-3 px-4"
+                                id="nationality" type="text" value={user.nationality} disabled/>
+                        </div>
+                    </div>
 
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item label="Code Public">
-                                <Input value={user?.publicCode} disabled/>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Code Privé">
-                                <Input value={user?.privateCode} disabled/>
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                    {/* Code Public et Code Privé */}
+                    <div className="-mx-3 md:flex mb-6">
+                        <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+                            <label
+                                className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2 text-gray-500"
+                                htmlFor="publicCode">
+                                Code Public
+                            </label>
+                            <input
+                                className="appearance-none block w-full bg-gray-200 text-gray-500 border border-gray-200 rounded py-3 px-4"
+                                id="publicCode" type="text" value={user.publicCode} disabled/>
+                        </div>
+                        <div className="md:w-1/2 px-3">
+                            <label
+                                className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2 text-gray-500"
+                                htmlFor="privateCode">
+                                Code Privé
+                            </label>
+                            <input
+                                className="appearance-none block w-full bg-gray-200 text-gray-500 border border-gray-200 rounded py-3 px-4"
+                                id="privateCode" type="text" value={user.privateCode} disabled/>
+                        </div>
+                    </div>
 
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item label="Adresse" name="address">
-                                <Input defaultValue={user?.address}/>
-                            </Form.Item>
-                        </Col>
-                        <Col span={12}>
-                            <Form.Item label="Téléphone" name="phone">
-                                <Input defaultValue={user?.phone}/>
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                    {/* Adresse */}
+                    <div className="-mx-3 md:flex mb-6">
+                        <div className="md:w-full px-3">
+                            <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                                   htmlFor="address">
+                                Adresse
+                            </label>
+                            <input
+                                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 mb-3"
+                                name="address" id="address" type="text" defaultValue={user.address}/>
+                        </div>
+                    </div>
 
-                    <Row gutter={16}>
-                        <Col span={12}>
-                            <Form.Item label="Email" name="email">
-                                <Input defaultValue={user?.email}/>
-                            </Form.Item>
-                        </Col>
-                    </Row>
+                    {/* Téléphone et Email */}
+                    <div className="-mx-3 md:flex mb-6">
+                        <div className="md:w-1/2 px-3 mb-6 md:mb-0">
+                            <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                                   htmlFor="phone">
+                                Téléphone
+                            </label>
+                            <input
+                                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4"
+                                name="phone" id="phone" type="text" defaultValue={user.phone}/>
+                        </div>
+                        <div className="md:w-1/2 px-3">
+                            <label className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2"
+                                   htmlFor="email">
+                                Email
+                            </label>
+                            <input
+                                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4"
+                                name="email" id="email" type="email" defaultValue={user.email}/>
+                        </div>
+                    </div>
 
-                    <Row>
-                        <Col span={24} style={{textAlign: 'right'}}>
-                            <Form.Item>
-                                <Button type="default" htmlType="submit">
-                                    Mettre à jour
-                                </Button>
-                            </Form.Item>
-                        </Col>
-                    </Row>
-
-                </Form>
-            )}
-
+                    {/* Bouton de soumission */}
+                    <div className="-mx-3 md:flex mt-6">
+                        <div className="md:w-full px-3 text-right">
+                            <button type="submit"
+                                    style={{
+                                        backgroundColor: '#4CC425',
+                                        borderColor: '#4CC425'
+                                    }}
+                                    className="shadow hover:bg-green-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                                    onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#3da035'}  // Couleur plus foncée au survol
+                                    onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#4CC425'} // Couleur originale lorsque la souris n'est plus dessus
+                            >
+                                Mettre à jour
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            )
+            }
         </MainWrapper>
     );
 }
