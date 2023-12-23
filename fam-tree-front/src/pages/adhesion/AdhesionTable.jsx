@@ -1,5 +1,5 @@
-import React from 'react';
-import {Table, Button, Space} from 'antd';
+import React, {useState} from 'react';
+import {Table, Button, Space, Modal} from 'antd';
 import {CheckOutlined, CloseOutlined} from '@ant-design/icons';
 import {useDispatch} from 'react-redux';
 import {
@@ -12,6 +12,18 @@ import {toast} from "react-toastify";
 
 const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
     const dispatch = useDispatch();
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [currentImage, setCurrentImage] = useState('');
+
+    const showModal = (imageUrl) => {
+        setCurrentImage(imageUrl);
+        setIsModalVisible(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
 
     const columns = [
         {
@@ -50,6 +62,24 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
             dataIndex: 'email',
             showSorterTooltip: true,
             sorter: (a, b) => a.email.localeCompare(b.email),
+        },
+        {
+            title: 'CNI',
+            dataIndex: 'cni',
+            render: (text, record) => (
+                <Space size="middle">
+                    <Button onClick={() => showModal(record.idCardPath)}>Voir CNI</Button>
+                </Space>
+            ),
+        },
+        {
+            title: 'Photo',
+            dataIndex: 'photo',
+            render: (text, record) => (
+                <Space size="middle">
+                    <Button onClick={() => showModal(record.photoPath)}>Voir Photo</Button>
+                </Space>
+            ),
         },
     ];
 
@@ -91,6 +121,7 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                 </Space>
             ),
         });
+
     }
     if (showAdminAction) {
         columns.push({
@@ -142,7 +173,16 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
         });
     }
 
-    return <Table columns={columns} dataSource={data}/>;
+    return (<div>
+        <Modal
+            title="Aperçu de l'image"
+            visible={isModalVisible}
+            onCancel={handleCancel}
+            footer={null} // No buttons at the bottom
+        >
+            <img alt="Aperçu" src={currentImage} style={{width: '100%'}}/>
+        </Modal>
+        <Table columns={columns} dataSource={data}/></div>);
 };
 
 export default AdhesionTable;
