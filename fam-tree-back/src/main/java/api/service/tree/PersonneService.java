@@ -261,8 +261,6 @@ public class PersonneService {
         relationsAsFather.ifPresent(relationRepository::deleteAll);
     }
 
-
-
     private void createRelationForNewPerson(Long personId, Map<String, Long> idMapping, Map<String, Object> nodeData) {
         Relation newRelation = new Relation();
         System.out.println("idMapping => " + idMapping);

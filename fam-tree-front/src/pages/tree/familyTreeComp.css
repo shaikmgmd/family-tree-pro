@@ -129,3 +129,7 @@
     background-color: transparent;
     color: #106ba3;
 }
+
+#tree.viewer #base_tree_menu {
+    display: none;
+}

@@ -76,7 +76,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "feature-chatbox",
+    "git-widget-placeholder": "develop",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "H:/Programs/Projects/family-tree-pro/fam-tree-front",
     "list.type.of.created.stylesheet": "CSS",
@@ -86,7 +86,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2023.2.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2023.1.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -143,8 +143,6 @@
       <workItem from="1703153699492" duration="19825000" />
       <workItem from="1703180474875" duration="329000" />
       <workItem from="1703191098633" duration="308000" />
-      <workItem from="1703276544438" duration="8433000" />
-    </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
