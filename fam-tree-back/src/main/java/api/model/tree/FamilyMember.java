@@ -14,6 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @ToString
+
 @Table(name = "family_member")
 public class FamilyMember {
     @Id

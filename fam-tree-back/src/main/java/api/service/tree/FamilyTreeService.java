@@ -119,8 +119,4 @@ public class FamilyTreeService {
         motherRelationsOptional.ifPresent(relationshipRepository::deleteAll);
         partnerRelationsOptional.ifPresent(relationshipRepository::deleteAll);
     }
-
-
-
-
 }
