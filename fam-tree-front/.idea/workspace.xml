@@ -5,11 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5fa6533-db79-460f-9073-dbaf731ebe6f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/adhesionForm/image.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/config/WebSocketConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/chat/ChatController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/chat/Chat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/chat/ChatMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/chat/Status.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/chat/ChatMessageRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/chat/ChatRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/chat/ChatService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/feature/chat/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/chat/Chat.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/chat/ChatList.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/features/slices/chat/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/profile/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/profile/Profile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/config/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/config/urls.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/route/AppRoute.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/route/AppRoute.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,9 +38,9 @@
         <option value="com.haulmont.rcb.index" />
         <option value="com.haulmont.rcb.useInitial" />
         <option value="com.haulmont.rcb.README" />
-        <option value="JavaScript File" />
         <option value="JSX File" />
         <option value="CSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -62,7 +76,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "develop",
+    "git-widget-placeholder": "feature-chatbox",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "H:/Programs/Projects/family-tree-pro/fam-tree-front",
     "list.type.of.created.stylesheet": "CSS",
