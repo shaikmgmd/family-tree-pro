@@ -5,31 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5fa6533-db79-460f-9073-dbaf731ebe6f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/user/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/user/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/FamilyMember.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/FamilyMember.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/user/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/user/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/JwtAuthorizationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/JwtAuthorizationFilter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/FamilyTreeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/FamilyTreeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/PersonneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/PersonneService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/user/UserService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/config/WebSocketConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/chat/ChatController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/chat/Chat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/chat/ChatMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/chat/Status.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/chat/ChatMessageRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/chat/ChatRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/chat/ChatService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/feature/chat/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/chat/Chat.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/chat/ChatList.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/features/slices/chat/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/config/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/config/urls.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/feature/tree/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/feature/tree/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/feature/user/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/feature/user/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/button/PowerButton.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/button/PowerButton.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/button/PowerButton.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/button/PowerButton.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/familytreeuser/FamilyTreeUser.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/familytreeuser/FamilyTreeUser.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/familytreeuser/ListUser.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/familytreeuser/ListUser.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTreeComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTreeComponent.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/tree/familyTreeComp.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/familyTreeComp.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/route/AppRoute.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/route/AppRoute.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/features/slices/familytreeuser/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/features/slices/familytreeuser/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/features/slices/user/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/features/slices/user/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/rootReducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,9 +38,9 @@
         <option value="com.haulmont.rcb.index" />
         <option value="com.haulmont.rcb.useInitial" />
         <option value="com.haulmont.rcb.README" />
-        <option value="JavaScript File" />
         <option value="JSX File" />
         <option value="CSS File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -109,7 +103,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\elbiy\OneDrive\Bureau\family-tree-pro\fam-tree-front\src\route" />
+      <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\src\assets\ui\svg\adhesionForm" />
       <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\src\assets\ui\svg\login" />
       <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\src\assets\ui\svg\presentation" />
       <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\public" />
@@ -149,9 +143,6 @@
       <workItem from="1703153699492" duration="19825000" />
       <workItem from="1703180474875" duration="329000" />
       <workItem from="1703191098633" duration="308000" />
-      <workItem from="1703323765190" duration="5672000" />
-      <workItem from="1703332847763" duration="30838000" />
-    </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

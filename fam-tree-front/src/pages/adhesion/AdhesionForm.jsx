@@ -8,6 +8,7 @@ import React, {useEffect, useState} from "react";
 import {createAdhesionAction} from "../../store/features/slices/adhesion";
 import axios from "axios";
 import {toast} from "react-toastify";
+import {ReactComponent as ImageIcon} from "../../assets/ui/svg/adhesionForm/image.svg";
 
 const AdhesionSchema = Yup.object().shape({
     socialSecurityNumber: Yup.string().required('Requis'),
@@ -27,7 +28,8 @@ export const AdhesionForm = () => {
     const {Option} = Select;
     const [idCardFile, setIdCardFile] = useState(null); // TODO : utiliser le setIdCardFile dans le .then(data) du cloud
     const [photoFile, setPhotoFile] = useState(null); // TODO : utiliser le setPhotoFile dans le .then(data) du cloud
-
+    const [picMessageIdCardFile, setPicMessageIdCardFile] = useState("");
+    const [picMessagePhotoFile, setPicMessagePhotoFile] = useState("");
     const formik = useFormik({
         initialValues: {
             socialSecurityNumber: '',
@@ -101,6 +103,7 @@ export const AdhesionForm = () => {
             draggable: true,
             progress: undefined,
         });
+        navigate(-1);
     };
     const fetchCountries = async () => {
         try {
@@ -137,14 +140,66 @@ export const AdhesionForm = () => {
     };
 
     // Générer l'URL de prévisualisation
+    /*    const getPreview = (file) => {
+            return file ? URL.createObjectURL(file) : '';
+        };*/
+
     const getPreview = (file) => {
-        return file ? URL.createObjectURL(file) : '';
+        return typeof file === 'string' ? file : '';
     };
+
 
     // Fonction pour gérer la suppression de l'image
     const removeFile = (setFileFunc, fieldName) => {
         setFileFunc(null);
         formik.setFieldValue(fieldName, null);
+    };
+
+    const postDetailsIdCardFile = (pics) => {
+        setPicMessageIdCardFile(null);
+        if (pics.type === "image/jpeg" || pics.type === "image/png") {
+            const data = new FormData();
+            data.append("file", pics);
+            data.append("upload_preset", "ftpropp");
+            data.append("cloud_name", "dfxdhqrqu");
+            fetch("https://api.cloudinary.com/v1_1/dfxdhqrqu/image/upload", {
+                method: "post",
+                body: data,
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    setIdCardFile(data.url.toString());
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        } else {
+            return setPicMessageIdCardFile("Choisissez une image valide");
+        }
+    };
+
+    const postDetailsPhotoFile = (pics) => {
+        setPicMessagePhotoFile(null);
+        if (pics.type === "image/jpeg" || pics.type === "image/png") {
+            const data = new FormData();
+            data.append("file", pics);
+            data.append("upload_preset", "ftpropp");
+            data.append("cloud_name", "dfxdhqrqu");
+            fetch("https://api.cloudinary.com/v1_1/dfxdhqrqu/image/upload", {
+                method: "post",
+                body: data,
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    console.log("data", data)
+                    setPhotoFile(data.url.toString());
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        } else {
+            return setPicMessagePhotoFile("Choisissez une image valide");
+        }
     };
 
     // S'assurer de libérer les ressources lorsque le composant est démonté
@@ -272,10 +327,20 @@ export const AdhesionForm = () => {
                                          className="max-h-full max-w-full object-contain"/>
                                 </div>
                             ) : (
-                                <p>Glissez votre carte d'identité ici ou cliquez pour sélectionner un fichier</p>
+                                <div
+                                    className="flex items-center space-x-2"> {/* Utilisez flex et space-x-2 pour aligner et espacer */}
+
+                                    <ImageIcon style={{height: "15px", width: "15px"}}/>
+                                    {/* Icône SVG */}
+                                    <p>Glissez votre carte d'identité ici ou cliquez pour sélectionner un fichier</p>
+                                </div>
                             )}
                             <input id="idCardPath" name="idCardPath" type="file" className="hidden"
-                                   onChange={(e) => handleFileChange(e, setIdCardFile)}/>
+                                   onChange={(e) => {
+                                       handleFileChange(e, setIdCardFile);
+                                       postDetailsIdCardFile(e.target.files[0]);
+                                   }}/>
+
                             {/* TODO : ajouter ici la fonction pour uploader */}
                         </div>
                     </div>
@@ -310,10 +375,19 @@ export const AdhesionForm = () => {
                                          className="max-h-full max-w-full object-contain"/>
                                 </div>
                             ) : (
-                                <p>Glissez votre photo ici ou cliquez pour sélectionner un fichier</p>
+                                <div
+                                    className="flex items-center space-x-2"> {/* Utilisez flex et space-x-2 pour aligner et espacer */}
+
+                                    <ImageIcon style={{height: "15px", width: "15px"}}/>
+                                    {/* Icône SVG */}
+                                    <p>Glissez votre photo ici ou cliquez pour sélectionner un fichier</p>
+                                </div>
                             )}
                             <input id="photoPath" name="photoPath" type="file" className="hidden"
-                                   onChange={(e) => handleFileChange(e, setPhotoFile)}/>
+                                   onChange={(e) => {
+                                       handleFileChange(e, setPhotoFile);
+                                       postDetailsPhotoFile(e.target.files[0]);
+                                   }}/>
                             {/* TODO : ajouter ici la fonction pour uploader */}
                         </div>
                     </div>

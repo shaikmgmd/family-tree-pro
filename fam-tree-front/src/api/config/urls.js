@@ -1,3 +1,5 @@
+import chat from "../../pages/chat/Chat";
+
 export const featureExampleUrl = {
     URL_EXAMPLE: '/example',
     URL_EXAMPLE_2: (urlParam) => `/example2/${urlParam}`,
@@ -33,4 +35,11 @@ export const roleUrl = {
 export const treeUrl = {
     GET_TREE_BY_USER_ID: (userId) => `/family-tree/${userId}`,
     ADD_USER_ON_TREE : (userId) => `/family-tree/${userId}`,
+}
+
+export const chatUrl = {
+    GET_USER_CHATS_WITH_MESSAGES: (userId) => `/chat/${userId}/chats`,
+    SEND_CHAT_MESSAGE : `/chat/send`,
+    GET_CHAT_MESSAGES :(chatId) => `/chat/${chatId}/messages`,
+    START_CHAT : `/chat/start`,
 }
