@@ -8,6 +8,10 @@ import PasswordChange from "../pages/authentication/PasswordChange";
 import Profile from "../pages/profile/Profile";
 import Presentation from "../pages/presentation/Presentation";
 import FamilyTree from "../pages/tree/FamilyTree";
+import ListUser from "../pages/familytreeuser/ListUser";
+import FamilyTreeUser from "../pages/familytreeuser/FamilyTreeUser";
+import PowerButton from "../components/button/PowerButton"
+
 
 const AppRoute = () => {
     return (
@@ -22,6 +26,8 @@ const AppRoute = () => {
             <Route path='/profile' element={<Profile />}/>
             <Route path='/presentation' element={<Presentation />}/>
             <Route path='/family-tree' element={<FamilyTree />}/>
+            <Route path='/user/all-except-current' element={<ListUser />}/>
+            <Route path='/family-tree/user/:userId' element={<FamilyTreeUser />}/>
         </Routes>
     )
 }

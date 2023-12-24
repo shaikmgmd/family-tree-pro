@@ -1,0 +1,11 @@
+.billyButton
+{
+    background-color: #08CC0A;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+.billyButton:hover {
+    background-color: #08CC0A;
+    opacity: 0.9;
+}

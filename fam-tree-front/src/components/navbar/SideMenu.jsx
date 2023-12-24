@@ -61,6 +61,13 @@ const SideMenu = () => {
                                   style={{color: location.pathname === '/family-tree' ? '#333' : 'white'}}>Arbre
                                 Généalogique</Link>
                         </Menu.Item>
+                        <Menu.Item key="/user/all-except-current"
+                                   icon={<UserOutlined
+                                       style={{color: location.pathname === '/user/all-except-current' ? selectedIconColor : 'white'}}/>}
+                                   style={{marginBottom: '15px'}}>
+                            <Link to="/user/all-except-current"
+                                  style={{color: location.pathname === '/user/all-except-current' ? '#333' : 'white'}}>Utilisateurs</Link>
+                        </Menu.Item>
                     </>
                 )}
 

@@ -12,14 +12,17 @@ import PowerButton from "../../components/button/PowerButton";
 import './ListUser.css';
 import {getTreeByUserIdAction} from "../../store/features/slices/tree";
 import {getTreeByUserId} from "../../api/feature/tree";
+import { useNavigate } from 'react-router-dom';
 
 const ListUser = () => {
     const {data, loading, hasMore} = useSelector((state) => state.familytreeuser);
     const dispatch = useDispatch();
+    const user = useSelector((state) => state.user.getConnectedUser);
     const [currentPage, setCurrentPage] = useState({
         page: 0,
         size: 2
     });
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(setLoading(true));
@@ -73,6 +76,11 @@ const ListUser = () => {
         </div>
     ) : null;
 
+    const handlePowerButtonClick = (userId) => {
+        //navigate(`/family-tree/user/${userId}`);
+        navigate(`/family-tree/user/${userId}`);
+    };
+
     return (
         <List
             className="demo-loadmore-list"
@@ -90,7 +98,7 @@ const ListUser = () => {
                             title={<div>{item.firstName}</div>}
                         />
                     </Skeleton>
-                    <PowerButton onClick={() => getTreeByUserId(item.id)} index={item.id} />
+                    <PowerButton onClick={() => handlePowerButtonClick(item.id)} index={item.id} />
                 </List.Item>
             )}
         />

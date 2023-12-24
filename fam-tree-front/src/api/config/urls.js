@@ -22,6 +22,7 @@ export const authUrl = {
 export const userUrl = {
     GET_CONNECTED_USER: `/user`,
     UPDATE_USER: `/user/update`,
+    GET_ALL_USERS_EXCEPT_CURRENT: (page, size) => `/user/all-except-current?page=${page}&pageSize=${size}`,
 }
 
 export const roleUrl = {

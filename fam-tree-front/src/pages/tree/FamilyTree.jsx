@@ -95,7 +95,7 @@ const FamilyTree = ({userId}) => {
                 <FTProLoader />
             ) : tree && (
                 <div id="treeWrapper" style={{ width: '100%', height: '100%' }}>
-                    <FamilyTreeComponent />
+                    <FamilyTreeComponent isOwner={true} />
                 </div>
 
             )}

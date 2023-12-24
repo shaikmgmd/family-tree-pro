@@ -4,7 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import './familyTreeComp.css'
 import {addMemberToTreeAction, getTreeByUserIdAction} from "../../store/features/slices/tree";
 
-const FamilyTreeComponent = () => {
+const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
     const treeContainer = useRef(null); // Création d'une référence au conteneur
     const treeDataFromRedux = useSelector((state) => state.tree.getUserTree.payload);
     const [treeInstance, setTreeInstance] = useState(null);
@@ -17,6 +17,10 @@ const FamilyTreeComponent = () => {
         //field_1: 'born',
         img_0: 'photo'
     };
+
+    useEffect(() => {
+        dispatch(getTreeByUserIdAction(familytree_id));
+    },[dispatch, familytree_id]);
 
     const addNode = (newNode) => {
         // Simuler un appel API pour ajouter un nœud
@@ -56,6 +60,7 @@ const FamilyTreeComponent = () => {
 
 
     useEffect(() => {
+        console.log("isOwner" + isOwner);
         if (treeContainer.current) {
             const tree = new FamilyTree(treeContainer.current, {
 
@@ -87,6 +92,7 @@ const FamilyTreeComponent = () => {
                     title: {}
                 },*/
                 editForm: {
+                    readOnly: !isOwner, // Si isOwner est false, alors readOnly est true
                     titleBinding: "name",
                     photoBinding: "photo",
                     addMoreBtn: 'Ajouter élement',
@@ -122,7 +128,7 @@ const FamilyTreeComponent = () => {
 
             setTreeInstance(tree);
         }
-    }, [treeContainer]);
+    }, [treeContainer, isOwner]);
 
     useEffect(() => {
         if (treeInstance) {
@@ -160,7 +166,7 @@ const FamilyTreeComponent = () => {
         }
     }, [treeInstance, data]);
 
-    return <div id="tree" ref={treeContainer}></div>; // Rendu du conteneur avec la référence
+    return <div id="tree" ref={treeContainer} className={isOwner ? 'owner' : 'viewer'}></div>; // Rendu du conteneur avec la référence
 };
 
 export default FamilyTreeComponent;
