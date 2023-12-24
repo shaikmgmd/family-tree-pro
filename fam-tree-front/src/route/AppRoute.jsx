@@ -8,20 +8,22 @@ import PasswordChange from "../pages/authentication/PasswordChange";
 import Profile from "../pages/profile/Profile";
 import Presentation from "../pages/presentation/Presentation";
 import FamilyTree from "../pages/tree/FamilyTree";
+import ChatList from "../pages/chat/ChatList";
 
 const AppRoute = () => {
     return (
         <Routes>
-            <Route path='/' element={<Home />}/>
-            <Route path='/home' element={<Home />}/>
-            <Route path='/adhesion/dashboard' element={<AdhesionDashboard />}/>
-            <Route path='/adhesion/apply' element={<AdhesionForm />}/>
-            <Route path='/login' element={<LoginPage />}/>
-            <Route path='/logout' element={<LogoutPage />}/>
-            <Route path='/password-change' element={<PasswordChange />}/>
-            <Route path='/profile' element={<Profile />}/>
-            <Route path='/presentation' element={<Presentation />}/>
-            <Route path='/family-tree' element={<FamilyTree />}/>
+            <Route path='/' element={<Home/>}/>
+            <Route path='/home' element={<Home/>}/>
+            <Route path='/adhesion/dashboard' element={<AdhesionDashboard/>}/>
+            <Route path='/adhesion/apply' element={<AdhesionForm/>}/>
+            <Route path='/login' element={<LoginPage/>}/>
+            <Route path='/logout' element={<LogoutPage/>}/>
+            <Route path='/password-change' element={<PasswordChange/>}/>
+            <Route path='/profile' element={<Profile/>}/>
+            <Route path='/presentation' element={<Presentation/>}/>
+            <Route path='/family-tree' element={<FamilyTree/>}/>
+            <Route path='/chat-list' element={<ChatList/>}/>
         </Routes>
     )
 }

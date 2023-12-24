@@ -42,9 +42,13 @@
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
     "react-select": "^5.7.1",
+    "react-stomp": "^5.1.0",
     "react-svg": "^16.1.28",
     "react-toastify": "^9.1.3",
     "reactstrap": "^9.1.6",
+    "sockjs": "^0.3.24",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "web-vitals": "^2.1.0",
     "yup": "^1.3.2"
   },
