@@ -1,2 +1,8 @@
-package api.model.chat;public class Status {
+package api.model.chat;
+
+public enum Status {
+    JOIN,
+    MESSAGE,
+    LEAVE
+
 }
