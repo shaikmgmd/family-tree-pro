@@ -10,32 +10,139 @@ import {
 import familyTree from "./FamilyTree";
 import {addExistingUserOnTree} from "../../api/feature/tree";
 
-const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
+const FamilyTreeComponent = ({familytree_id, isOwner}) => {
     const treeContainer = useRef(null); // Création d'une référence au conteneur
     const treeDataFromRedux = useSelector((state) => state.tree.getUserTree.payload);
+    const userId = useSelector((state) => state.user.getConnectedUser.payload.id);
     const [treeInstance, setTreeInstance] = useState(null);
     const dispatch = useDispatch();
+
 
     const [data, setData] = useState([]);
 
     const [modalMode, setModalMode] = useState("edit")
 
     const myRef = useRef();
+    const [treeOptions, setTreeOptions] = useState({
+        mouseScroll: FamilyTree.none,
+        mode: 'light',
+        //miniMap: true,
+        template: 'hugo',
+        roots: [],
+        nodeMenu: {
+            edit: {text: 'Modifier'},
+            details: {text: 'Détails'},
+        },
+        nodeTreeMenu: true,
+        nodeBinding: {
+            field_0: 'name',
+            //field_1: 'born',
+            img_0: 'photo'
+        },
+        toolbar: {
+            layout: false,
+            zoom: true,
+            fit: true,
+            expandAll: false,
+            fullScreen: false
+        },
+        lazyLoading: true,
+        nodeContextMenu: {
+            myMenuItem: {
+                text: "My node menu Item", onClick: () => {
+                }
+            },
+        },
+        filterBy: ['name', 'gender', 'country'],
+        /*filterBy: {
+            name: { 'femme 2': { checked: false, text: 'My text 2'} },
+            title: {}
+        },*/
+        editForm: {
+            readOnly: !isOwner, // Si isOwner est false, alors readOnly est true
+            titleBinding: "name",
+            photoBinding: "photo",
+            addMoreBtn: 'Ajouter élement',
+            addMore: 'Ajouter elements en plus',
+            addMoreFieldName: 'Element name',
+            saveAndCloseBtn: 'Confirmer',
+            generateElementsFromFields: false,
+            buttons: {
+                addNewMember: {
+                    icon: 'Add Member',
+                    text: 'addNewMember',
+                },
+                addExistingMember: {
+                    icon: 'Add existing member',
+                    text: 'addExistingMember',
+                },
+                edit: {
+                    icon: 'Edit',
+                    text: 'edit',
+                },
 
-    const nodeBinding = {
-        field_0: 'name',
-        //field_1: 'born',
-        img_0: 'photo'
+            },
+            elements:
+                (modalMode === "newMember") || (modalMode === "edit") ? (
+                    [
+                        {type: 'textbox', label: 'Full Name', binding: 'name'},
+                        {type: 'textbox', label: 'Email Address', binding: 'email'},
+                        [
+                            {type: 'textbox', label: 'Phone', binding: 'phone',},
+                            {type: 'date', label: 'Date Of Birth', binding: 'born'}
+                        ],
+                        [
+                            {
+                                type: 'select',
+                                options: [{value: 'bg', text: 'Bulgaria'}, {value: 'ru', text: 'Russia'}, {
+                                    value: 'gr',
+                                    text: 'Greece'
+                                }],
+                                label: 'Country',
+                                binding: 'country'
+                            },
+                            {type: 'textbox', label: 'City', binding: 'city'},
+                        ],
+                        {type: 'textbox', label: 'Photo Url', binding: 'photo', btn: 'Upload'},
+
+                    ]) : (
+                    [
+                        {type: 'textbox', label: 'Email Address', binding: 'email'},
+                    ])
+        },
+        nodes: data
+    });
+
+    useEffect(() => {
+        const newRoots = findUserAndParentRoots(data, userId);
+        setTreeOptions(currentOptions => ({
+            ...currentOptions,
+            roots: newRoots,
+        }));
+    }, [data, userId]);
+
+    const findUserAndParentRoots = (data, userId) => {
+        let roots = [userId]; // Commencez avec le userId connecté
+
+        // Trouvez les parents du userId connecté
+        const userNode = data.find(node => node.id === userId);
+        if (userNode) {
+            if (userNode.mid) roots.push(userNode.mid);
+            if (userNode.fid) roots.push(userNode.fid);
+        }
+
+        return roots;
     };
+
 
     const treeFetcher = async () => {
         await dispatch(getTreeByUserIdAction(familytree_id));
     }
     useEffect(() => {
-        if(familytree_id) {
+        if (familytree_id) {
             treeFetcher();
         }
-    },[dispatch, familytree_id]);
+    }, [dispatch, familytree_id]);
 
     const addNode = (newNode) => {
         // Simuler un appel API pour ajouter un nœud
@@ -53,7 +160,7 @@ const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
     const editNode = (nodeId, updatedNode) => {
         handleAddMember({updatedNode}).then(async r => {
             console.log("Response =>", r);
-            await dispatch(getTreeByUserIdAction(1));
+            await dispatch(getTreeByUserIdAction(userId));
         });
         setTimeout(() => {
             setData(currentData =>
@@ -61,7 +168,6 @@ const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
             );
         }, 1000); // Délai simulé de 1 seconde
     };
-
 
     const editExistingNode = (nodeId, email) => {
         // Simuler un appel API pour éditer un nœud
@@ -75,7 +181,6 @@ const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
             );
         }, 1000); // Délai simulé de 1 seconde
     };
-
 
     const deleteNode = (nodeId) => {
         // Simuler un appel API pour supprimer un nœud
@@ -95,92 +200,7 @@ const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
     useEffect(() => {
         if (treeContainer.current) {
 
-            const tree = new FamilyTree(treeContainer.current, {
-
-                mouseScroll: FamilyTree.none,
-                mode: 'light',
-                //miniMap: true,
-                template: 'hugo',
-                roots: [],
-                nodeMenu: {
-                    edit: {text: 'Modifier'},
-                    details: {text: 'Détails'},
-                },
-                nodeTreeMenu: true,
-                nodeBinding: nodeBinding,
-                toolbar: {
-                    layout: false,
-                    zoom: true,
-                    fit: true,
-                    expandAll: false,
-                    fullScreen: false
-                },
-                lazyLoading: true,
-                nodeContextMenu: {
-                    myMenuItem: {
-                        text: "My node menu Item", onClick: () => {
-                        }
-                    },
-                },
-                filterBy: ['name', 'gender', 'country'],
-                /*filterBy: {
-                    name: { 'femme 2': { checked: false, text: 'My text 2'} },
-                    title: {}
-                },*/
-                editForm: {
-                    readOnly: !isOwner, // Si isOwner est false, alors readOnly est true
-                    titleBinding: "name",
-                    photoBinding: "photo",
-                    addMoreBtn: 'Ajouter élement',
-                    addMore: 'Ajouter elements en plus',
-                    addMoreFieldName: 'Element name',
-                    saveAndCloseBtn: 'Confirmer',
-                    generateElementsFromFields: false,
-                    buttons: {
-                        addNewMember: {
-                            icon: 'Add Member',
-                            text: 'addNewMember',
-                        },
-                        addExistingMember: {
-                            icon: 'Add existing member',
-                            text: 'addExistingMember',
-                        },
-                        edit: {
-                            icon: 'Edit',
-                            text: 'edit',
-                        },
-
-                    },
-                    elements:
-                        (modalMode === "newMember") || (modalMode === "edit") ? (
-                            [
-                                {type: 'textbox', label: 'Full Name', binding: 'name'},
-                                {type: 'textbox', label: 'Email Address', binding: 'email'},
-                                [
-                                    {type: 'textbox', label: 'Phone', binding: 'phone',},
-                                    {type: 'date', label: 'Date Of Birth', binding: 'born'}
-                                ],
-                                [
-                                    {
-                                        type: 'select',
-                                        options: [{value: 'bg', text: 'Bulgaria'}, {value: 'ru', text: 'Russia'}, {
-                                            value: 'gr',
-                                            text: 'Greece'
-                                        }],
-                                        label: 'Country',
-                                        binding: 'country'
-                                    },
-                                    {type: 'textbox', label: 'City', binding: 'city'},
-                                ],
-                                {type: 'textbox', label: 'Photo Url', binding: 'photo', btn: 'Upload'},
-
-                            ]) : (
-                            [
-                                {type: 'textbox', label: 'Email Address', binding: 'email'},
-                            ])
-                },
-                nodes: data
-            });
+            const tree = new FamilyTree(treeContainer.current, treeOptions);
 
             setTreeInstance(tree);
         }
@@ -247,10 +267,9 @@ const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
             });*/
             treeInstance.on('update', (nodeId, node) => {
                 console.log('edit node', node);
-                if(modalMode === "newMember" || modalMode === "edit") {
+                if (modalMode === "newMember" || modalMode === "edit") {
                     editNode(nodeId, node);
-                }
-                else {
+                } else {
                     editNode(nodeId, node);
                     editExistingNode(nodeId, node.updateNodesData[0].email);
                     setModalMode("edit")
@@ -264,7 +283,6 @@ const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
     }, [treeInstance, modalMode]);
 
 
-
     useEffect(() => {
         if (treeDataFromRedux) {
             setData([...treeDataFromRedux]); // Créez une copie des données
@@ -273,9 +291,13 @@ const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
 
     useEffect(() => {
         if (treeInstance && data.length > 0) {
-            treeInstance.load(data);
+            try {
+                treeInstance.load(data);
+            } catch (error) {
+                console.error('Error initializing FamilyTree:', error);
+            }
         }
-    }, [treeInstance, data]);
+    }, [treeInstance, data, userId]);
 
     return <div id="tree" ref={treeContainer} className={isOwner ? 'owner' : 'viewer'}></div>;
 };
