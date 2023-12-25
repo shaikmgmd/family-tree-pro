@@ -37,6 +37,10 @@ export const roleUrl = {
 export const treeUrl = {
     GET_TREE_BY_USER_ID: (userId) => `/family-tree/${userId}`,
     ADD_USER_ON_TREE : (userId) => `/family-tree/${userId}`,
+    ADD_EXISTING_USER_ON_TREE : (userId) => `/relationship-confirmation/${userId}`,
+    CONFIRM_RELATIONSHIP : (confirmation) => `/relationship-confirmation/accept/${confirmation}`,
+    REFUSE_RELATIONSHIP : (confirmation) => `/relationship-confirmation/refuse/${confirmation}`,
+    // GET_TREE_BY_EXISTING_USER_ID: (userId) => ``
 }
 
 export const chatUrl = {
