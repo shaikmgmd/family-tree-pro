@@ -25,13 +25,13 @@ INSERT INTO chat (user_id_1, user_id_2) VALUES (2, 3);
 
 -- Insertion de messages fictifs dans la table ChatMessage
 -- Chat entre l'utilisateur 1 et 2
-INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('User1', 'User2', 'Salut, comment ça va ?', 1);
-INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('User2', 'User1', 'Bien, et toi ?', 1);
+INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('Mougamadou', 'Batcha', 'Salut, comment ça va ?', 1);
+INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('Batcha', 'Mougamadou', 'Bien, et toi ?', 1);
 
 -- Chat entre l'utilisateur 1 et 3
-INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('User1', 'User3', 'Hey, prêt pour demain ?', 2);
-INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('User3', 'User1', 'Tout à fait!', 2);
+INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('Mougamadou', 'Tayo', 'Hey, prêt pour demain ?', 2);
+INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('Tayo', 'Mougamadou', 'Tout à fait!', 2);
 
 -- Chat entre l'utilisateur 2 et 3
-INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('User2', 'User3', 'As-tu le rapport ?', 3);
-INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('User3', 'User2', 'Je te lenvoie dans 5 minutes.', 3);
+INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('Batcha', 'Tayo', 'As-tu le rapport ?', 3);
+INSERT INTO chat_message (sender_name, receiver_name, message, chat_id) VALUES ('Tayo', 'Batcha', 'Je te lenvoie dans 5 minutes.', 3);
