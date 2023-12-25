@@ -5,6 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5fa6533-db79-460f-9073-dbaf731ebe6f" name="Changes" comment="">
+<<<<<<< Updated upstream
       <change afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/config/WebSocketConfig.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/chat/ChatController.java" afterDir="false" />
@@ -89,6 +90,9 @@
       <change beforePath="$PROJECT_DIR$/src/store/features/slices/tree/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/features/slices/tree/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/features/slices/user/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/features/slices/user/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/rootReducer.js" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V4__edit_personne.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V5__edit_personne.sql" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,7 +146,11 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+<<<<<<< Updated upstream
     "git-widget-placeholder": "Merging fam-tree-add-person",
+=======
+    "git-widget-placeholder": "develop",
+>>>>>>> Stashed changes
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/CYTech Student/IdeaProjects/family-tree-pro/fam-tree-front",
     "list.type.of.created.stylesheet": "CSS",
@@ -152,7 +160,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2023.3.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "ts.external.directory.path": "H:\\Programs\\IntelliJ IDEA 2023.2.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>

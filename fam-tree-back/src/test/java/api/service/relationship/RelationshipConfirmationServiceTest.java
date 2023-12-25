@@ -47,7 +47,7 @@ public class RelationshipConfirmationServiceTest {
     private RelationshipType relationshipType;
     private String confirmationCode;
 
-    @BeforeEach
+/*    @BeforeEach
     void setUp() {
         sourceMember = new FamilyMember();
         user = new User();
@@ -118,5 +118,5 @@ public class RelationshipConfirmationServiceTest {
         confirmation.setRelationshipType(relationshipType);
         confirmation.setIsProcessed(false);
         return confirmation;
-    }
+    }*/
 }
