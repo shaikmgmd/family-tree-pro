@@ -10,7 +10,7 @@ import api.repository.tree.FamilyMemberRepository;
 import api.repository.tree.FamilyTreeRepository;
 import api.repository.tree.RelationshipRepository;
 import api.repository.user.UserRepository;
-import api.service.relationship.RelationshipConfirmationService;
+//import api.service.relationship.RelationshipConfirmationService;
 import api.service.relationship.RelationshipService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;

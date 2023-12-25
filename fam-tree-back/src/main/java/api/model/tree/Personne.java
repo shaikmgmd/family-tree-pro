@@ -25,4 +25,6 @@ public class Personne {
     private String city;
     private String country;
     private Long treeId; // Ajouté pour lier à un arbre spécifique
+    private String address;
+    private Boolean is_registered;
 }

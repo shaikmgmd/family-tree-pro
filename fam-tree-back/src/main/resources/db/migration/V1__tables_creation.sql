@@ -79,8 +79,8 @@ CREATE TABLE IF NOT EXISTS relationship_confirmation (
     expiry_date TIMESTAMP WITHOUT TIME ZONE,
     is_confirmed BOOLEAN DEFAULT FALSE,
     is_processed BOOLEAN DEFAULT FALSE,
-    CONSTRAINT fk_relationship_confirmation_source_member FOREIGN KEY (source_member_id) REFERENCES family_member (id),
-    CONSTRAINT fk_relationship_confirmation_target_member FOREIGN KEY (target_member_id) REFERENCES family_member (id)
+    CONSTRAINT fk_relationship_confirmation_source_member FOREIGN KEY (source_member_id) REFERENCES ftpro_user (id),
+    CONSTRAINT fk_relationship_confirmation_target_member FOREIGN KEY (target_member_id) REFERENCES ftpro_user (id)
     );
 
 -- Création de la table relationship
