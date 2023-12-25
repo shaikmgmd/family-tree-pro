@@ -15,7 +15,7 @@ export const LogoutPage = () => {
     useEffect(() => {
         localStorage.removeItem("userData");
         // TODO : logout();
-        /*toast.success("Vous êtes déconnecté avec succès!", {
+        /*toast.success("Vous êtes déconnecté avec succès !", {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,

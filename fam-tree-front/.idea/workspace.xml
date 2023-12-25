@@ -5,29 +5,90 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5fa6533-db79-460f-9073-dbaf731ebe6f" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/EmailDTO.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/relationship/RelationshipConfirmationResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V4__edit_personne.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/pages/confirm-relationship/ConfirmRelationship.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/tree/FamilyTreeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/tree/FamilyTreeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/tree/confirmation/RelationshipConfirmationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/tree/confirmation/RelationshipConfirmationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/Personne.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/Personne.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/relationship/RelationshipConfirmation.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/relationship/RelationshipConfirmation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/PersonneRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/PersonneRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/RelationshipConfirmationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/RelationshipConfirmationRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/mail/MailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/mail/MailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/relationship/RelationshipConfirmationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/relationship/RelationshipConfirmationService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/config/WebSocketConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/chat/ChatController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/chat/Chat.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/chat/ChatMessage.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/chat/ChatMessageDAO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/chat/ChatMessageRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/chat/ChatRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/chat/ChatService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V4__chat_features.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/test/java/api/service/adhesion/AdhesionServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/test/java/api/service/auth/AuthServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/test/java/api/service/mail/MailServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/test/java/api/service/relationship/RelationshipConfirmationServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/test/java/api/service/relationship/RelationshipServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/test/java/api/service/role/RoleServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/test/java/api/service/tree/FamilyTreeServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/test/java/api/service/tree/PersonneServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/test/java/api/service/user/UserServiceTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/test/java/api/utils/CodeUtilsTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/public/tree_122921.ico" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/api/feature/chat/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/adhesionForm/image.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/login/secure_login.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/presentation/analytics.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/presentation/collaboration.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/presentation/connection.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/presentation/family.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/presentation/memories.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/presentation/personalization.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/assets/ui/svg/presentation/profiles.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/button/ErrorBornDateButton.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/button/PowerButton.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/button/PowerButton.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/chat/Chat.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/chat/ChatList.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/familytreeuser/FamilyTreeUser.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/familytreeuser/ListUser.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/familytreeuser/ListUser.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/tree/ErrorBornDate.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/features/slices/chat/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/store/features/slices/familytreeuser/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/user/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/user/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/FamilyMember.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/FamilyMember.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/UserUpdate.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/UserUpdate.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/RelationshipRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/RelationshipRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/user/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/user/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/JwtAuthorizationFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/security/JwtAuthorizationFilter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/auth/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/auth/AuthService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/relationship/RelationshipService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/relationship/RelationshipService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/FamilyTreeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/FamilyTreeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V1__tables_creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V1__tables_creation.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/PersonneService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/PersonneService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/user/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/user/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/utils/CodeUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/utils/CodeUtils.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V2__data_init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V2__data_init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/test/java/com/familytree/famtree/FamtreeApplicationTests.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/config/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/config/urls.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/api/feature/tree/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/feature/tree/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/feature/user/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/feature/user/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/navbar/SideMenu.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/wrapper/MainWrapper.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/wrapper/MainWrapper.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionForm.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/adhesion/AdhesionTable.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/authentication/LoginPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/authentication/LoginPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/authentication/LogoutPage.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/authentication/LogoutPage.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/authentication/PasswordChange.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/authentication/PasswordChange.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/home/Home.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/home/Home.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/presentation/Presentation.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/presentation/Presentation.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/profile/Profile.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/profile/Profile.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTreeComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTreeComponent.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/tree/familyTreeComp.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/familyTreeComp.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/route/AppRoute.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/route/AppRoute.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/features/slices/tree/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/features/slices/tree/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/features/slices/user/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/features/slices/user/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/rootReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/rootReducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,6 +112,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -78,7 +142,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "fam-tree-add-person",
+    "git-widget-placeholder": "Merging fam-tree-add-person",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/CYTech Student/IdeaProjects/family-tree-pro/fam-tree-front",
     "list.type.of.created.stylesheet": "CSS",
@@ -105,8 +169,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\src\assets\ui\svg\adhesionForm" />
+      <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\src\assets\ui\svg\login" />
+      <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\src\assets\ui\svg\presentation" />
+      <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\public" />
       <recent name="H:\Programs\Projects\family-tree-pro\fam-tree-front\src\pages\tree\FamilyTreeJS" />
-      <recent name="H:\Programs\Projects\family-tree-pro\fam-tree-front\src\assets\ui\svg\login" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -151,7 +218,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>

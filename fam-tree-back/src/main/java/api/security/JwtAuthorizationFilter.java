@@ -46,6 +46,7 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             }
             System.out.println("token : " + accessToken);
             Claims claims = jwtUtil.resolveClaims(request);
+            System.out.println("claims : " + claims);
 
             if (claims != null & jwtUtil.validateClaims(claims)) {
                 String privateCode = claims.getSubject();

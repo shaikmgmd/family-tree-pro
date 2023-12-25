@@ -1,5 +1,5 @@
-import React from 'react';
-import {Table, Button, Space} from 'antd';
+import React, {useState} from 'react';
+import {Table, Button, Space, Modal} from 'antd';
 import {CheckOutlined, CloseOutlined} from '@ant-design/icons';
 import {useDispatch} from 'react-redux';
 import {
@@ -12,13 +12,25 @@ import {toast} from "react-toastify";
 
 const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
     const dispatch = useDispatch();
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [currentImage, setCurrentImage] = useState('');
+
+    const showModal = (imageUrl) => {
+        setCurrentImage(imageUrl);
+        setIsModalVisible(true);
+    };
+
+    const handleCancel = () => {
+        setIsModalVisible(false);
+    };
+
 
     const columns = [
         {
             title: 'Numéro de sécurité sociale',
             dataIndex: 'socialSecurityNumber',
-            showSorterTooltip: true,  // Ajouté pour le tri
-            sorter: (a, b) => a.socialSecurityNumber.localeCompare(b.socialSecurityNumber),  // Exemple de tri
+            showSorterTooltip: true,
+            sorter: (a, b) => a.socialSecurityNumber.localeCompare(b.socialSecurityNumber),
         },
         {
             title: 'Nom',
@@ -51,6 +63,24 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
             showSorterTooltip: true,
             sorter: (a, b) => a.email.localeCompare(b.email),
         },
+        {
+            title: 'CNI',
+            dataIndex: 'cni',
+            render: (text, record) => (
+                <Space size="middle">
+                    <Button onClick={() => showModal(record.idCardPath)}>Voir CNI</Button>
+                </Space>
+            ),
+        },
+        {
+            title: 'Photo',
+            dataIndex: 'photo',
+            render: (text, record) => (
+                <Space size="middle">
+                    <Button onClick={() => showModal(record.photoPath)}>Voir Photo</Button>
+                </Space>
+            ),
+        },
     ];
 
     if (showActions) {
@@ -63,9 +93,8 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                         icon={<CheckOutlined/>}
                         onClick={() => {
                             dispatch(approveAdhesionAction(record.id))
-                                .then(() => {
-                                    // Une fois l'adhésion approuvée, rechargez les données.
-                                    dispatch(getApprovedAdhesionAction());
+                                .then(async () => {
+                                    await dispatch(getApprovedAdhesionAction());
                                 });
                         }}
                     >
@@ -76,9 +105,9 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                         icon={<CloseOutlined/>}
                         onClick={() => {
                             dispatch(rejectAdhesionAction(record.id))
-                                .then(() => {
-                                    // Une fois l'adhésion refusée, rechargez les données.
-                                    dispatch(getRejectedAdhesionAction());
+                                .then(async () => {
+                                    await dispatch(getRejectedAdhesionAction());
+                                    await dispatch(getApprovedAdhesionAction());
                                 });
                         }}
                     >
@@ -87,6 +116,7 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                 </Space>
             ),
         });
+
     }
     if (showAdminAction) {
         columns.push({
@@ -96,8 +126,8 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                 <Space size="middle">
                     <Button
                         icon={<CheckOutlined/>}
-                        onClick={() => {
-                            dispatch(addNewAdminAction(record.id))
+                        onClick={async () => {
+                            await dispatch(addNewAdminAction(record.id))
                                 .then(() => {
                                     toast.success("Nouveau admin ajouté!", {
                                         position: "top-right",
@@ -116,8 +146,8 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                     <Button
                         danger
                         icon={<CloseOutlined/>}
-                        onClick={() => {
-                            dispatch(removeAdminAction(record.id))
+                        onClick={async () => {
+                            await dispatch(removeAdminAction(record.id))
                                 .then(() => {
                                     toast.success("Nouveau admin retiré!", {
                                         position: "top-right",
@@ -138,7 +168,16 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
         });
     }
 
-    return <Table columns={columns} dataSource={data}/>;
+    return (<div>
+        <Modal
+            title="Aperçu de l'image"
+            visible={isModalVisible}
+            onCancel={handleCancel}
+            footer={null}
+        >
+            <img alt="Aperçu" src={currentImage} style={{width: '100%'}}/>
+        </Modal>
+        <Table columns={columns} dataSource={data}/></div>);
 };
 
 export default AdhesionTable;

@@ -10,7 +10,6 @@ export const getTreeByUserIdAction = createAsyncThunk('get-tree-by-user-id', asy
 });
 
 export const addMemberToTreeAction = createAsyncThunk('add-member-to-tree', async ({data}) => {
-    console.log(data);
     const response = await addUserOnTree(3, data);
     return response.data.content;
 });
@@ -41,7 +40,7 @@ const initialState = {
 }
 
 const treeStore = createSlice({
-    name: 'role',
+    name: 'tree',
     initialState,
     reducers: {},
     extraReducers(builder) {

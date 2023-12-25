@@ -13,7 +13,7 @@ const Home = () => {
 
             <Button
                 variant="contained"
-                color="primary"
+                style={{backgroundColor: "#4CC425"}}
                 className="text-white"
             >
                 <Link to={'/adhesion/apply'}>Faire une demande d'adhésion</Link>
