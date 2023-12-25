@@ -5,20 +5,29 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d5fa6533-db79-460f-9073-dbaf731ebe6f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../FamtreeApplication.png" beforeDir="false" afterPath="$PROJECT_DIR$/../FamtreeApplication.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/fam-tree-front.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/fam-tree-front.iml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/EmailDTO.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/relationship/RelationshipConfirmationResponse.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V4__edit_personne.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/pages/confirm-relationship/ConfirmRelationship.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/tree/FamilyTreeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/tree/FamilyTreeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/tree/confirmation/RelationshipConfirmationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/controller/tree/confirmation/RelationshipConfirmationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/Personne.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/Personne.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/relationship/RelationshipConfirmation.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/tree/relationship/RelationshipConfirmation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/model/user/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/PersonneRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/PersonneRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/RelationshipConfirmationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/repository/tree/RelationshipConfirmationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/mail/MailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/mail/MailService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/relationship/RelationshipConfirmationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/relationship/RelationshipConfirmationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/FamilyTreeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/java/api/service/tree/FamilyTreeService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V1__tables_creation.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V1__tables_creation.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V2__data_init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../fam-tree-back/src/main/resources/db/migration/V2__data_init.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/config/urls.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/config/urls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/api/feature/tree/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/api/feature/tree/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTree.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTreeComponent.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTreeComponent.jsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/tree/FamilyTreeJS/familytree.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/FamilyTreeJS/familytree.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/tree/familyTreeComp.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/tree/familyTreeComp.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/route/AppRoute.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/route/AppRoute.jsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/features/slices/tree/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/features/slices/tree/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/RelationshipTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/RelationshipTypes.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,8 +43,8 @@
         <option value="com.haulmont.rcb.useInitial" />
         <option value="com.haulmont.rcb.README" />
         <option value="JavaScript File" />
-        <option value="JSX File" />
         <option value="CSS File" />
+        <option value="JSX File" />
       </list>
     </option>
   </component>
@@ -63,14 +72,15 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Node.js.FamilyTreeComponent.jsx.executor": "Run",
     "ReactCreateComponentLastSelected": "arrowFunctionComponent",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "refonte-arbre-bdd-back-front",
+    "git-widget-placeholder": "fam-tree-add-person",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "H:/Programs/Projects/family-tree-pro/fam-tree-front",
+    "last_opened_file_path": "C:/Users/CYTech Student/IdeaProjects/family-tree-pro/fam-tree-front",
     "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -78,7 +88,7 @@
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "preferences.pluginManager",
-    "ts.external.directory.path": "H:\\Programs\\IntelliJ IDEA 2023.2.2\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2023.3.1\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -125,6 +135,11 @@
       <workItem from="1702484319017" duration="2866000" />
       <workItem from="1702493426731" duration="7001000" />
       <workItem from="1702676809246" duration="3188000" />
+      <workItem from="1703085899968" duration="28761000" />
+      <workItem from="1703175495173" duration="11585000" />
+      <workItem from="1703252360822" duration="23299000" />
+      <workItem from="1703352840736" duration="29897000" />
+      <workItem from="1703509127552" duration="290000" />
     </task>
     <servers />
   </component>

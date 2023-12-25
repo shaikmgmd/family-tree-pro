@@ -2,7 +2,13 @@ import React, {useEffect, useRef, useState} from 'react';
 import FamilyTree from '@balkangraph/familytree.js';
 import {useDispatch, useSelector} from "react-redux";
 import './familyTreeComp.css'
-import {addMemberToTreeAction, getTreeByUserIdAction} from "../../store/features/slices/tree";
+import {
+    addExistingMemberToTreeAction,
+    addMemberToTreeAction,
+    getTreeByUserIdAction
+} from "../../store/features/slices/tree";
+import familyTree from "./FamilyTree";
+import {addExistingUserOnTree} from "../../api/feature/tree";
 
 const FamilyTreeComponent = () => {
     const treeContainer = useRef(null); // Création d'une référence au conteneur
@@ -11,6 +17,10 @@ const FamilyTreeComponent = () => {
     const dispatch = useDispatch();
 
     const [data, setData] = useState([]);
+
+    const [modalMode, setModalMode] = useState("edit")
+
+    const myRef = useRef();
 
     const nodeBinding = {
         field_0: 'name',
@@ -25,14 +35,13 @@ const FamilyTreeComponent = () => {
         }, 1000); // Délai simulé de 1 seconde
     };
 
-    function editHandler(nodeId) {
-        console.log("nodeId",nodeId);
-        var nodeData = treeInstance.current.get(nodeId);
-        console.log("nodeData",nodeData);
-    }
+    // function editHandler(nodeId) {
+    //     console.log("nodeId",nodeId);
+    //     var nodeData = treeInstance.current.get(nodeId);
+    //     console.log("nodeData",nodeData);
+    // }
 
     const editNode = (nodeId, updatedNode) => {
-        // Simuler un appel API pour éditer un nœud
         handleAddMember({updatedNode}).then(async r => {
             console.log("Response =>", r);
             await dispatch(getTreeByUserIdAction(1));
@@ -44,6 +53,21 @@ const FamilyTreeComponent = () => {
         }, 1000); // Délai simulé de 1 seconde
     };
 
+
+    const editExistingNode = (nodeId, email) => {
+        // Simuler un appel API pour éditer un nœud
+        handleExistingMember({email}).then(async r => {
+            console.log("Response =>", r);
+            await dispatch(getTreeByUserIdAction(1));
+        });
+        setTimeout(() => {
+            setData(currentData =>
+                currentData.map(node => node.id === nodeId ? email : node)
+            );
+        }, 1000); // Délai simulé de 1 seconde
+    };
+
+
     const deleteNode = (nodeId) => {
         // Simuler un appel API pour supprimer un nœud
         setTimeout(() => {
@@ -54,9 +78,15 @@ const FamilyTreeComponent = () => {
     };
 
 
+    useEffect(() => {
+        // Log the current state of 'data' to the console whenever it changes.
+        console.log('Current data:', data);
+    }, [data]);
 
     useEffect(() => {
+
         if (treeContainer.current) {
+
             const tree = new FamilyTree(treeContainer.current, {
 
                 mouseScroll: FamilyTree.none,
@@ -79,7 +109,10 @@ const FamilyTreeComponent = () => {
                 },
                 lazyLoading: true,
                 nodeContextMenu: {
-                    myMenuItem: {text:"My node menu Item", onClick: () => {}},
+                    myMenuItem: {
+                        text: "My node menu Item", onClick: () => {
+                        }
+                    },
                 },
                 filterBy: ['name', 'gender', 'country'],
                 /*filterBy: {
@@ -94,52 +127,69 @@ const FamilyTreeComponent = () => {
                     addMoreFieldName: 'Element name',
                     saveAndCloseBtn: 'Confirmer',
                     generateElementsFromFields: false,
-                    elements: [
-                        {type: 'textbox', label: 'Full Name', binding: 'name'},
-                        {type: 'textbox', label: 'Email Address', binding: 'email'},
-                        [
-                            {type: 'textbox', label: 'Phone', binding: 'phone'},
-                            {type: 'date', label: 'Date Of Birth', binding: 'born'}
-                        ],
-                        [
-                            {
-                                type: 'select',
-                                options: [{value: 'bg', text: 'Bulgaria'}, {value: 'ru', text: 'Russia'}, {
-                                    value: 'gr',
-                                    text: 'Greece'
-                                }],
-                                label: 'Country',
-                                binding: 'country'
-                            },
-                            {type: 'textbox', label: 'City', binding: 'city'},
-                        ],
-                        {type: 'textbox', label: 'Photo Url', binding: 'photo', btn: 'Upload'},
+                    buttons: {
+                        addNewMember: {
+                            icon: 'Add Member',
+                            text: 'addNewMember',
+                        },
+                        addExistingMember: {
+                            icon: 'Add existing member',
+                            text: 'addExistingMember',
+                        },
+                        edit: {
+                            icon: 'Edit',
+                            text: 'edit',
+                        },
 
-                    ]
+                    },
+                    elements:
+                        (modalMode === "newMember") || (modalMode === "edit") ? (
+                            [
+                                {type: 'textbox', label: 'Full Name', binding: 'name'},
+                                {type: 'textbox', label: 'Email Address', binding: 'email'},
+                                [
+                                    {type: 'textbox', label: 'Phone', binding: 'phone',},
+                                    {type: 'date', label: 'Date Of Birth', binding: 'born'}
+                                ],
+                                [
+                                    {
+                                        type: 'select',
+                                        options: [{value: 'bg', text: 'Bulgaria'}, {value: 'ru', text: 'Russia'}, {
+                                            value: 'gr',
+                                            text: 'Greece'
+                                        }],
+                                        label: 'Country',
+                                        binding: 'country'
+                                    },
+                                    {type: 'textbox', label: 'City', binding: 'city'},
+                                ],
+                                {type: 'textbox', label: 'Photo Url', binding: 'photo', btn: 'Upload'},
+
+                            ]) : (
+                            [
+                                {type: 'textbox', label: 'Email Address', binding: 'email'},
+                            ])
                 },
                 nodes: data
             });
 
             setTreeInstance(tree);
         }
-    }, [treeContainer]);
 
-    useEffect(() => {
+    }, [treeContainer, modalMode]);
+
+
+    function editHandler(nodeId) {
         if (treeInstance) {
-            /*treeInstance.on('nodeAdd', (node) => {
-                console.log('add node', node);
-                addNode(node);
-            });*/
-            treeInstance.on('update', (nodeId, node) => {
-                console.log('edit node', node);
-                editNode(nodeId, node);
-            });
-            /*treeInstance.on('nodeDelete', (nodeId) => {
-                console.log('delete node', nodeId);
-                deleteNode(nodeId);
-            });*/
+            console.log("nodeId", nodeId);
+            var nodeData = treeInstance.current.get(nodeId);
+            console.log("nodeData", nodeData);
+        } else {
+            console.log("L'instance de l'arbre n'est pas encore prête.");
         }
-    }, [treeInstance]);
+    }
+
+
     const handleAddMember = async (data) => {
         try {
             const response = await dispatch(addMemberToTreeAction({data}));
@@ -148,6 +198,66 @@ const FamilyTreeComponent = () => {
             console.error("Erreur lors de l'ajout du membre:", error);
         }
     }
+
+
+    const handleExistingMember = async (data) => {
+        try {
+            const response = await dispatch(addExistingMemberToTreeAction({data}));
+            console.log("response handleAddExistingMember =>", response.data)
+        } catch (error) {
+            console.error("Erreur lors de l'ajout du membre:", error);
+        }
+    }
+
+
+    useEffect(() => {
+        if (treeInstance) {
+
+
+            treeInstance.editUI.on('button-click', function (sender, args) {
+                if (args.name === 'addNewMember') {
+                    var data = treeInstance.get(args.nodeId);
+                    setModalMode("newMember")
+                    treeInstance.editUI.show(args.nodeId);
+                } else if (args.name === 'addExistingMember') {
+                    var data = treeInstance.get(args.nodeId);
+                    setModalMode("existingMember")
+                    treeInstance.editUI.show(args.nodeId);
+                } else if (args.name === 'newMember') {
+                    var data = treeInstance.get(args.nodeId);
+                    setModalMode("edit")
+                    treeInstance.editUI.show(args.nodeId);
+                }
+
+
+            });
+
+
+            console.log(modalMode)
+            /*treeInstance.on('nodeAdd', (node) => {
+                console.log('add node', node);
+                addNode(node);
+            });*/
+            treeInstance.on('update', (nodeId, node) => {
+                console.log('edit node', node);
+                if(modalMode === "newMember" || modalMode === "edit") {
+                    editNode(nodeId, node);
+                }
+                else {
+                    editNode(nodeId, node);
+                    editExistingNode(nodeId, node.updateNodesData[0].email);
+                    setModalMode("edit")
+                }
+            });
+            /*treeInstance.on('nodeDelete', (nodeId) => {
+                console.log('delete node', nodeId);
+                deleteNode(nodeId);
+            });*/
+        }
+    }, [treeInstance, modalMode]);
+
+
+
     useEffect(() => {
         if (treeDataFromRedux) {
             setData([...treeDataFromRedux]); // Créez une copie des données
@@ -160,7 +270,8 @@ const FamilyTreeComponent = () => {
         }
     }, [treeInstance, data]);
 
-    return <div id="tree" ref={treeContainer}></div>; // Rendu du conteneur avec la référence
+    return <div id="tree" ref={treeContainer}>
+    </div>; // Rendu du conteneur avec la référence
 };
 
 export default FamilyTreeComponent;

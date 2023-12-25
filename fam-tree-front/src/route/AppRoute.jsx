@@ -8,6 +8,7 @@ import PasswordChange from "../pages/authentication/PasswordChange";
 import Profile from "../pages/profile/Profile";
 import Presentation from "../pages/presentation/Presentation";
 import FamilyTree from "../pages/tree/FamilyTree";
+import ConfirmRelationship from "../pages/confirm-relationship/ConfirmRelationship";
 
 const AppRoute = () => {
     return (
@@ -22,6 +23,7 @@ const AppRoute = () => {
             <Route path='/profile' element={<Profile />}/>
             <Route path='/presentation' element={<Presentation />}/>
             <Route path='/family-tree' element={<FamilyTree />}/>
+            <Route path='/confirm-relationship/:confirmationCode' element={<ConfirmRelationship />}/>
         </Routes>
     )
 }
