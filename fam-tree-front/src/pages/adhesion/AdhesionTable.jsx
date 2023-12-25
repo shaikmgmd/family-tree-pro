@@ -29,8 +29,8 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
         {
             title: 'Numéro de sécurité sociale',
             dataIndex: 'socialSecurityNumber',
-            showSorterTooltip: true,  // Ajouté pour le tri
-            sorter: (a, b) => a.socialSecurityNumber.localeCompare(b.socialSecurityNumber),  // Exemple de tri
+            showSorterTooltip: true,
+            sorter: (a, b) => a.socialSecurityNumber.localeCompare(b.socialSecurityNumber),
         },
         {
             title: 'Nom',
@@ -94,10 +94,7 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                         onClick={() => {
                             dispatch(approveAdhesionAction(record.id))
                                 .then(async () => {
-                                    // Une fois l'adhésion approuvée, rechargez les données.
-                                    dispatch(getApprovedAdhesionAction());
-                                    dispatch(getPendingAdhesionAction());
-                                    dispatch(getRejectedAdhesionAction());
+                                    await dispatch(getApprovedAdhesionAction());
                                 });
                         }}
                     >
@@ -108,11 +105,9 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                         icon={<CloseOutlined/>}
                         onClick={() => {
                             dispatch(rejectAdhesionAction(record.id))
-                                .then(() => {
-                                    // Une fois l'adhésion refusée, rechargez les données.
-                                    dispatch(getApprovedAdhesionAction());
-                                    dispatch(getPendingAdhesionAction());
-                                    dispatch(getRejectedAdhesionAction());
+                                .then(async () => {
+                                    await dispatch(getRejectedAdhesionAction());
+                                    await dispatch(getApprovedAdhesionAction());
                                 });
                         }}
                     >
@@ -131,8 +126,8 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                 <Space size="middle">
                     <Button
                         icon={<CheckOutlined/>}
-                        onClick={() => {
-                            dispatch(addNewAdminAction(record.id))
+                        onClick={async () => {
+                            await dispatch(addNewAdminAction(record.id))
                                 .then(() => {
                                     toast.success("Nouveau admin ajouté!", {
                                         position: "top-right",
@@ -151,8 +146,8 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
                     <Button
                         danger
                         icon={<CloseOutlined/>}
-                        onClick={() => {
-                            dispatch(removeAdminAction(record.id))
+                        onClick={async () => {
+                            await dispatch(removeAdminAction(record.id))
                                 .then(() => {
                                     toast.success("Nouveau admin retiré!", {
                                         position: "top-right",
@@ -178,7 +173,7 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
             title="Aperçu de l'image"
             visible={isModalVisible}
             onCancel={handleCancel}
-            footer={null} // No buttons at the bottom
+            footer={null}
         >
             <img alt="Aperçu" src={currentImage} style={{width: '100%'}}/>
         </Modal>

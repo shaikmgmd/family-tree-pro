@@ -1,14 +1,15 @@
 package api.model.chat;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "chat")
 public class Chat {
 
@@ -22,7 +23,19 @@ public class Chat {
     @Column(name = "user_id_2")
     private Long userId2;
 
-    @OneToMany(mappedBy = "chat")
-    private List<ChatMessage> messages;
+    /*
+        @OneToMany(mappedBy = "chat")
+        private List<ChatMessage> messages;
+    */
 
+    @Override
+    public String toString() {
+        return "Chat{" +
+                "id=" + id +
+                ", userId1=" + userId1 +
+                ", userId2=" + userId2 +
+                // Ne pas imprimer les messages pour éviter les références circulaires
+                // ", messages=" + messages +
+                '}';
+    }
 }
