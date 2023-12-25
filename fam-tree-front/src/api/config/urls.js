@@ -23,8 +23,10 @@ export const authUrl = {
 
 export const userUrl = {
     GET_CONNECTED_USER: `/user`,
+    GET_USER_BY_ID: (userId) => `/user/${userId}`,
     UPDATE_USER: `/user/update`,
     GET_ALL_USERS_EXCEPT_CURRENT: (page, size) => `/user/all-except-current?page=${page}&pageSize=${size}`,
+    GET_ALL_USERS_EXCEPT_CURRENT_NO_PAGINATION: `/user/all-except-current-no-pagination`,
 }
 
 export const roleUrl = {
@@ -41,5 +43,5 @@ export const chatUrl = {
     GET_USER_CHATS_WITH_MESSAGES: (userId) => `/chat/${userId}/chats`,
     SEND_CHAT_MESSAGE : `/chat/send`,
     GET_CHAT_MESSAGES :(chatId) => `/chat/${chatId}/messages`,
-    START_CHAT : `/chat/start`,
+    START_CHAT : (userId1, userId2) => `/chat/start?userId1=${userId1}&userId2=${userId2}`,
 }

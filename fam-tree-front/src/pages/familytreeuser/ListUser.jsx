@@ -12,7 +12,8 @@ import PowerButton from "../../components/button/PowerButton";
 import './ListUser.css';
 import {getTreeByUserIdAction} from "../../store/features/slices/tree";
 import {getTreeByUserId} from "../../api/feature/tree";
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
+import {MainWrapper} from "../../components/wrapper/MainWrapper";
 
 const ListUser = () => {
     const {data, loading, hasMore} = useSelector((state) => state.familytreeuser);
@@ -82,26 +83,29 @@ const ListUser = () => {
     };
 
     return (
-        <List
-            className="demo-loadmore-list"
-            loading={loading}
-            itemLayout="horizontal"
-            loadMore={loadMore}
-            dataSource={data}
-            renderItem={(item) => (
-                <List.Item
-                >
-                    <Skeleton avatar title={false} loading={loading} active>
-                        <List.Item.Meta
-                            className="custom-list-item-meta"
-                            avatar={<Avatar className="custom-avatar" src={item.photoPath}/>}
-                            title={<div>{item.firstName}</div>}
-                        />
-                    </Skeleton>
-                    <PowerButton onClick={() => handlePowerButtonClick(item.id)} index={item.id} />
-                </List.Item>
-            )}
-        />
+        <MainWrapper title={"Liste des utilisateurs disponible sur l'application"}
+                     description={"N'hésitez pas à jeter un coup d'oeil à l'arbre généalogique des autres utilisateurs !"}>
+            <List
+                className="demo-loadmore-list"
+                loading={loading}
+                itemLayout="horizontal"
+                loadMore={loadMore}
+                dataSource={data}
+                renderItem={(item) => (
+                    <List.Item
+                    >
+                        <Skeleton avatar title={false} loading={loading} active>
+                            <List.Item.Meta
+                                className="custom-list-item-meta"
+                                avatar={<Avatar className="custom-avatar" src={item.photoPath}/>}
+                                title={<div>{item.firstName}</div>}
+                            />
+                        </Skeleton>
+                        <PowerButton onClick={() => handlePowerButtonClick(item.id)} index={item.id}/>
+                    </List.Item>
+                )}
+            />
+        </MainWrapper>
     );
 };
 

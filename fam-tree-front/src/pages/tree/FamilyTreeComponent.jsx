@@ -18,8 +18,13 @@ const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
         img_0: 'photo'
     };
 
+    const treeFetcher = async () => {
+        await dispatch(getTreeByUserIdAction(familytree_id));
+    }
     useEffect(() => {
-        dispatch(getTreeByUserIdAction(familytree_id));
+        if(familytree_id) {
+            treeFetcher();
+        }
     },[dispatch, familytree_id]);
 
     const addNode = (newNode) => {

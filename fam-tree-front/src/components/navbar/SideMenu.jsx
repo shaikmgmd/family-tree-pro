@@ -68,6 +68,13 @@ const SideMenu = () => {
                             <Link to="/user/all-except-current"
                                   style={{color: location.pathname === '/user/all-except-current' ? '#333' : 'white'}}>Utilisateurs</Link>
                         </Menu.Item>
+                        <Menu.Item key="/chat-list"
+                                   icon={<UserOutlined
+                                       style={{color: location.pathname === '/chat-list' ? selectedIconColor : 'white'}}/>}
+                                   style={{marginBottom: '15px'}}>
+                            <Link to="/chat-list"
+                                  style={{color: location.pathname === '/chat-list' ? '#333' : 'white'}}>Discussion</Link>
+                        </Menu.Item>
                     </>
                 )}
 
