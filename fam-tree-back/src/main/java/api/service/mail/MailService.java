@@ -42,7 +42,7 @@ public class MailService {
 //        mailSender.send(message);
 //    }
 
-
+//
     public void sendRelationshipConfirmationEmail(String sourceMemberEmail, String confirmationCode) {
         String confirmationUrl = "http://localhost:3000/confirm-relationship/" + confirmationCode;
         SimpleMailMessage message = new SimpleMailMessage();

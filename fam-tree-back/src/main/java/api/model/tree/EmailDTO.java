@@ -1,7 +1,7 @@
-package api.model;
+package api.model.tree;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
+//
 public class EmailDTO {
     @JsonProperty("email")
     private String email;

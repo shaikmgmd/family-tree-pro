@@ -1,7 +1,7 @@
 package api.controller.tree.confirmation;
 
 import api.common.ApiResponse;
-import api.model.EmailDTO;
+import api.model.tree.EmailDTO;
 import api.service.relationship.RelationshipConfirmationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,6 +44,7 @@ public class RelationshipConfirmationController {
 
             relationshipConfirmationService.requestRelationshipConfirmation(userId, emailToAdd);
 
+            //
             ApiResponse<String> response = new ApiResponse<>("Ok");
             return new ResponseEntity<>(response, HttpStatus.OK);
         }

@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @ToString
 @Table(name = "relationship_confirmation")
 public class RelationshipConfirmation {
-
+//
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

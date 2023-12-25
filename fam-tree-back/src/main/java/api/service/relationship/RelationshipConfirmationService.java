@@ -159,7 +159,7 @@ public class RelationshipConfirmationService {
 //        confirmation.setIsConfirmed(true);
 //        confirmationRepository.save(confirmation);
 //    }
-
+//
     private void handleConfirmedRelationship(RelationshipConfirmation confirmation) {
         // Retrouver le fto_user grace a target dans relaction_ship_confirmation
         Optional<User> user = userRepository.findById(confirmation.getTargetMember().getId());
