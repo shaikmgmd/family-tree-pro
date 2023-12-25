@@ -18,6 +18,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+
 //
 @Service
 @RequiredArgsConstructor
@@ -94,12 +95,16 @@ public class PersonneService {
     }
 
     private void handleRemoveNodeId(Map<String, Object> updatedNode) {
-        if (updatedNode.containsKey("removeNodeId")) {
-            Long removeNodeId = Long.valueOf(updatedNode.get("removeNodeId").toString());
-            if (removeNodeId != null) {
-                deleteRelatedRelations(removeNodeId); // Supprime d'abord les relations associées
-                personneRepository.deleteById(removeNodeId); // Ensuite, supprime la personne
+        try {
+            if (updatedNode.containsKey("removeNodeId")) {
+                Long removeNodeId = Long.valueOf(updatedNode.get("removeNodeId").toString());
+                if (removeNodeId != null) {
+                    deleteRelatedRelations(removeNodeId); // Supprime d'abord les relations associées
+                    personneRepository.deleteById(removeNodeId); // Ensuite, supprime la personne
+                }
             }
+        } catch (NullPointerException err) {
+            System.err.println(err);
         }
     }
 
@@ -192,17 +197,25 @@ public class PersonneService {
         formattedPersonne.put("pids", partnerIds);
 
         // Traiter les mères et pères
-        relations.stream()
-                .filter(rel -> rel.getPerson().equals(personne))
-                .findFirst()
-                .ifPresent(rel -> {
-                    if (rel.getMother() != null) {
-                        formattedPersonne.put("mid", rel.getMother().getId());
-                    }
-                    if (rel.getFather() != null) {
-                        formattedPersonne.put("fid", rel.getFather().getId());
-                    }
-                });
+        // Trouver les identifiants de la mère et du père, en considérant toutes les relations
+        Set<Long> motherIds = new HashSet<>();
+        Set<Long> fatherIds = new HashSet<>();
+        relations.forEach(rel -> {
+            if (rel.getMother() != null) {
+                motherIds.add(rel.getMother().getId());
+            }
+            if (rel.getFather() != null) {
+                fatherIds.add(rel.getFather().getId());
+            }
+        });
+
+        // S'il y a plus d'un ID, cela pourrait indiquer un problème de données ou un cas spécial à gérer.
+        if (motherIds.size() == 1) {
+            formattedPersonne.put("mid", motherIds.iterator().next());
+        }
+        if (fatherIds.size() == 1) {
+            formattedPersonne.put("fid", fatherIds.iterator().next());
+        }
 
         return formattedPersonne;
     }
@@ -250,7 +263,7 @@ public class PersonneService {
         }
     }
 
-     private void deleteRelatedRelations(Long personId) {
+    private void deleteRelatedRelations(Long personId) {
         Optional<List<Relation>> relationsAsPerson = relationRepository.findByPerson_Id(personId);
         relationsAsPerson.ifPresent(relationRepository::deleteAll);
 

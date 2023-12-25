@@ -10,11 +10,12 @@ import {Button} from "antd";
 import {useNavigate} from "react-router-dom";
 import {MainWrapper} from "../../components/wrapper/MainWrapper";
 import {getUserByIdAction} from "../../store/features/slices/user";
+import {FTProLoader} from "../../components/loader/FTProLoader";
 
 const FamilyTreeUser = () => {
     const {userId} = useParams();
     const dispatch = useDispatch();
-    const currentUser = useSelector((state) => state.user.getConnectedUser);
+    const treeLoader = useSelector((state) => state.tree.getUserTree.loading);
     const userById = useSelector((state) => state.user.getUserById.payload);
     const treeData = useSelector((state) => state.tree.getUserTree.payload);
     const navigate = useNavigate();
@@ -44,7 +45,12 @@ const FamilyTreeUser = () => {
                 Retour
             </Button>}
         >
-            <FamilyTreeComponent isOwner={false}/>
+            {treeLoader ? (
+                <FTProLoader />
+            ) : (
+                <FamilyTreeComponent isOwner={false}/>
+            )}
+
         </MainWrapper>
     );
 };
