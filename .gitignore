@@ -1,1 +1,8 @@
 fam-tree-back/src/main/resources/application.properties
+.idea/
+.idea
+.idea/*
+.idea/workspace.xml
+fam-tree-front/.idea/*
+fam-tree-front/.idea/
+fam-tree-front/.idea/workspace.xml
