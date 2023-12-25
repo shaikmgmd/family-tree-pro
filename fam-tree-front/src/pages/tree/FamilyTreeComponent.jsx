@@ -10,7 +10,7 @@ import {
 import familyTree from "./FamilyTree";
 import {addExistingUserOnTree} from "../../api/feature/tree";
 
-const FamilyTreeComponent = () => {
+const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
     const treeContainer = useRef(null); // Création d'une référence au conteneur
     const treeDataFromRedux = useSelector((state) => state.tree.getUserTree.payload);
     const [treeInstance, setTreeInstance] = useState(null);
@@ -27,6 +27,15 @@ const FamilyTreeComponent = () => {
         //field_1: 'born',
         img_0: 'photo'
     };
+
+    const treeFetcher = async () => {
+        await dispatch(getTreeByUserIdAction(familytree_id));
+    }
+    useEffect(() => {
+        if(familytree_id) {
+            treeFetcher();
+        }
+    },[dispatch, familytree_id]);
 
     const addNode = (newNode) => {
         // Simuler un appel API pour ajouter un nœud
@@ -84,7 +93,6 @@ const FamilyTreeComponent = () => {
     }, [data]);
 
     useEffect(() => {
-
         if (treeContainer.current) {
 
             const tree = new FamilyTree(treeContainer.current, {
@@ -120,6 +128,7 @@ const FamilyTreeComponent = () => {
                     title: {}
                 },*/
                 editForm: {
+                    readOnly: !isOwner, // Si isOwner est false, alors readOnly est true
                     titleBinding: "name",
                     photoBinding: "photo",
                     addMoreBtn: 'Ajouter élement',
@@ -175,8 +184,7 @@ const FamilyTreeComponent = () => {
 
             setTreeInstance(tree);
         }
-
-    }, [treeContainer, modalMode]);
+    }, [treeContainer, modalMode, isOwner]);
 
 
     function editHandler(nodeId) {
@@ -208,7 +216,6 @@ const FamilyTreeComponent = () => {
             console.error("Erreur lors de l'ajout du membre:", error);
         }
     }
-
 
     useEffect(() => {
         if (treeInstance) {
@@ -270,8 +277,7 @@ const FamilyTreeComponent = () => {
         }
     }, [treeInstance, data]);
 
-    return <div id="tree" ref={treeContainer}>
-    </div>; // Rendu du conteneur avec la référence
+    return <div id="tree" ref={treeContainer} className={isOwner ? 'owner' : 'viewer'}></div>;
 };
 
 export default FamilyTreeComponent;

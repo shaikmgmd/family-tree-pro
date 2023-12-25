@@ -8,3 +8,15 @@ export const getConnectedUser = async () => (
 export const updateUser = async (payload) => (
     backend.post(userUrl.UPDATE_USER, payload)
 )
+
+export const getAllUsersExceptCurrent = async (page, size) => (
+    backend.get(userUrl.GET_ALL_USERS_EXCEPT_CURRENT(page, size))
+)
+
+export const getAllUsersExceptCurrentNoPagination = async () => (
+    backend.get(userUrl.GET_ALL_USERS_EXCEPT_CURRENT_NO_PAGINATION)
+)
+
+export const getUserById = async (id) => (
+    backend.get(userUrl.GET_USER_BY_ID(id))
+)

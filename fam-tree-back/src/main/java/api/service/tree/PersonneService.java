@@ -34,7 +34,7 @@ public class PersonneService {
         return personnes.stream().map(this::convertToTreeFormat).collect(Collectors.toList());
     }
 
-    private Long createAndSaveNewPerson(Map<String, Object> personneData, Map<String, Long> idMapping) {
+    public Long createAndSaveNewPerson(Map<String, Object> personneData, Map<String, Long> idMapping) {
         Personne newPersonne = new Personne();
         updatePersonneAttributes(newPersonne, personneData);
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -181,7 +181,8 @@ public class PersonneService {
 
         // Récupérer les relations pour cette personne
         Optional<List<Relation>> relationsOpt = relationRepository.findByPerson_Id(personne.getId());
-        List<Relation> relations = relationsOpt.get();
+        List<Relation> relations = relationsOpt.orElse(Collections.emptyList());
+
         // Trouver les identifiants des partenaires
         List<Long> partnerIds = relations.stream()
                 .filter(rel -> rel.getPerson().equals(personne) && rel.getPartner() != null)
@@ -259,8 +260,6 @@ public class PersonneService {
         Optional<List<Relation>> relationsAsFather = relationRepository.findByPartner_Id(personId);
         relationsAsFather.ifPresent(relationRepository::deleteAll);
     }
-
-
 
     private void createRelationForNewPerson(Long personId, Map<String, Long> idMapping, Map<String, Object> nodeData) {
         Relation newRelation = new Relation();

@@ -10,6 +10,7 @@ import './custom-tree.css'
 import {Circles} from "react-loader-spinner";
 import {FTProLoader} from "../../components/loader/FTProLoader";
 import FamilyTreeComponent from "./FamilyTreeComponent";
+import {getConnectedUserAction} from "../../store/features/slices/user";
 
 const FamilyTree = ({userId}) => {
     const [treeData, setTreeData] = useState(null);
@@ -40,8 +41,9 @@ const FamilyTree = ({userId}) => {
     const fetcher = async () => {
         try {
             setIsLoading(true);
-            console.log("user =>" , user)
-            await dispatch(getTreeByUserIdAction(user.payload.id));
+            await dispatch(getConnectedUserAction()).then(async (res) => {
+                await dispatch(getTreeByUserIdAction(res.payload.id));
+            })
         } catch (error) {
             console.error("Erreur lors de la récupération de l'arbre:", error);
         } finally {
@@ -95,7 +97,7 @@ const FamilyTree = ({userId}) => {
                 <FTProLoader />
             ) : tree && (
                 <div id="treeWrapper" style={{ width: '100%', height: '100%' }}>
-                    <FamilyTreeComponent />
+                    <FamilyTreeComponent isOwner={true} />
                 </div>
 
             )}

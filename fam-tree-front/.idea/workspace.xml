@@ -51,6 +51,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -105,8 +108,11 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\src\assets\ui\svg\adhesionForm" />
+      <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\src\assets\ui\svg\login" />
+      <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\src\assets\ui\svg\presentation" />
+      <recent name="H:\Documents\CY Tech\ING2\Semestre 1\Programmation Web JEE\Projet\family-tree-pro\fam-tree-front\public" />
       <recent name="H:\Programs\Projects\family-tree-pro\fam-tree-front\src\pages\tree\FamilyTreeJS" />
-      <recent name="H:\Programs\Projects\family-tree-pro\fam-tree-front\src\assets\ui\svg\login" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -151,7 +157,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>

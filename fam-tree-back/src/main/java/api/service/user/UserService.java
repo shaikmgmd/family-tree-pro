@@ -3,10 +3,18 @@ package api.service.user;
 import api.model.user.User;
 import api.model.user.UserUpdate;
 import api.repository.user.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.Optional;
 
@@ -54,5 +62,29 @@ public class UserService {
         return currUser;
     }
 
+    public User findUserById(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        return userOptional.orElseThrow(() -> new EntityNotFoundException("Utilisateur non trouvé avec ID: " + userId));
+    }
 
+    public List<User> findAllUsersExceptCurrentWoutPagination() {
+        String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = userRepository.findByPrivateCode(currentPrivateCode);
+        List<User> allUsers = userRepository.findAll();
+        List<User> users = allUsers.stream()
+                .filter(user -> !user.getPrivateCode().equals(currentUser.getPrivateCode()))
+                .collect(Collectors.toList());
+        return users;
+    }
+
+    public List<User> getAllUsersExceptCurrent(int page, int size) {
+        String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = userRepository.findByPrivateCode(currentPrivateCode);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> usersPage = userRepository.findAll(pageable);
+        List<User> users = usersPage.getContent().stream()
+                .filter(user -> !user.getPrivateCode().equals(currentUser.getPrivateCode()))
+                .collect(Collectors.toList());
+        return users;
+    }
 }

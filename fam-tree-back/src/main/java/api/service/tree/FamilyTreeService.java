@@ -27,16 +27,19 @@ public class FamilyTreeService {
     private final FamilyMemberRepository familyMemberRepository;
     private final RelationshipRepository relationshipRepository;
     private final PersonneService personneService;
-    private final UserRepository userRepository; // Assumé qu'il existe pour gérer les utilisateurs
+    private final UserRepository userRepository;
 
     public List<Map<String, Object>> getFamilyTreeByUserId(Long userId) {
         Optional<FamilyTree> optTree = familyTreeRepository.findByUserId(userId);
-        FamilyTree tree = optTree.get();
-        if (tree == null) {
+
+        // Vérifier si l'Optional contient une valeur avant de l'utiliser
+        if (optTree.isPresent()) {
+            FamilyTree tree = optTree.get();
+            List<Map<String, Object>> lp = personneService.findByTreeId(tree.getId());
+            return lp;
+        } else {
             throw new EntityNotFoundException("Arbre généalogique non trouvé pour l'utilisateur avec ID " + userId);
         }
-        List<Map<String, Object>> lp = personneService.findByTreeId(tree.getId());
-        return lp; // Assumé qu'il y a une méthode getRootMember() dans FamilyTree
     }
 
     private TreeNode buildTree(FamilyMember rootMember) {
@@ -69,5 +72,51 @@ public class FamilyTreeService {
 
         // Sauvegarder la relation
         relationshipRepository.save(relationship);
+    }
+
+    public FamilyMember updateMemberToTree(Long memberId, AddMemberRequest updateRequest) {
+        // Trouver le membre existant par son ID
+        FamilyMember existingMember = familyMemberRepository.findById(memberId)
+                .orElseThrow(() -> new EntityNotFoundException("Membre non trouvé avec ID " + memberId));
+
+        // Mettre à jour les informations du membre
+        if (updateRequest.getName() != null) {
+            existingMember.setName(updateRequest.getName());
+        }
+        if (updateRequest.getBirthDate() != null) {
+            existingMember.setBirthDate(updateRequest.getBirthDate());
+        }
+
+        return familyMemberRepository.save(existingMember);
+    }
+
+    public void deleteMemberToTree(Long memberId) {
+        if (!familyMemberRepository.existsById(memberId)) {
+            throw new EntityNotFoundException("Membre non trouvé avec ID " + memberId);
+        }
+
+        // Supprimer toutes les relations associées au membre
+        deleteAllRelationsForMember(memberId);
+
+        // Supprimer le membre
+        familyMemberRepository.deleteById(memberId);
+    }
+
+    private void deleteAllRelationsForMember(Long memberId) {
+        // Supprimer les relations où le membre est le sourceMember ou le targetMember
+        relationshipRepository.deleteBySourceMemberId(memberId);
+        relationshipRepository.deleteByTargetMemberId(memberId);
+    }
+
+    public void deleteRelatedRelations(Long memberId) {
+        // Trouver et supprimer les relations où le membre est impliqué
+        Optional<List<Relationship>> personRelationsOptional = Optional.ofNullable(relationshipRepository.findByPerson_Id(memberId));
+        Optional<List<Relationship>> motherRelationsOptional = Optional.ofNullable(relationshipRepository.findByMother_Id(memberId));
+        Optional<List<Relationship>> partnerRelationsOptional = Optional.ofNullable(relationshipRepository.findByPartner_Id(memberId));
+
+        // Supprimer toutes les relations trouvées
+        personRelationsOptional.ifPresent(relationshipRepository::deleteAll);
+        motherRelationsOptional.ifPresent(relationshipRepository::deleteAll);
+        partnerRelationsOptional.ifPresent(relationshipRepository::deleteAll);
     }
 }
