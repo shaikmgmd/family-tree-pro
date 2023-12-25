@@ -1,2 +1,8 @@
-package api.model.tree.relationship;public class RelationshipConfirmationResponse {
+package api.model.tree.relationship;
+
+import lombok.Data;
+//
+@Data
+public class RelationshipConfirmationResponse {
+    private String response;
 }

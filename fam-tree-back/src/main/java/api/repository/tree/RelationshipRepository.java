@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
+//
 public interface RelationshipRepository extends JpaRepository<Relationship, Long> {
     List<Relationship> findBySourceMemberAndType(FamilyMember sourceMember, RelationshipType type);
 

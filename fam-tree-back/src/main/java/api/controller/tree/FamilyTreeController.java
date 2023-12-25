@@ -6,6 +6,7 @@ import api.model.tree.FamilyTree;
 import api.model.tree.Personne;
 import api.model.tree.TreeNode;
 import api.model.tree.relationship.AddMemberRequest;
+//import api.service.relationship.RelationshipConfirmationService;
 import api.service.tree.FamilyTreeService;
 import api.service.tree.PersonneService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -25,6 +26,7 @@ public class FamilyTreeController {
     private final FamilyTreeService familyTreeService;
     private final PersonneService personneService;
 
+    //
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getFamilyTree(@PathVariable Long userId) {
         System.out.println("User ID => " + userId);
@@ -46,12 +48,15 @@ public class FamilyTreeController {
         System.out.println("request => " + request);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> requestMap = objectMapper.convertValue(request, new TypeReference<Map<String, Object>>() {});
+        Map<String, Object> requestMap = objectMapper.convertValue(request, new TypeReference<Map<String, Object>>() {
+        });
 
         personneService.treeNodeManaging(requestMap);
 
         ApiResponse<String> response = new ApiResponse<>("Ok");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-}
 
+
+
+}
