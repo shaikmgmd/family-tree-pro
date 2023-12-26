@@ -11,8 +11,10 @@ import api.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -51,6 +53,11 @@ public class PersonneService {
             idMapping.put(tempId, newPersonne.getId());
         }
 
+        if(!areParentChildRelationsValid(newPersonne.getTreeId())){
+            //System.out.println("\nKAKA INVALIDE\n");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après création de la personne).");
+        }
+
         return newPersonne.getId();
     }
 
@@ -63,7 +70,6 @@ public class PersonneService {
 
         Map<String, Long> idMapping = new HashMap<>();
         System.out.println("Updated Node: " + updatedNode);
-
 
         // Traitement de addNodesData
         handleAddNodesData(updatedNode, idMapping);
@@ -97,8 +103,16 @@ public class PersonneService {
         if (updatedNode.containsKey("removeNodeId")) {
             Long removeNodeId = Long.valueOf(updatedNode.get("removeNodeId").toString());
             if (removeNodeId != null) {
+                Personne removedPerson = personneRepository.findById(removeNodeId).orElse(null);
+                Long treeId = removedPerson != null ? removedPerson.getTreeId() : null;
+
                 deleteRelatedRelations(removeNodeId); // Supprime d'abord les relations associées
                 personneRepository.deleteById(removeNodeId); // Ensuite, supprime la personne
+
+                if(treeId != null && !areParentChildRelationsValid(treeId)){
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après sup de la personne).");
+                }
+
             }
         }
     }
@@ -115,7 +129,7 @@ public class PersonneService {
                 throw new RuntimeException("ID bizarre non trouvé dans le mapping: " + tempId);
             }
         } else if (idObject instanceof Number) {
-            realId = ((Number) idObject).longValue(); // Convertir en Long pour les ID numériques
+            realId = ((Number) idObject).longValue(); // Convertir en Long pour les ID
         } else {
             throw new RuntimeException("Type d'ID non reconnu: " + idObject);
         }
@@ -124,6 +138,10 @@ public class PersonneService {
         updatePersonneAttributes(personneToUpdate, nodeData);
         if (!ObjectUtils.isEmpty(idMapping)) {
             createRelationForNewPerson(realId, idMapping, nodeData);
+        }
+        if(!areParentChildRelationsValid(personneToUpdate.getTreeId())){
+            //System.out.println("\nKAKA3 INVALIDE\n");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après mise à jour de la personne).");
         }
         personneRepository.save(personneToUpdate);
     }
@@ -337,6 +355,33 @@ public class PersonneService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private boolean isBirthDateValid(Personne parent, Personne child) {
+        System.out.println("date de naissance parent : " + parent.getBorn() + "\n");
+        System.out.println("date de naissance enfant : " + child.getBorn());
+        return parent.getBorn().before(child.getBorn());
+    }
+    public boolean areParentChildRelationsValid(Long treeId) {
+        List<Personne> personnes = personneRepository.findByTreeId(treeId);
+        for (Personne personne : personnes) {
+            Optional<List<Relation>> optionalRelations = relationRepository.findByPerson_Id(personne.getId());
+            if (optionalRelations.isPresent()) {
+                List<Relation> relations = optionalRelations.get();
+                for (Relation relation : relations) {
+                    if (relation.getMother() != null && !isBirthDateValid(relation.getMother(), personne)) {
+                        System.out.println("\nLIEN INVALIDE\n");
+                        return false;
+                    }
+                    if (relation.getFather() != null && !isBirthDateValid(relation.getFather(), personne)) {
+                        System.out.println("\nLIEN INVALIDE\n");
+                        return false;
+                    }
+                }
+            }
+        }
+        System.out.println("\nLIEN VALIDE\n");
+        return true;
     }
 
 }
