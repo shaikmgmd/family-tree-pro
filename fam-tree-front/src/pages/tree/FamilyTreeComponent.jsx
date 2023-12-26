@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import FamilyTree from '@balkangraph/familytree.js';
 import {useDispatch, useSelector} from "react-redux";
 import './familyTreeComp.css'
+import {addMemberToTreeAction, getTreeByUserIdAction} from "../../store/features/slices/tree";
+import { useNavigate } from 'react-router-dom';
 import {
     addExistingMemberToTreeAction,
     addMemberToTreeAction,
@@ -10,15 +12,15 @@ import {
 import familyTree from "./FamilyTree";
 import {addExistingUserOnTree} from "../../api/feature/tree";
 
-const FamilyTreeComponent = ({isOwner}) => {
+const FamilyTreeComponent = ({isOwner, handleError}) => {
     const treeContainer = useRef(null); // Création d'une référence au conteneur
     const treeDataFromRedux = useSelector((state) => state.tree.getUserTree.payload);
     const userId = useSelector((state) => state.user.getConnectedUser.payload.id);
     const [treeInstance, setTreeInstance] = useState(null);
     const dispatch = useDispatch();
-
-
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const [modalMode, setModalMode] = useState("edit")
 
@@ -134,6 +136,20 @@ const FamilyTreeComponent = ({isOwner}) => {
         return roots;
     };
 
+    const handleServerError = (error) => {
+        console.log("Erreur complète:", error);
+        if (error.payload.response.status === 400) {
+            if (error.payload.response.data.content.includes("Relation parent-enfant invalide")) {
+                setErrorMessage("La date de naissance de l'enfant est invalide par rapport à celle des parents.");
+                //navigate('/family-tree/born-date-error');
+                //setShowErrorBornDate(true);
+                handleError(true);
+            } else {
+                setErrorMessage("Une erreur inattendue est survenue.");
+            }
+        }
+        console.log("Message d'erreur : " + errorMessage);
+    }
 
     /*const treeFetcher = async () => {
         await dispatch(getTreeByUserIdAction(familytree_id));
@@ -145,12 +161,6 @@ const FamilyTreeComponent = ({isOwner}) => {
         }
     }, [dispatch, familytree_id]);*/
 
-    const addNode = (newNode) => {
-        // Simuler un appel API pour ajouter un nœud
-        setTimeout(() => {
-            setData(currentData => [...currentData, newNode]);
-        }, 1000); // Délai simulé de 1 seconde
-    };
 
     // function editHandler(nodeId) {
     //     console.log("nodeId",nodeId);
@@ -159,10 +169,14 @@ const FamilyTreeComponent = ({isOwner}) => {
     // }
 
     const editNode = (nodeId, updatedNode) => {
-        handleAddMember({updatedNode}).then(async r => {
-            console.log("Response =>", r);
-            await dispatch(getTreeByUserIdAction(userId));
-        });
+        try {
+            handleAddMember({updatedNode}).then(async r => {
+                console.log("Response =>", r);
+                await dispatch(getTreeByUserIdAction(userId));
+            });
+        }catch (error) {
+            handleServerError(error);
+        }
     };
 
     const editExistingNode = (nodeId, email) => {
@@ -172,12 +186,6 @@ const FamilyTreeComponent = ({isOwner}) => {
             await dispatch(getTreeByUserIdAction(userId));
         });
     };
-
-
-    useEffect(() => {
-        // Log the current state of 'data' to the console whenever it changes.
-        console.log('Current data:', data);
-    }, [data]);
 
     useEffect(() => {
         if (treeContainer.current) {
@@ -199,7 +207,7 @@ const FamilyTreeComponent = ({isOwner}) => {
     }
 
 
-    const handleAddMember = async (data) => {
+    /*const handleAddMember = async (data) => {
         try {
             const response = await dispatch(addMemberToTreeAction({data}));
             console.log("response handleAddMember =>", response.data)
@@ -207,18 +215,7 @@ const FamilyTreeComponent = ({isOwner}) => {
         } catch (error) {
             console.error("Erreur lors de l'ajout du membre:", error);
         }
-    }
-
-
-    const handleExistingMember = async (data) => {
-        try {
-            const response = await dispatch(addExistingMemberToTreeAction({data}));
-            console.log("response handleAddExistingMember =>", response.data)
-            await dispatch(getTreeByUserIdAction(userId));
-        } catch (error) {
-            console.error("Erreur lors de l'ajout du membre:", error);
-        }
-    }
+    }*/
 
     useEffect(() => {
         if (treeInstance) {
@@ -265,7 +262,20 @@ const FamilyTreeComponent = ({isOwner}) => {
         }
     }, [treeInstance, modalMode]);
 
-
+    const handleAddMember = async (data) => {
+        try {
+            const response = await dispatch(addMemberToTreeAction({ data }));
+            console.log("Réponse handleAddMember =>", response);
+            await dispatch(getTreeByUserIdAction(userId));
+            if(response) {
+                handleServerError(response);
+            }
+        } catch (error) {
+            console.error("Erreur lors de l'ajout du membre:", error);
+            handleServerError(error);
+        }
+    }
+    
     useEffect(() => {
         if (treeDataFromRedux) {
             setData([...treeDataFromRedux]); // Créez une copie des données
