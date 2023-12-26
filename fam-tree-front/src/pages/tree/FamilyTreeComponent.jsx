@@ -2,8 +2,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import FamilyTree from '@balkangraph/familytree.js';
 import {useDispatch, useSelector} from "react-redux";
 import './familyTreeComp.css'
-import {addMemberToTreeAction, getTreeByUserIdAction} from "../../store/features/slices/tree";
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {
     addExistingMemberToTreeAction,
     addMemberToTreeAction,
@@ -138,6 +137,10 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
 
     const handleServerError = (error) => {
         console.log("Erreur complète:", error);
+        if (error.type ===
+            "add-member-to-tree/fulfilled") {
+            return;
+        }
         if (error.payload.response.status === 400) {
             if (error.payload.response.data.content.includes("Relation parent-enfant invalide")) {
                 setErrorMessage("La date de naissance de l'enfant est invalide par rapport à celle des parents.");
@@ -174,7 +177,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
                 console.log("Response =>", r);
                 await dispatch(getTreeByUserIdAction(userId));
             });
-        }catch (error) {
+        } catch (error) {
             handleServerError(error);
         }
     };
@@ -264,10 +267,10 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
 
     const handleAddMember = async (data) => {
         try {
-            const response = await dispatch(addMemberToTreeAction({ data }));
+            const response = await dispatch(addMemberToTreeAction({data}));
             console.log("Réponse handleAddMember =>", response);
             await dispatch(getTreeByUserIdAction(userId));
-            if(response) {
+            if (response) {
                 handleServerError(response);
             }
         } catch (error) {
@@ -275,7 +278,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
             handleServerError(error);
         }
     }
-    
+
     useEffect(() => {
         if (treeDataFromRedux) {
             setData([...treeDataFromRedux]); // Créez une copie des données

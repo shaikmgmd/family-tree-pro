@@ -54,7 +54,7 @@ public class PersonneService {
             idMapping.put(tempId, newPersonne.getId());
         }
 
-        if(!areParentChildRelationsValid(newPersonne.getTreeId())){
+        if (!areParentChildRelationsValid(newPersonne.getTreeId())) {
             //System.out.println("\nKAKA INVALIDE\n");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après création de la personne).");
         }
@@ -101,8 +101,14 @@ public class PersonneService {
     }
 
     private void handleRemoveNodeId(Map<String, Object> updatedNode) {
+
         if (updatedNode.containsKey("removeNodeId")) {
-            Long removeNodeId = Long.valueOf(updatedNode.get("removeNodeId").toString());
+            Long removeNodeId = null;
+            try {
+                removeNodeId = Long.valueOf(updatedNode.get("removeNodeId").toString());
+            } catch (NullPointerException err) {
+                System.err.println(err);
+            }
             if (removeNodeId != null) {
                 Personne removedPerson = personneRepository.findById(removeNodeId).orElse(null);
                 Long treeId = removedPerson != null ? removedPerson.getTreeId() : null;
@@ -110,12 +116,10 @@ public class PersonneService {
                 deleteRelatedRelations(removeNodeId); // Supprime d'abord les relations associées
                 personneRepository.deleteById(removeNodeId); // Ensuite, supprime la personne
 
-                if(treeId != null && !areParentChildRelationsValid(treeId)){
+                if (treeId != null && !areParentChildRelationsValid(treeId)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après sup de la personne).");
                 }
             }
-        } catch (NullPointerException err) {
-            System.err.println(err);
         }
     }
 
@@ -141,7 +145,7 @@ public class PersonneService {
         if (!ObjectUtils.isEmpty(idMapping)) {
             createRelationForNewPerson(realId, idMapping, nodeData);
         }
-        if(!areParentChildRelationsValid(personneToUpdate.getTreeId())){
+        if (!areParentChildRelationsValid(personneToUpdate.getTreeId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après mise à jour de la personne).");
         }
         personneRepository.save(personneToUpdate);
@@ -371,6 +375,7 @@ public class PersonneService {
         System.out.println("date de naissance enfant : " + child.getBorn());
         return parent.getBorn().before(child.getBorn());
     }
+
     public boolean areParentChildRelationsValid(Long treeId) {
         List<Personne> personnes = personneRepository.findByTreeId(treeId);
         for (Personne personne : personnes) {
