@@ -10,6 +10,8 @@ import './custom-tree.css'
 import {Circles} from "react-loader-spinner";
 import {FTProLoader} from "../../components/loader/FTProLoader";
 import FamilyTreeComponent from "./FamilyTreeComponent";
+import ErrorBornDateButton from "../../components/button/ErrorBornDateButton";
+import ErrorBornDate from "./ErrorBornDate";
 
 const FamilyTree = ({userId}) => {
     const [treeData, setTreeData] = useState(null);
@@ -21,6 +23,8 @@ const FamilyTree = ({userId}) => {
     const dispatch = useDispatch();
     const tree = useSelector((state) => state.tree.getUserTree.payload);
     const user = useSelector((state) => state.user.getConnectedUser);
+
+    const [showErrorBornDate, setShowErrorBornDate] = useState(false);
 
     const getDynamicPathClass = ({source, target}, orientation) => {
         if (!target.children) {
@@ -69,7 +73,7 @@ const FamilyTree = ({userId}) => {
     const handleAddMember = async (data) => {
         try {
             const response = await dispatch(addMemberToTreeAction({sourceMemberId: selectedNodeId, data}));
-            console.log("response", response)
+            console.log("AFFICHE TOI", response);
             fetcher();
             setIsModalVisible(false);
         } catch (error) {
@@ -86,16 +90,23 @@ const FamilyTree = ({userId}) => {
         };
     };
 
+    const handleError = (isError) => {
+        setShowErrorBornDate(isError);
+    }
 
+    const handleHideError = () => {
+        setShowErrorBornDate(false);
+    };
 
     return (
         <MainWrapper title={"Votre arbre généalogique"}
                      description={"Consultez ou modifiez votre arbre généalogique :"}>
+            {showErrorBornDate && <ErrorBornDate onHide={handleHideError}/>}
             {isLoading ? (
                 <FTProLoader />
             ) : tree && (
                 <div id="treeWrapper" style={{ width: '100%', height: '100%' }}>
-                    <FamilyTreeComponent isOwner={true} />
+                    <FamilyTreeComponent familytree_id={1} isOwner={true} handleError={handleError} />
                 </div>
 
             )}

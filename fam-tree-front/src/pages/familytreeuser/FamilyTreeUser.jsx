@@ -36,7 +36,6 @@ const FamilyTreeUser = () => {
 
     return (
         <div>
-            {/*<ErrorBornDate />*/}
             {treeData ? <div>Arbre généalogique pour l'utilisateur {userId}</div> : <p> Arbre Vide</p>}
             <Button type="primary" key="console" onClick={handleRetour} className="billyButton" style={{ marginTop: '20px', marginBottom: '20px', marginLeft: '20px' }}>
                 Retour

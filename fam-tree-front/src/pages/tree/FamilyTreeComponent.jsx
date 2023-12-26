@@ -3,20 +3,37 @@ import FamilyTree from '@balkangraph/familytree.js';
 import {useDispatch, useSelector} from "react-redux";
 import './familyTreeComp.css'
 import {addMemberToTreeAction, getTreeByUserIdAction} from "../../store/features/slices/tree";
+import { useNavigate } from 'react-router-dom';
 
-const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
+const FamilyTreeComponent = ({ familytree_id, isOwner, handleError }) => {
     const treeContainer = useRef(null); // Création d'une référence au conteneur
     const treeDataFromRedux = useSelector((state) => state.tree.getUserTree.payload);
     const [treeInstance, setTreeInstance] = useState(null);
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
+    const [errorMessage, setErrorMessage] = useState(null);
 
     const nodeBinding = {
         field_0: 'name',
         //field_1: 'born',
         img_0: 'photo'
     };
+
+    const handleServerError = (error) => {
+        console.log("Erreur complète:", error);
+        if (error.payload.response.status === 400) {
+            if (error.payload.response.data.content.includes("Relation parent-enfant invalide")) {
+                setErrorMessage("La date de naissance de l'enfant est invalide par rapport à celle des parents.");
+                //navigate('/family-tree/born-date-error');
+                //setShowErrorBornDate(true);
+                handleError(true);
+            } else {
+                setErrorMessage("Une erreur inattendue est survenue.");
+            }
+        }
+        console.log("Message d'erreur : " + errorMessage);
+    }
 
     useEffect(() => {
         dispatch(getTreeByUserIdAction(familytree_id));
@@ -36,28 +53,35 @@ const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
     }
 
     const editNode = (nodeId, updatedNode) => {
+
         // Simuler un appel API pour éditer un nœud
-        handleAddMember({updatedNode}).then(async r => {
-            console.log("Response =>", r);
-            await dispatch(getTreeByUserIdAction(1));
-        });
-        setTimeout(() => {
-            setData(currentData =>
-                currentData.map(node => node.id === nodeId ? updatedNode : node)
-            );
-        }, 1000); // Délai simulé de 1 seconde
+        try {
+            handleAddMember({updatedNode}).then(async r => {
+                console.log("Response =>", r);
+                await dispatch(getTreeByUserIdAction(1)); // familytree_id à la place du 1 ?? -> demander à shaikh
+            });
+            setTimeout(() => {
+                setData(currentData =>
+                    currentData.map(node => node.id === nodeId ? updatedNode : node)
+                );
+            }, 1000); // Délai simulé de 1 seconde
+        }catch (error) {
+            handleServerError(error);
+        }
     };
 
     const deleteNode = (nodeId) => {
-        // Simuler un appel API pour supprimer un nœud
-        setTimeout(() => {
-            setData(currentData =>
-                currentData.filter(node => node.id !== nodeId)
-            );
-        }, 1000); // Délai simulé de 1 seconde
+        try {
+            // Simuler un appel API pour supprimer un nœud
+            setTimeout(() => {
+                setData(currentData =>
+                    currentData.filter(node => node.id !== nodeId)
+                );
+            }, 1000); // Délai simulé de 1 seconde
+        }catch(error){
+            handleServerError(error);
+        }
     };
-
-
 
     useEffect(() => {
         console.log("isOwner" + isOwner);
@@ -148,10 +172,14 @@ const FamilyTreeComponent = ({ familytree_id, isOwner }) => {
     }, [treeInstance]);
     const handleAddMember = async (data) => {
         try {
-            const response = await dispatch(addMemberToTreeAction({data}));
-            console.log("response handleAddMember =>", response.data)
+            const response = await dispatch(addMemberToTreeAction({ data }));
+            console.log("Réponse handleAddMember =>", response);
+            if(response) {
+                handleServerError(response);
+            }
         } catch (error) {
             console.error("Erreur lors de l'ajout du membre:", error);
+            handleServerError(error);
         }
     }
     useEffect(() => {

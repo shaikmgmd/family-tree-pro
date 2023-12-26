@@ -11,6 +11,7 @@ import FamilyTree from "../pages/tree/FamilyTree";
 import ListUser from "../pages/familytreeuser/ListUser";
 import FamilyTreeUser from "../pages/familytreeuser/FamilyTreeUser";
 import ChatList from "../pages/chat/ChatList";
+import ErrorBornDate from "../pages/tree/ErrorBornDate";
 
 const AppRoute = () => {
     return (
@@ -25,6 +26,7 @@ const AppRoute = () => {
             <Route path='/profile' element={<Profile/>}/>
             <Route path='/presentation' element={<Presentation/>}/>
             <Route path='/family-tree' element={<FamilyTree/>}/>
+            <Route path='/family-tree/born-date-error' element={<ErrorBornDate/>}/>
             <Route path='/user/all-except-current' element={<ListUser />}/>
             <Route path='/family-tree/user/:userId' element={<FamilyTreeUser />}/>
             <Route path='/chat-list' element={<ChatList/>}/>
