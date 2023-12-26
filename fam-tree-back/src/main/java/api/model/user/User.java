@@ -32,6 +32,7 @@ public class User extends BaseEntityWithAudit {
     private String idCardPath;
     private String photoPath;
     private String publicCode;
+    private String city;
     @Column(unique = true)
     private String privateCode;
     private String phone;

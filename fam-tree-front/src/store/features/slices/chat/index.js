@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getUserChatsWithMessages, sendChatMessage, getChatMessages, startChat } from "../../../../api/feature/chat";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
+import {getUserChatsWithMessages, sendChatMessage, getChatMessages, startChat} from "../../../../api/feature/chat";
 
 export const getUserChatsWithMessagesAction = createAsyncThunk(
     'chat/get-user-chats-with-messages',
@@ -11,8 +11,8 @@ export const getUserChatsWithMessagesAction = createAsyncThunk(
 
 export const sendChatMessageAction = createAsyncThunk(
     'chat/send-chat-message',
-    async ({ chatId, message }) => {
-        const response = await sendChatMessage(chatId, message);
+    async (payload) => {
+        const response = await sendChatMessage(payload);
         return response.data.content;
     }
 );
@@ -27,7 +27,7 @@ export const getChatMessagesAction = createAsyncThunk(
 
 export const startChatAction = createAsyncThunk(
     'chat/start-chat',
-    async ({ userId1, userId2 }) => {
+    async ({userId1, userId2}) => {
         const response = await startChat(userId1, userId2);
         return response.data.content;
     }
@@ -36,14 +36,19 @@ export const startChatAction = createAsyncThunk(
 const initialState = {
     userChats: {
         loading: false,
-        data: null,
+        payload: null,
+        error: null
+    },
+    chatMessages: {
+        loading: false,
+        payload: null,
         error: null
     },
     currentChat: {
         loading: false,
-        data: null,
+        payload: null,
         error: null
-    }
+    },
 }
 
 const chatStore = createSlice({
@@ -52,17 +57,19 @@ const chatStore = createSlice({
     reducers: {},
     extraReducers(builder) {
         builder
+            // Get user chats WITH messages --> GET
             .addCase(getUserChatsWithMessagesAction.pending, (state) => {
                 state.userChats.loading = true;
             })
             .addCase(getUserChatsWithMessagesAction.fulfilled, (state, action) => {
                 state.userChats.loading = false;
-                state.userChats.data = action.payload;
+                state.userChats.payload = action.payload;
             })
             .addCase(getUserChatsWithMessagesAction.rejected, (state, action) => {
                 state.userChats.loading = false;
                 state.userChats.error = action.error.message;
             })
+            // Send chat message --> POST
             .addCase(sendChatMessageAction.pending, (state) => {
                 state.currentChat.loading = true;
             })
@@ -73,28 +80,18 @@ const chatStore = createSlice({
                 state.currentChat.loading = false;
                 state.currentChat.error = action.error.message;
             })
+            // Get chats messages --> GET
             .addCase(getChatMessagesAction.pending, (state) => {
-                state.currentChat.loading = true;
+                state.chatMessages.loading = true;
             })
             .addCase(getChatMessagesAction.fulfilled, (state, action) => {
-                state.currentChat.loading = false;
+                state.chatMessages.loading = false;
+                state.chatMessages.payload = action.payload;
             })
             .addCase(getChatMessagesAction.rejected, (state, action) => {
-                state.currentChat.loading = false;
-                state.currentChat.error = action.error.message;
+                state.chatMessages.loading = false;
+                state.chatMessages.error = action.error.message;
             })
-            .addCase(startChatAction.pending, (state) => {
-                state.currentChat.loading = true;
-            })
-            .addCase(startChatAction.fulfilled, (state, action) => {
-                state.currentChat.loading = false;
-            })
-            .addCase(startChatAction.rejected, (state, action) => {
-                state.currentChat.loading = false;
-                state.currentChat.error = action.error.message;
-            })
-
-        // ... Ajoutez d'autres extraReducers pour getChatMessagesAction et startChatAction
     }
 });
 

@@ -4,6 +4,7 @@ import user from "./features/slices/user";
 import role from "./features/slices/role";
 import tree from "./features/slices/tree";
 import familytreeuser from "./features/slices/familytreeuser";
+import chat from "./features/slices/chat";
 
 const rootReducer = {
     adhesion,
@@ -11,7 +12,8 @@ const rootReducer = {
     user,
     role,
     tree,
-    familytreeuser
+    familytreeuser,
+    chat
 };
 
 export default rootReducer;

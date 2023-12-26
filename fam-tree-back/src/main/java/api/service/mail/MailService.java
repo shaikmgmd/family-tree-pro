@@ -27,8 +27,24 @@ public class MailService {
         mailSender.send(message);
     }
 
-    public void sendRelationshipConfirmationEmail(FamilyMember sourceMember, String sourceMemberEmail, String confirmationCode) {
-        String confirmationUrl = "http://localhost:8080/api/relationship-confirmation/" + confirmationCode;
+//    public void sendRelationshipConfirmationEmail(FamilyMember sourceMember, String sourceMemberEmail, String confirmationCode) {
+//        String confirmationUrl = "http://localhost:8080/api/relationship-confirmation/" + confirmationCode;
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom("familytree.pro2024@gmail.com");
+//        message.setTo(sourceMemberEmail);
+//        message.setSubject("Vous avez une demande d'ajout dans un arbre généalogique !");
+//        message.setText("Merci de vous intéresser à Arbre Généalogique Pro++.\n\n" +
+//                " Voici votre lien de confirmation pour intégrer un arbre " +
+//                /*+ sourceMember + " :\n\n"*/
+//                 confirmationUrl + "\n"
+//                + "Veuillez conserver ce lien en lieu sûr.");
+//
+//        mailSender.send(message);
+//    }
+
+//
+    public void sendRelationshipConfirmationEmail(String sourceMemberEmail, String confirmationCode) {
+        String confirmationUrl = "http://localhost:3000/confirm-relationship/" + confirmationCode;
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("familytree.pro2024@gmail.com");
         message.setTo(sourceMemberEmail);
@@ -36,7 +52,7 @@ public class MailService {
         message.setText("Merci de vous intéresser à Arbre Généalogique Pro++.\n\n" +
                 " Voici votre lien de confirmation pour intégrer un arbre " +
                 /*+ sourceMember + " :\n\n"*/
-                 confirmationUrl + "\n"
+                confirmationUrl + "\n"
                 + "Veuillez conserver ce lien en lieu sûr.");
 
         mailSender.send(message);

@@ -12,6 +12,7 @@ import {FTProLoader} from "../../components/loader/FTProLoader";
 import FamilyTreeComponent from "./FamilyTreeComponent";
 import ErrorBornDateButton from "../../components/button/ErrorBornDateButton";
 import ErrorBornDate from "./ErrorBornDate";
+import {getConnectedUserAction} from "../../store/features/slices/user";
 
 const FamilyTree = ({userId}) => {
     const [treeData, setTreeData] = useState(null);
@@ -44,8 +45,9 @@ const FamilyTree = ({userId}) => {
     const fetcher = async () => {
         try {
             setIsLoading(true);
-            console.log("user =>" , user)
-            await dispatch(getTreeByUserIdAction(user.payload.id));
+            await dispatch(getConnectedUserAction()).then(async (res) => {
+                await dispatch(getTreeByUserIdAction(res.payload.id));
+            })
         } catch (error) {
             console.error("Erreur lors de la récupération de l'arbre:", error);
         } finally {
@@ -137,24 +139,3 @@ const FamilyTree = ({userId}) => {
 }
 
 export default FamilyTree;
-
-/*<Tree data={convertToTreeData(tree)} nodeSvgShape={{shape: 'circle'}} nodeSize={{x: 200, y: 200}}
-      styles={{ nodes: { node: { circle: { fill: "#fff" } } }}}
-      pathFunc="straight" orientation="vertical"
-      allowForeignObjects nodeLabelComponent={{
-    /!*render: <MyCustomLabelComponent />, // Ton composant personnalisé pour les étiquettes*!/
-    foreignObjectWrapper: { x: 10, y: 10 }
-}}
-      transitionDuration={0}
-      nodeSvgShape={{ shape: 'circle', shapeProps: { r: 10 } }}
-      rootNodeClassName="node__root"
-      branchNodeClassName="node__branch"
-      leafNodeClassName="node__leaf"
-      nodeStyle={nodeStyleCallback}
-      pathClassFunc={getDynamicPathClass}
-      translate={{x: window.innerWidth / 3.5, y: window.innerHeight / 3}}
-      onNodeClick={node => {
-          setSelectedNodeId(node.data.attributes.id);
-          showModal();
-      }}
-/>*/

@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
+//
     @GetMapping
     public ResponseEntity<ApiResponse<User>> findConnectedUser() {
         ApiResponse<User> response = new ApiResponse<>(userService.getCurrentConnectedUser());
@@ -35,19 +35,19 @@ public class UserController {
     public ResponseEntity<List<User>> getAllUsersExceptCurrent(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size) {
-        System.out.println("----------------page---------------------\n");
-        System.out.println(page);
-        System.out.println("----------------size---------------------\n");
-        System.out.println(size);
         List<User> users = userService.getAllUsersExceptCurrent(page, size);
-        System.out.println("users : " + users);
         return ResponseEntity.ok(users);
     }
 
-    // Endpoint pour récupérer un utilisateur spécifique par son ID
-    @GetMapping("/all-except-current/{userId}")
-    public ResponseEntity<User> getUserById(@PathVariable Long userId) {
-        User user = userService.getUserById(userId);
-        return ResponseEntity.ok(user); // avec le statut HTTP 200 (OK)
+    @GetMapping("/all-except-current-no-pagination")
+    public ResponseEntity<ApiResponse<List<User>>> getAllUsersExceptCurrentWoutPagination() {
+        ApiResponse<List<User>> users = new ApiResponse<>(userService.findAllUsersExceptCurrentWoutPagination());
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable Long userId) {
+        ApiResponse<User> user = new ApiResponse<>(userService.findUserById(userId));
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 }
