@@ -10,7 +10,7 @@ import {
 import familyTree from "./FamilyTree";
 import {addExistingUserOnTree} from "../../api/feature/tree";
 
-const FamilyTreeComponent = ({familytree_id, isOwner}) => {
+const FamilyTreeComponent = ({isOwner}) => {
     const treeContainer = useRef(null); // Création d'une référence au conteneur
     const treeDataFromRedux = useSelector((state) => state.tree.getUserTree.payload);
     const userId = useSelector((state) => state.user.getConnectedUser.payload.id);
@@ -27,7 +27,7 @@ const FamilyTreeComponent = ({familytree_id, isOwner}) => {
         mouseScroll: FamilyTree.none,
         mode: 'light',
         //miniMap: true,
-        template: 'hugo',
+        template: 'tommy',
         roots: [],
         nodeMenu: {
             edit: {text: 'Modifier'},
@@ -114,11 +114,11 @@ const FamilyTreeComponent = ({familytree_id, isOwner}) => {
     });
 
     useEffect(() => {
-        const newRoots = findUserAndParentRoots(data, userId);
+        /*const newRoots = findUserAndParentRoots(data, userId);
         setTreeOptions(currentOptions => ({
             ...currentOptions,
             roots: newRoots,
-        }));
+        }));*/
     }, [data, userId]);
 
     const findUserAndParentRoots = (data, userId) => {
@@ -135,14 +135,15 @@ const FamilyTreeComponent = ({familytree_id, isOwner}) => {
     };
 
 
-    const treeFetcher = async () => {
+    /*const treeFetcher = async () => {
         await dispatch(getTreeByUserIdAction(familytree_id));
     }
     useEffect(() => {
         if (familytree_id) {
             treeFetcher();
+            return;
         }
-    }, [dispatch, familytree_id]);
+    }, [dispatch, familytree_id]);*/
 
     const addNode = (newNode) => {
         // Simuler un appel API pour ajouter un nœud
@@ -162,33 +163,14 @@ const FamilyTreeComponent = ({familytree_id, isOwner}) => {
             console.log("Response =>", r);
             await dispatch(getTreeByUserIdAction(userId));
         });
-        setTimeout(() => {
-            setData(currentData =>
-                currentData.map(node => node.id === nodeId ? updatedNode : node)
-            );
-        }, 1000); // Délai simulé de 1 seconde
     };
 
     const editExistingNode = (nodeId, email) => {
         // Simuler un appel API pour éditer un nœud
         handleExistingMember({email}).then(async r => {
             console.log("Response =>", r);
-            await dispatch(getTreeByUserIdAction(1));
+            await dispatch(getTreeByUserIdAction(userId));
         });
-        setTimeout(() => {
-            setData(currentData =>
-                currentData.map(node => node.id === nodeId ? email : node)
-            );
-        }, 1000); // Délai simulé de 1 seconde
-    };
-
-    const deleteNode = (nodeId) => {
-        // Simuler un appel API pour supprimer un nœud
-        setTimeout(() => {
-            setData(currentData =>
-                currentData.filter(node => node.id !== nodeId)
-            );
-        }, 1000); // Délai simulé de 1 seconde
     };
 
 
@@ -199,13 +181,12 @@ const FamilyTreeComponent = ({familytree_id, isOwner}) => {
 
     useEffect(() => {
         if (treeContainer.current) {
-
+            console.log("Initialisation de FamilyTree avec les options : ", treeOptions);
             const tree = new FamilyTree(treeContainer.current, treeOptions);
-
+            console.log("Instance de FamilyTree créée : ", tree);
             setTreeInstance(tree);
         }
-    }, [treeContainer, modalMode, isOwner]);
-
+    }, [treeContainer, modalMode, isOwner, treeOptions]);
 
     function editHandler(nodeId) {
         if (treeInstance) {
@@ -222,6 +203,7 @@ const FamilyTreeComponent = ({familytree_id, isOwner}) => {
         try {
             const response = await dispatch(addMemberToTreeAction({data}));
             console.log("response handleAddMember =>", response.data)
+            await dispatch(getTreeByUserIdAction(userId));
         } catch (error) {
             console.error("Erreur lors de l'ajout du membre:", error);
         }
@@ -232,6 +214,7 @@ const FamilyTreeComponent = ({familytree_id, isOwner}) => {
         try {
             const response = await dispatch(addExistingMemberToTreeAction({data}));
             console.log("response handleAddExistingMember =>", response.data)
+            await dispatch(getTreeByUserIdAction(userId));
         } catch (error) {
             console.error("Erreur lors de l'ajout du membre:", error);
         }
@@ -291,13 +274,9 @@ const FamilyTreeComponent = ({familytree_id, isOwner}) => {
 
     useEffect(() => {
         if (treeInstance && data.length > 0) {
-            try {
-                treeInstance.load(data);
-            } catch (error) {
-                console.error('Error initializing FamilyTree:', error);
-            }
+            treeInstance.load(data);
         }
-    }, [treeInstance, data, userId]);
+    }, [treeInstance, data]);
 
     return <div id="tree" ref={treeContainer} className={isOwner ? 'owner' : 'viewer'}></div>;
 };

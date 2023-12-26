@@ -25,13 +25,15 @@ CREATE TABLE relation (
 -- Insertion des données dans la table Personnes
 INSERT INTO personne (id, tree_id, name, gender, born, photo, email, phone, city, country) VALUES
                                                                                        (1, 1, 'Shaik MASTER', 'male', '1954-09-29', 'https://media.licdn.com/dms/image/D4E03AQHHTIB4b7KdBg/profile-displayphoto-shrink_800_800/0/1691258212491?e=1707350400&v=beta&t=Xq8wX9sckDe6mBxkl5f1WuKn6TrLd2A3YWjdAMwSkrg', NULL, NULL, NULL, NULL),
-                                                                                       (2, 1,'Hashif BATCHAAA', 'male', '1952-10-10', 'https://media.licdn.com/dms/image/C4E03AQHH8oM-mc-xUQ/profile-displayphoto-shrink_800_800/0/1649011599937?e=1707350400&v=beta&t=bW4LIfJE5Pe9Aj7axGZCsylHwNjj-Hf-c4-Y28wBbl0', NULL, NULL, NULL, NULL),
+                                                                                       (2, 1,'Hashif BATCHA', 'male', '1952-10-10', 'https://media.licdn.com/dms/image/C4E03AQHH8oM-mc-xUQ/profile-displayphoto-shrink_800_800/0/1649011599937?e=1707350400&v=beta&t=bW4LIfJE5Pe9Aj7axGZCsylHwNjj-Hf-c4-Y28wBbl0', NULL, NULL, NULL, NULL),
                                                                                        (3,  1,'Laura Shepherd', 'female', '1943-01-13', 'https://cdn.balkan.app/shared/w60/1.jpg', 'laura.shepherd@gmail.com', '+44 845 5752 547', 'Moscow', 'ru'),
                                                                                        (4, 1, 'Rowan Annable', 'male', '1975-11-12', 'https://cdn.balkan.app/shared/m60/3.jpg', NULL, NULL, NULL, NULL),
                                                                                        (5,  1,'Lois Sowle', 'female', '1975-11-12', 'https://cdn.balkan.app/shared/w60/3.jpg', NULL, NULL, NULL, NULL),
                                                                                        (6, 1, 'Tyler Heath', 'female', '1975-11-12', 'https://cdn.balkan.app/shared/w30/1.jpg', NULL, NULL, NULL, NULL),
                                                                                        (7, 1, 'ILIAS ARCHI', 'male', '1986-10-01', 'https://media.licdn.com/dms/image/D4E03AQGsp8qCVHU9QQ/profile-displayphoto-shrink_800_800/0/1666099563197?e=1707350400&v=beta&t=0M7mSXaG4MUzZtpfy2ScJ2kagGBL_ZgmW0RJEjnwGnk', NULL, NULL, NULL, NULL),
-                                                                                       (8, 1, 'Celeste Castillo', 'female', '2021-02-01', 'https://cdn.balkan.app/shared/w10/3.jpg', NULL, NULL, NULL, NULL);
+                                                                                       (8, 1, 'Celeste Castillo', 'female', '2021-02-01', 'https://cdn.balkan.app/shared/w10/3.jpg', NULL, NULL, NULL, NULL),
+                                                                                       (9, 2, 'Hashif BATCHA', 'male', '2002-02-01', 'https://media.licdn.com/dms/image/C4E03AQHH8oM-mc-xUQ/profile-displayphoto-shrink_800_800/0/1649011599937?e=1707350400&v=beta&t=bW4LIfJE5Pe9Aj7axGZCsylHwNjj-Hf-c4-Y28wBbl0', NULL, NULL, NULL, NULL),
+                                                                                       (10, 3, 'Roland-Cédric TAYO', 'male', '1990-02-01', 'https://media.licdn.com/dms/image/C4E03AQHH8oM-mc-xUQ/profile-displayphoto-shrink_800_800/0/1649011599937?e=1707350400&v=beta&t=bW4LIfJE5Pe9Aj7axGZCsylHwNjj-Hf-c4-Y28wBbl0', NULL, NULL, NULL, NULL);
 
 -- Insertion des données dans la table Relations
 INSERT INTO relation (person_id, partner_id, mother_id, father_id) VALUES
