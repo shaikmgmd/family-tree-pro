@@ -4,7 +4,7 @@ import { Button } from 'antd';
 import { PoweroffOutlined } from '@ant-design/icons';
 import './PowerButton.css';
 
-const PowerButton = ({ index, onClick, text = "Voir l'arbre" }) => {
+const PowerButton = ({ index, onClick, text, duration, icon }) => {
   const [loading, setLoading] = useState(false);
 
   const enterLoading = () => {
@@ -12,7 +12,7 @@ const PowerButton = ({ index, onClick, text = "Voir l'arbre" }) => {
     setTimeout(() => {
       setLoading(false);
       if (onClick) onClick(index);
-    }, 1000);
+    }, duration);
   };
 
   return (
@@ -21,6 +21,7 @@ const PowerButton = ({ index, onClick, text = "Voir l'arbre" }) => {
       className="billyButton"
       loading={loading}
       onClick={enterLoading}
+      icon={icon}
     >
       {text}
     </Button>

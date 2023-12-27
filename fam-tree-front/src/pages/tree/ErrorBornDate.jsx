@@ -5,7 +5,7 @@ import ErrorBornDateButton from "../../components/button/ErrorBornDateButton"; /
 import '../../components/button/PowerButton.css';
 const ErrorBornDate = () => (
     <Result
-        status="500"
+        status="error"
         title="Vos données sont incohérentes"
             subTitle="Assurez vous de résoudre les erreurs listées ci-dessous"
         extra={[

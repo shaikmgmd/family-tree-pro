@@ -5,64 +5,52 @@ import {
     setUsers,
     addUsers,
     setLoading,
-    setHasMore,
-} from '../../store/features/slices/familytreeuser';
+    setHasMore, getAllUsersExceptCurrentAction, getAllUsersAction, resetAllUsersExceptCurrent,
+} from '../../store/features/slices/user';
 import {getAllUsersExceptCurrent} from "../../api/feature/user";
 import PowerButton from "../../components/button/PowerButton";
 import './ListUser.css';
 import {getTreeByUserIdAction} from "../../store/features/slices/tree";
 import {getTreeByUserId} from "../../api/feature/tree";
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import {MainWrapper} from "../../components/wrapper/MainWrapper";
+import {ListUserWrapper} from "../../components/wrapper/ListUserWrapper";
+import {AllUsersLoadedMessage} from "../../components/popup/AllUsersLoadedMessage";
+import {PlusCircleFilled} from "@ant-design/icons";
+import SearchButton from "../../components/button/SearchButton";
+import {getAllUsers} from "../../api/feature/user";
 
 const ListUser = () => {
-    const {data, loading, hasMore} = useSelector((state) => state.familytreeuser);
+    const {data, loading, hasMore, page} = useSelector((state) => state.user.allUsersExceptCurrent);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.getConnectedUser);
-    const [currentPage, setCurrentPage] = useState({
-        page: 0,
-        size: 2
-    });
+    const userCount = useSelector((state) => state.user.allUsersExceptCurrent);
+    const pageSize = 2;
     const navigate = useNavigate();
 
     useEffect(() => {
-        dispatch(setLoading(true));
-        getAllUsersExceptCurrent(currentPage.page, currentPage.size)
-            .then((res) => {
-                console.log("data:", res.data);
-                dispatch(setUsers(res.data));
-                dispatch(setLoading(false));
-            })
-            .catch((error) => {
-                console.error("Erreur lors de la récupération des utilisateurs", error);
-                dispatch(setLoading(false));
-            });
-    }, [dispatch, currentPage.page]);
-    const onLoadMore = () => {
-        if (!hasMore) return;
-        dispatch(setLoading(true));
+        console.log('Users loaded:', data);
+        console.log('Has more users:', hasMore);
+    }, [data, hasMore]);
 
-        const nextPage = currentPage.page + 1;
-        console.log("Chargement de la page : ", nextPage);
-        getAllUsersExceptCurrent(nextPage, currentPage.size)
-            .then((res) => {
-                if (res.data.length === 0) {
-                    dispatch(setHasMore(false));
-                } else {
-                    dispatch(addUsers(res.data));
-                    setCurrentPage((prevState) => ({
-                        ...prevState,
-                        page: prevState.page + 1 // mise à jour correcte de la page
-                    }));
-                }
-                dispatch(setLoading(false));
-            })
-            .catch((error) => {
-                console.error("Erreur lors du chargement de plus d'utilisateurs", error);
-                dispatch(setLoading(false));
-            });
+    useEffect(() => {
+        return () => {
+            // Dispatch an action to reset the state when the component unmounts
+            dispatch(resetAllUsersExceptCurrent());
+        };
+    }, [dispatch]);
+
+    const loadUsers = async (page) => {
+        await dispatch(getAllUsersExceptCurrentAction({page, size: pageSize}));
     };
 
+    const onLoadMore = () => {
+        if (!hasMore || loading) return;
+        console.log(`Loading users for page: ${page}`);
+        loadUsers(page).then(() => {
+        });
+        //loadUsers(page);
+    };
 
     const loadMore = !loading && hasMore ? (
         <div
@@ -73,7 +61,7 @@ const ListUser = () => {
                 lineHeight: "32px",
             }}
         >
-            <Button onClick={onLoadMore}>loading more</Button>
+            <PowerButton onClick={onLoadMore} text={"Next"} duration={100} icon={<PlusCircleFilled />}></PowerButton>
         </div>
     ) : null;
 
@@ -82,30 +70,40 @@ const ListUser = () => {
         navigate(`/family-tree/user/${userId}`);
     };
 
+    const allUsersLoadedMessage = !hasMore && data.length > 0 ? <AllUsersLoadedMessage /> : null;
+
     return (
-        <MainWrapper title={"Liste des utilisateurs disponible sur l'application"}
-                     description={"N'hésitez pas à jeter un coup d'oeil à l'arbre généalogique des autres utilisateurs !"}>
+        <ListUserWrapper title={"Liste des utilisateurs disponible sur l'application"}
+                     description={"N'hésitez pas à jeter un coup d'oeil à l'arbre généalogique des autres utilisateurs !"}
+                    userCount={userCount.data.length}>
             <List
                 className="demo-loadmore-list"
                 loading={loading}
                 itemLayout="horizontal"
                 loadMore={loadMore}
                 dataSource={data}
-                renderItem={(item) => (
-                    <List.Item
-                    >
-                        <Skeleton avatar title={false} loading={loading} active>
-                            <List.Item.Meta
-                                className="custom-list-item-meta"
-                                avatar={<Avatar className="custom-avatar" src={item.photoPath}/>}
-                                title={<div>{item.firstName}</div>}
-                            />
-                        </Skeleton>
-                        <PowerButton onClick={() => handlePowerButtonClick(item.id)} index={item.id}/>
-                    </List.Item>
-                )}
+                renderItem={(item) => {
+                    // Log l'item ici
+                    console.log("item:", item);
+
+                    return (
+                        <List.Item>
+                            <Skeleton avatar title={false} loading={loading} active>
+                                <List.Item.Meta
+                                    className="custom-list-item-meta"
+                                    avatar={<Avatar className="custom-avatar" src={item.photoPath}/>}
+                                    title={<div>{item.firstName}</div>}
+                                    description={"Utilisateur n°" + item.id + " : " + item.lastName + " " + item.firstName + " | Orignaire du pays " + item.nationality + ", il est né le " + item.birthDate + ". "
+                                    + "Son arbre a été crée le " + item.createdAt}
+                                />
+                            </Skeleton>
+                            <PowerButton index={item.id} onClick={() => handlePowerButtonClick(item.id)} text="Voir l'arbre" duration={1000}/>
+                        </List.Item>
+                    );
+                }}
             />
-        </MainWrapper>
+            {allUsersLoadedMessage}
+        </ListUserWrapper>
     );
 };
 
