@@ -31,12 +31,12 @@ public class UserController {
     }
 
     // Endpoint pour récupérer tous les utilisateurs sauf l'utilisateur actuel
-    @GetMapping("/all-except-current")
-    public ResponseEntity<List<User>> getAllUsersExceptCurrent(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "2") int size) {
-        List<User> users = userService.getAllUsersExceptCurrent(page, size);
-        return ResponseEntity.ok(users);
+    @GetMapping("/all-except-current/{page}/{size}")
+    public ResponseEntity<ApiResponse<List<User>>> getAllUsersExceptCurrent(
+            @PathVariable int page,
+            @PathVariable int size) {
+        ApiResponse<List<User>> users = new ApiResponse<>(userService.getAllUsersExceptCurrent(page, size));
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @GetMapping("/all-except-current-no-pagination")
@@ -44,10 +44,16 @@ public class UserController {
         ApiResponse<List<User>> users = new ApiResponse<>(userService.findAllUsersExceptCurrentWoutPagination());
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
-
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable Long userId) {
         ApiResponse<User> user = new ApiResponse<>(userService.findUserById(userId));
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
+        ApiResponse<List<User>> users = new ApiResponse<>(userService.getAllUsers());
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
 }
