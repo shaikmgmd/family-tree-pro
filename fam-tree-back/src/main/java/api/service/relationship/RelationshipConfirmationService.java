@@ -16,6 +16,7 @@ import api.repository.user.UserRepository;
 import api.service.mail.MailService;
 import api.service.tree.FamilyTreeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -64,39 +65,43 @@ public class RelationshipConfirmationService {
 //    }
 
 
-    public void requestRelationshipConfirmation(Long userId, String emailOfMemberToAdd) {
+    public void requestRelationshipConfirmation(String emailOfMemberToAdd, Long nodeId) {
+        String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currUser = userRepository.findByPrivateCode(currentPrivateCode);
 
         Optional<User> targetMember = userRepository.findByEmail(emailOfMemberToAdd);
-        Optional<User> sourceMember = userRepository.findById(userId);
+        User sourceMember = currUser;
 
         if (targetMember.isEmpty()) {
             throw new RuntimeException("User not found");
         }
 
         System.out.println("TARGET =>" + targetMember.get().getEmail());
-        System.out.println("SOURCE =>" + sourceMember.get().getEmail());
+        System.out.println("SOURCE =>" + sourceMember.getEmail());
 
 
         String confirmationCode = UUID.randomUUID().toString();
 
         RelationshipConfirmation confirmation = new RelationshipConfirmation();
 
-        Optional<RelationshipConfirmation> existingTargetMember = relationshipConfirmationRepository.findByTargetMember(targetMember.get());
+        Optional<RelationshipConfirmation> existingTargetMember = relationshipConfirmationRepository.findBySourceMemberAndTargetMember(sourceMember, targetMember.get());
 
         if(existingTargetMember.isPresent()) {
             throw new RuntimeException("User already add");
         }
 
         confirmation.setConfirmationCode(confirmationCode);
-        confirmation.setSourceMember(sourceMember.get());
+        confirmation.setSourceMember(sourceMember);
         confirmation.setTargetMember(targetMember.get());
         confirmation.setExpiryDate(LocalDateTime.now().plusDays(7));
         confirmation.setIsConfirmed(false);
         relationshipConfirmationRepository.save(confirmation);
 
-        Optional<Personne> personne = personneRepository.findByEmail(emailOfMemberToAdd);
-        personne.get().setName("En attente");
-        personneRepository.save(personne.get());
+        Optional<Personne> personne = personneRepository.findById(nodeId);
+        Personne tmpPrsn = personne.get();
+        tmpPrsn.setName("En attente");
+        tmpPrsn.setEmail(emailOfMemberToAdd);
+        personneRepository.save(tmpPrsn);
 
         emailService.sendRelationshipConfirmationEmail(emailOfMemberToAdd, confirmationCode);
 
@@ -172,16 +177,24 @@ public class RelationshipConfirmationService {
 
         // Si oui changer dans la bdd les infos de personne par ftp_pro_user
         Optional<Personne> personne = personneRepository.findByEmail(user.get().getEmail());
-        personne.get().setName(user.get().getFirstName() + " " + user.get().getLastName());
-        personne.get().setBorn(date);
-        personne.get().setPhoto(user.get().getPhotoPath());
-        personne.get().setPhone(user.get().getPhone());
-        personne.get().setCity(user.get().getCity());
-        personne.get().setCountry(user.get().getNationality());
-        personne.get().setAddress(user.get().getAddress());
-//        personne.get().setGender(user.get().getGender());
-        personne.get().setIs_registered(true);
-        personneRepository.save(personne.get());
+
+        // Assign the retrieved Personne object to a temporary variable for clarity and to avoid multiple calls to .get()
+        Personne tmpPrsn = personne.get();
+
+        // Update the Personne object with user details
+        tmpPrsn.setName(user.get().getFirstName() + " " + user.get().getLastName());
+        tmpPrsn.setBorn(date);
+        tmpPrsn.setPhoto(user.get().getPhotoPath());
+        tmpPrsn.setPhone(user.get().getPhone());
+        tmpPrsn.setCity(user.get().getCity());
+        tmpPrsn.setCountry(user.get().getNationality());
+        tmpPrsn.setAddress(user.get().getAddress());
+        // tmpPrsn.setGender(user.get().getGender()); // This line is commented out, as in your original code
+        tmpPrsn.setIs_registered(true);
+
+        // Save the updated Personne object to the repository
+        personneRepository.save(tmpPrsn);
+
 
     }
 

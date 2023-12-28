@@ -28,5 +28,5 @@ public class Personne {
     private String address;
     @Column(name = "temp_id")
     private String tempId;
-    private Boolean is_registered;
+    private Boolean is_registered = false;
 }

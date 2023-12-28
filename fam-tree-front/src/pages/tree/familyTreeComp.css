@@ -137,3 +137,14 @@
 #tree.viewer .bft-img-button {
     display: none;
 }
+
+svg.tommy .node.border-t rect {
+    stroke: green; /* Couleur de la bordure */
+    stroke-width: 3px; /* Épaissit la bordure */
+}
+
+svg.tommy .node.border-f rect {
+    stroke: red; /* Couleur de la bordure */
+    stroke-width: 3px; /* Épaissit la bordure */
+}
+

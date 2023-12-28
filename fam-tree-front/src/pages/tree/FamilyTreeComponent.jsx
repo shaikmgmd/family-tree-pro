@@ -44,6 +44,19 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
         return roots;
     };
 
+
+    const getBorderTag = (name) => {
+        if(name != null) {
+            if (name.endsWith('_t')) {
+                return 'border-t'; // Tag pour les noms finissant par '_t'
+            } else if (name.endsWith('_f')) {
+                return 'border-f'; // Tag pour les noms finissant par '_f'
+            }
+            return ''; // Pas de tag spécifique si le nom ne correspond pas
+        }
+    };
+
+
     const handleServerError = (error) => {
         console.log("Erreur complète:", error);
         if (error.type ===
@@ -91,7 +104,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
 
     const editExistingNode = (nodeId, email) => {
         // Simuler un appel API pour éditer un nœud
-        handleExistingMember({email}).then(async r => {
+        handleExistingMember({nodeId, email}).then(async r => {
             await dispatch(getTreeByUserIdAction(userId));
         });
     };
@@ -243,8 +256,8 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
                 if (modalMode === "newMember" || modalMode === "edit") {
                     editNode(nodeId, node);
                 } else {
-                    editNode(nodeId, node);
-                    editExistingNode(nodeId, node.updateNodesData[0].email);
+                    // editNode(nodeId, node);
+                    editExistingNode(node.updateNodesData[0].id, node.updateNodesData[0].email);
                     setModalMode("edit")
                 }
             });
@@ -270,6 +283,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
 
     const handleExistingMember = async (data) => {
         try {
+            console.log("data sent in handleExistingMember =>", data)
             const response = await dispatch(addExistingMemberToTreeAction({data}));
         } catch (error) {
             console.error("Erreur lors de l'ajout du membre:", error);
@@ -278,7 +292,16 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
 
     useEffect(() => {
         if (treeDataFromRedux) {
-            setData([...treeDataFromRedux]); // Créez une copie des données
+            const updatedNodes = treeDataFromRedux.map(node => {
+                const cleanedName = node?.name?.slice(0, -2);
+                    return {
+                        ...node,
+                        name : cleanedName,
+                        tags: [getBorderTag(node?.name)] // Ajoutez les tags en fonction du nom
+                    }
+                }
+            );
+            setData([...updatedNodes]); // Mettez à jour les données avec les nouveaux tags
         }
     }, []);
 
