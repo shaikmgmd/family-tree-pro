@@ -8,7 +8,6 @@ import java.util.Optional;
 //
 public interface PersonneRepository extends JpaRepository<Personne, Long> {
     List<Personne> findByTreeId(Long treeId);
-
     Optional<Personne> findByEmail(String email);
-
+    Optional<Personne> findByTempId(String tempId);
 }

@@ -94,6 +94,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
     const editNode = (nodeId, updatedNode) => {
         try {
             handleAddMember({updatedNode}).then(async r => {
+                console.log({updatedNode})
                 await dispatch(getTreeByUserIdAction(userId));
             });
         } catch (error) {
@@ -302,7 +303,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
             );
             setData([...updatedNodes]); // Mettez à jour les données avec les nouveaux tags
         }
-    }, [treeDataFromRedux]);
+    }, []);
 
     useEffect(() => {
         if (treeInstance && data.length > 0) {

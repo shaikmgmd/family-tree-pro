@@ -38,6 +38,7 @@ public class PersonneService {
     }
 
     public Long createAndSaveNewPerson(Map<String, Object> personneData, Map<String, Long> idMapping) {
+        System.out.println(idMapping);
         Personne newPersonne = new Personne();
         updatePersonneAttributes(newPersonne, personneData);
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -46,18 +47,17 @@ public class PersonneService {
             throw new EntityNotFoundException("Arbre généalogique non trouvé pour l'utilisateur avec ID " + currUser.getId());
         });
         newPersonne.setTreeId(familyTree.getId());
-        newPersonne = personneRepository.save(newPersonne);
 
-        // Récupérer l'ID bizarre et le mapper au nouvel ID réel
+        // Récupérer l'ID bizarre ou utiliser l'ID réel si le tempId est null.
         String tempId = (String) personneData.get("id");
-        if (tempId != null) {
-            idMapping.put(tempId, newPersonne.getId());
+        if (tempId != null && !tempId.isEmpty()) {
+            newPersonne.setTempId(tempId); // Set the temporary ID only if it's not null and not empty
         }
-
-        if (!areParentChildRelationsValid(newPersonne.getTreeId())) {
+        newPersonne = personneRepository.save(newPersonne);
+        /*if (!areParentChildRelationsValid(newPersonne.getTreeId())) {
             //System.out.println("\nKAKA INVALIDE\n");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après création de la personne).");
-        }
+        }*/
 
         return newPersonne.getId();
     }
@@ -96,9 +96,11 @@ public class PersonneService {
     private void handleUpdateNodesData(Map<String, Object> updatedNode, Map<String, Long> idMapping) {
         List<Map<String, Object>> updateNodesData = getAsListOfMap(updatedNode.get("updateNodesData"));
         for (Map<String, Object> nodeData : updateNodesData) {
-            updatePersonne(nodeData, idMapping);
+            Long personId = updatePersonne(nodeData, idMapping);
+            createRelationForNewPerson(personId, idMapping, nodeData); // Handle relation updates
         }
     }
+
 
     private void handleRemoveNodeId(Map<String, Object> updatedNode) {
 
@@ -116,19 +118,19 @@ public class PersonneService {
                 deleteRelatedRelations(removeNodeId); // Supprime d'abord les relations associées
                 personneRepository.deleteById(removeNodeId); // Ensuite, supprime la personne
 
-                if (treeId != null && !areParentChildRelationsValid(treeId)) {
+                /*if (treeId != null && !areParentChildRelationsValid(treeId)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après sup de la personne).");
-                }
+                }*/
             }
         }
     }
 
 
-    private void updatePersonne(Map<String, Object> nodeData, Map<String, Long> idMapping) {
+    private Long updatePersonne(Map<String, Object> nodeData, Map<String, Long> idMapping) {
         Object idObject = nodeData.get("id");
-        Long realId;
+        Long realId = resolveId(idObject, idMapping);
         // Vérifier si l'ID est une chaîne ou un nombre et le traiter en conséquence
-        if (idObject instanceof String) {
+        /*if (idObject instanceof String) {
             String tempId = (String) idObject;
             realId = idMapping.getOrDefault(tempId, null);
             if (realId == null) {
@@ -138,47 +140,76 @@ public class PersonneService {
             realId = ((Number) idObject).longValue(); // Convertir en Long pour les ID
         } else {
             throw new RuntimeException("Type d'ID non reconnu: " + idObject);
-        }
+        }*/
         Personne personneToUpdate = personneRepository.findById(realId)
                 .orElseThrow(() -> new RuntimeException("Personne not found with ID: " + realId));
         updatePersonneAttributes(personneToUpdate, nodeData);
         if (!ObjectUtils.isEmpty(idMapping)) {
             createRelationForNewPerson(realId, idMapping, nodeData);
         }
-        if (!areParentChildRelationsValid(personneToUpdate.getTreeId())) {
+        /*if (!areParentChildRelationsValid(personneToUpdate.getTreeId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après mise à jour de la personne).");
-        }
+        }*/
         personneRepository.save(personneToUpdate);
+        return personneToUpdate.getId();
     }
 
 
     private Long resolveId(Object idObject, Map<String, Long> idMapping) {
         if (idObject instanceof List) {
-            // Extraire le dernier élément si idObject est une liste
             List<?> idList = (List<?>) idObject;
             if (!idList.isEmpty()) {
                 Object lastId = idList.get(idList.size() - 1);
                 return getIdFromObject(lastId, idMapping);
+            } else {
+                System.out.println("Warning: Empty ID list received in resolveId for object: " + idObject);
+                return null; // Or handle as appropriate for your application
             }
         } else {
-            // Gérer les cas de chaîne ou de nombre unique
             return getIdFromObject(idObject, idMapping);
         }
-        throw new RuntimeException("resolveId ERROR : " + idObject);
     }
+
+
+
+
 
     private Long getIdFromObject(Object idObject, Map<String, Long> idMapping) {
         if (idObject instanceof String) {
             String tempId = (String) idObject;
-            if (idMapping.containsKey(tempId)) {
-                return idMapping.get(tempId);
+            Long realId = null;
+
+            // If tempId is not null and not empty, try to get the real ID from the idMapping or the database.
+            if (tempId != null && !tempId.isEmpty()) {
+                realId = idMapping.get(tempId);
+                if (realId == null) {
+                    // If it's not in the idMapping, look in the database.
+                    Optional<Personne> personneOpt = personneRepository.findByTempId(tempId);
+                    if (personneOpt.isPresent()) {
+                        realId = personneOpt.get().getId();
+                    }
+                }
             }
-            return Long.parseLong(tempId);
+
+            // If realId is still null, assume tempId is actually the real ID and parse it.
+            if (realId == null) {
+                try {
+                    realId = Long.parseLong(tempId);
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException("Invalid ID format: " + tempId);
+                }
+            }
+
+            return realId;
         } else if (idObject instanceof Number) {
+            // Just return the long value for numbers.
             return ((Number) idObject).longValue();
+        } else {
+            throw new RuntimeException("Unrecognized ID type: " + idObject);
         }
-        throw new RuntimeException("getIdFromObject ERROR : " + idObject);
     }
+
+
 
 
     private List<Map<String, Object>> getAsListOfMap(Object object) {
@@ -255,49 +286,6 @@ public class PersonneService {
         return formattedPersonne;
     }
 
-
-    private void updateRelationsWithNewPersons(Personne personne, Map<String, Object> nodeData, Map<String, Long> idMapping) {
-        // Mise à jour des relations
-        /*updatePartnerIds(personne, nodeData, idMapping);*/
-        /*updateMotherId(personne, nodeData, idMapping);
-        updateFatherId(personne, nodeData, idMapping);*/
-    }
-
-    private void updatePartnerIds(Personne personne, Map<String, Object> nodeData, Map<String, Long> idMapping) {
-        List<String> partnerIds = (List<String>) nodeData.get("pids");
-        System.out.println("partnerIds =>" + partnerIds);
-        if (partnerIds != null) {
-            for (int i = 0; i < partnerIds.size(); i++) {
-                String tempId = partnerIds.get(i);
-                if (idMapping.containsKey(tempId)) {
-                    partnerIds.set(i, idMapping.get(tempId).toString());
-                }
-            }
-        }
-        // Continuez à traiter les autres champs (mid, fid) de la même manière
-    }
-
-
-// Méthodes similaires pour updateMotherId et updateFatherId
-
-
-    private void updateMotherId(Personne personne, Map<String, Object> nodeData, Map<String, Long> idMapping) {
-        Long motherId = (Long) nodeData.get("mid");
-        if (motherId != null && idMapping.containsKey(motherId)) {
-            // Remplacer l'identifiant temporaire par l'identifiant réel
-            nodeData.put("mid", idMapping.get(motherId));
-        }
-    }
-
-
-    private void updateFatherId(Personne personne, Map<String, Object> nodeData, Map<String, Long> idMapping) {
-        Long fatherId = (Long) nodeData.get("fid");
-        if (fatherId != null && idMapping.containsKey(fatherId)) {
-            // Remplacer l'identifiant temporaire par l'identifiant réel
-            nodeData.put("fid", idMapping.get(fatherId));
-        }
-    }
-
     private void deleteRelatedRelations(Long personId) {
         Optional<List<Relation>> relationsAsPerson = relationRepository.findByPerson_Id(personId);
         relationsAsPerson.ifPresent(relationRepository::deleteAll);
@@ -311,16 +299,20 @@ public class PersonneService {
 
     private void createRelationForNewPerson(Long personId, Map<String, Long> idMapping, Map<String, Object> nodeData) {
         Relation newRelation = new Relation();
-        System.out.println("idMapping => " + idMapping);
-        System.out.println("nodeData => " + nodeData);
+        System.out.println("Creating relation for Person ID: " + personId);
+        System.out.println("Node Data: " + nodeData);
+        System.out.println("ID Mapping: " + idMapping);
 
         newRelation.setPerson(personneRepository.findById(personId).orElseThrow(
                 () -> new RuntimeException("Personne not found with ID: " + personId)));
 
         if (nodeData.containsKey("pids")) {
             Long partnerId = resolveId(nodeData.get("pids"), idMapping);
-            newRelation.setPartner(personneRepository.findById(partnerId)
-                    .orElseThrow(() -> new RuntimeException("Partner not found with ID: " + partnerId)));
+            if(partnerId != null) {
+                // Set partner only if ID is not null
+                newRelation.setPartner(personneRepository.findById(partnerId)
+                        .orElseThrow(() -> new RuntimeException("Partner not found with ID: " + partnerId)));
+            }
         }
 
         if (nodeData.containsKey("mid")) {
@@ -371,11 +363,6 @@ public class PersonneService {
         }
     }
 
-    private String formatDate(Date date) {
-        // Format de la date selon vos besoins
-        return new SimpleDateFormat("yyyy-MM-dd").format(date);
-    }
-
     public Date convertStringToDate(String dateString) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try {
@@ -387,13 +374,13 @@ public class PersonneService {
         }
     }
 
-    private boolean isBirthDateValid(Personne parent, Personne child) {
+    /*private boolean isBirthDateValid(Personne parent, Personne child) {
         System.out.println("date de naissance parent : " + parent.getBorn() + "\n");
         System.out.println("date de naissance enfant : " + child.getBorn());
         return parent.getBorn().before(child.getBorn());
-    }
+    }*/
 
-    public boolean areParentChildRelationsValid(Long treeId) {
+    /*public boolean areParentChildRelationsValid(Long treeId) {
         List<Personne> personnes = personneRepository.findByTreeId(treeId);
         for (Personne personne : personnes) {
             Optional<List<Relation>> optionalRelations = relationRepository.findByPerson_Id(personne.getId());
@@ -413,7 +400,7 @@ public class PersonneService {
         }
         System.out.println("\nLIEN VALIDE\n");
         return true;
-    }
+    }*/
 
 }
 
