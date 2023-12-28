@@ -1,4 +1,5 @@
 import chat from "../../pages/chat/Chat";
+import {getAllUsers} from "../../store/features/slices/user";
 
 export const featureExampleUrl = {
     URL_EXAMPLE: '/example',
@@ -25,8 +26,9 @@ export const userUrl = {
     GET_CONNECTED_USER: `/user`,
     GET_USER_BY_ID: (userId) => `/user/${userId}`,
     UPDATE_USER: `/user/update`,
-    GET_ALL_USERS_EXCEPT_CURRENT: (page, size) => `/user/all-except-current?page=${page}&pageSize=${size}`,
+    GET_ALL_USERS_EXCEPT_CURRENT: (page, size) => `/user/all-except-current/${page}/${size}`,
     GET_ALL_USERS_EXCEPT_CURRENT_NO_PAGINATION: `/user/all-except-current-no-pagination`,
+    GET_ALL_USERS:`/user/all`,
 }
 
 export const roleUrl = {
