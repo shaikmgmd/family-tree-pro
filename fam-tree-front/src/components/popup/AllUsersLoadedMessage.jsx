@@ -6,7 +6,7 @@ import { Button, Result } from "antd";
 export const AllUsersLoadedMessage = () => {
     return (
         <Result
-            title="Tous les utilisateurs ont été chargés avec succès!"
+            title="Tous les utilisateurs ont été chargés avec succès !"
             icon={<SmileOutlined/>}
             style={{fontSize: "30px"}}
         />
