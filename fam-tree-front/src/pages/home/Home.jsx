@@ -10,14 +10,12 @@ const Home = () => {
                 <h2 className="text-2xl font-semibold">Pro++</h2>
                 <p className="text-xl mt-4">2023-2024</p>
             </div>
-
-            <Button
-                variant="contained"
-                style={{backgroundColor: "#4CC425"}}
-                className="text-white"
+            <button type="default" htmlType="submit"
+                    className="mt-6 text-white bg-green-ftpro hover:bg-green-ftpro-h transition duration-75 px-3.5 py-1.5 rounded-md"
             >
                 <Link to={'/adhesion/apply'}>Faire une demande d'adhésion</Link>
-            </Button>
+            </button>
+
         </div>
     );
 }

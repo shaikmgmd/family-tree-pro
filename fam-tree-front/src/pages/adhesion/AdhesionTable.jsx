@@ -9,11 +9,20 @@ import {
 } from "../../store/features/slices/adhesion";
 import {addNewAdminAction, removeAdminAction} from "../../store/features/slices/role";
 import {toast} from "react-toastify";
+import FTProButton from "../../components/button/FTProButton";
+import {
+    Check,
+    X,
+    UserCircleGear, UserCircleMinus
+} from "@phosphor-icons/react";
+import FTProFancyButton from "../../components/button/FTProFancyButton";
+import FTProGlassButton from "../../components/button/FTProGlassButton";
 
-const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
+const AdhesionTable = ({data, showActions, setTrigger, showAdminAction = false}) => {
     const dispatch = useDispatch();
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [currentImage, setCurrentImage] = useState('');
+    const [selectedColumn, setSelectedColumn] = useState(null);
 
     const showModal = (imageUrl) => {
         setCurrentImage(imageUrl);
@@ -24,6 +33,10 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
         setIsModalVisible(false);
     };
 
+    const selectColumn = (dataIndex) => {
+        setSelectedColumn(dataIndex);
+    };
+
 
     const columns = [
         {
@@ -31,6 +44,10 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
             dataIndex: 'socialSecurityNumber',
             showSorterTooltip: true,
             sorter: (a, b) => a.socialSecurityNumber.localeCompare(b.socialSecurityNumber),
+            onHeaderCell: () => ({
+                onClick: () => selectColumn('socialSecurityNumber'),
+            }),
+            className: selectedColumn === 'socialSecurityNumber' ? 'selected-column' : '',
         },
         {
             title: 'Nom',
@@ -38,37 +55,57 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
             defaultSortOrder: 'descend',
             showSorterTooltip: true,
             sorter: (a, b) => a.lastName.localeCompare(b.lastName),
+            onHeaderCell: () => ({
+                onClick: () => selectColumn('lastName'),
+            }),
+            className: selectedColumn === 'lastName' ? 'selected-column' : '',
         },
         {
             title: 'Prénom',
             dataIndex: 'firstName',
             showSorterTooltip: true,
             sorter: (a, b) => a.firstName.localeCompare(b.firstName),
+            onHeaderCell: () => ({
+                onClick: () => selectColumn('firstName'),
+            }),
+            className: selectedColumn === 'firstName' ? 'selected-column' : '',
         },
         {
             title: 'Date de naissance',
             dataIndex: 'birthDate',
             showSorterTooltip: true,
             sorter: (a, b) => new Date(a.birthDate) - new Date(b.birthDate),
+            onHeaderCell: () => ({
+                onClick: () => selectColumn('birthDate'),
+            }),
+            className: selectedColumn === 'birthDate' ? 'selected-column' : '',
         },
         {
             title: 'Nationalité',
             dataIndex: 'nationality',
             showSorterTooltip: true,
             sorter: (a, b) => a.nationality.localeCompare(b.nationality),
+            onHeaderCell: () => ({
+                onClick: () => selectColumn('nationality'),
+            }),
+            className: selectedColumn === 'nationality' ? 'selected-column' : '',
         },
         {
             title: 'Email',
             dataIndex: 'email',
             showSorterTooltip: true,
             sorter: (a, b) => a.email.localeCompare(b.email),
+            onHeaderCell: () => ({
+                onClick: () => selectColumn('email'),
+            }),
+            className: selectedColumn === 'email' ? 'selected-column' : '',
         },
         {
             title: 'CNI',
             dataIndex: 'cni',
             render: (text, record) => (
                 <Space size="middle">
-                    <Button onClick={() => showModal(record.idCardPath)}>Voir CNI</Button>
+                    <FTProGlassButton content="Voir CNI" onClick={() => showModal(record.idCardPath)}/>
                 </Space>
             ),
         },
@@ -77,7 +114,7 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
             dataIndex: 'photo',
             render: (text, record) => (
                 <Space size="middle">
-                    <Button onClick={() => showModal(record.photoPath)}>Voir Photo</Button>
+                    <FTProGlassButton content="Voir Photo" noMarginTop onClick={() => showModal(record.photoPath)}/>
                 </Space>
             ),
         },
@@ -89,30 +126,18 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
             dataIndex: 'actions',
             render: (text, record) => (
                 <Space size="middle">
-                    <Button
-                        icon={<CheckOutlined/>}
-                        onClick={() => {
-                            dispatch(approveAdhesionAction(record.id))
-                                .then(async () => {
-                                    await dispatch(getApprovedAdhesionAction());
-                                });
-                        }}
-                    >
-                        Accepter
-                    </Button>
-                    <Button
-                        danger
-                        icon={<CloseOutlined/>}
-                        onClick={() => {
-                            dispatch(rejectAdhesionAction(record.id))
-                                .then(async () => {
-                                    await dispatch(getRejectedAdhesionAction());
-                                    await dispatch(getApprovedAdhesionAction());
-                                });
-                        }}
-                    >
-                        Refuser
-                    </Button>
+                    <FTProButton noMarginTop
+                                 icon={<Check size={20} color="#ffffff"/>}
+                                 onClick={async () => {
+                                     await dispatch(approveAdhesionAction(record.id))
+                                     setTrigger((v) => v + 1);
+                                 }}/>
+                    <FTProButton isDanger noMarginTop
+                                 icon={<X size={20} color="#ffffff"/>}
+                                 onClick={async () => {
+                                     await dispatch(rejectAdhesionAction(record.id))
+                                     setTrigger((v) => v + 1);
+                                 }}/>
                 </Space>
             ),
         });
@@ -124,60 +149,74 @@ const AdhesionTable = ({data, showActions, showAdminAction = false}) => {
             dataIndex: 'actions',
             render: (text, record) => (
                 <Space size="middle">
-                    <Button
-                        icon={<CheckOutlined/>}
-                        onClick={async () => {
-                            await dispatch(addNewAdminAction(record.id))
-                                .then(() => {
-                                    toast.success("Nouveau admin ajouté!", {
-                                        position: "top-right",
-                                        autoClose: 5000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                    });
-                                })
-                        }}
-                    >
-                        Admin
-                    </Button>
-                    <Button
-                        danger
-                        icon={<CloseOutlined/>}
-                        onClick={async () => {
-                            await dispatch(removeAdminAction(record.id))
-                                .then(() => {
-                                    toast.success("Nouveau admin retiré!", {
-                                        position: "top-right",
-                                        autoClose: 5000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                    });
-                                })
-                        }}
-                    >
-                        Admin
-                    </Button>
+                    <FTProButton noMarginTop
+                                 icon={<UserCircleGear size={20} color="#ffffff"/>}
+                                 onClick={async () => {
+                                     await dispatch(addNewAdminAction(record.id))
+                                         .then(() => {
+                                             toast.success("Nouveau admin ajouté!", {
+                                                 position: "top-right",
+                                                 autoClose: 5000,
+                                                 hideProgressBar: false,
+                                                 closeOnClick: true,
+                                                 pauseOnHover: true,
+                                                 draggable: true,
+                                                 progress: undefined,
+                                             });
+                                         })
+                                 }}/>
+                    <FTProButton isDanger noMarginTop
+                                 icon={<UserCircleMinus size={20} color="#ffffff"/>}
+                                 onClick={async () => {
+                                     await dispatch(removeAdminAction(record.id))
+                                         .then(() => {
+                                             toast.success("Nouveau admin retiré!", {
+                                                 position: "top-right",
+                                                 autoClose: 5000,
+                                                 hideProgressBar: false,
+                                                 closeOnClick: true,
+                                                 pauseOnHover: true,
+                                                 draggable: true,
+                                                 progress: undefined,
+                                             });
+                                         })
+                                 }}/>
                 </Space>
             ),
         });
     }
 
-    return (<div>
-        <Modal
-            title="Aperçu de l'image"
-            visible={isModalVisible}
-            onCancel={handleCancel}
-            footer={null}
-        >
-            <img alt="Aperçu" src={currentImage} style={{width: '100%'}}/>
-        </Modal>
-        <Table columns={columns} dataSource={data}/></div>);
+    return (
+        <>
+            <style>
+                {`
+                /* Couleur de l'en-tête */
+                .ant-table-thead > tr > th {
+                    background-color: #b7eb8f !important;
+                }
+                
+                /* Couleur de fond au survol pour chaque ligne */
+                .ant-table-tbody > tr:hover > td {
+                    background-color: #e6f7bf !important; /* Vert plus clair au survol */
+                }
+                
+                .selected-column {
+                    background-color: #ebf8cb !important; /* Couleur verte claire pour la colonne sélectionnée */
+                }
+    
+                `}
+            </style>
+            <Modal
+                title="Aperçu de l'image"
+                visible={isModalVisible}
+                onCancel={handleCancel}
+                footer={null}
+            >
+                <img alt="Aperçu" src={currentImage} style={{width: '100%'}}/>
+            </Modal>
+            <Table columns={columns} dataSource={data}/>
+        </>
+    );
 };
 
 export default AdhesionTable;
