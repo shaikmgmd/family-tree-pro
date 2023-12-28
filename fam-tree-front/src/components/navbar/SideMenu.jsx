@@ -37,7 +37,10 @@ const SideMenu = () => {
                     color: 'white',
                 }}
             >
-                FTPro++
+                <div className="flex items-center justify-center space-x-2">
+                    <Tree size={25} color="#FFFFFF"/>
+                    <span>FTPro++</span>
+                </div>
             </div>
 
             <Menu

@@ -26,5 +26,7 @@ public class Personne {
     private String country;
     private Long treeId; // Ajouté pour lier à un arbre spécifique
     private String address;
+    @Column(name = "temp_id")
+    private String tempId;
     private Boolean is_registered;
 }

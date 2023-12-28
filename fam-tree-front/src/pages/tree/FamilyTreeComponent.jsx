@@ -81,6 +81,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
     const editNode = (nodeId, updatedNode) => {
         try {
             handleAddMember({updatedNode}).then(async r => {
+                console.log({updatedNode})
                 await dispatch(getTreeByUserIdAction(userId));
             });
         } catch (error) {
@@ -279,7 +280,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
         if (treeDataFromRedux) {
             setData([...treeDataFromRedux]); // Créez une copie des données
         }
-    }, [treeDataFromRedux]);
+    }, []);
 
     useEffect(() => {
         if (treeInstance && data.length > 0) {
