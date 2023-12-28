@@ -36,13 +36,16 @@ public class RelationshipConfirmationController {
 //        return new ResponseEntity<>(response, HttpStatus.OK);
 //    }
 
-        @PostMapping("/{userId}")
-        public ResponseEntity<ApiResponse<String>> sendMailExistingUser(@PathVariable Long userId,
-                                                                        @RequestBody EmailDTO emailDto) {
+        @PostMapping("/add-existing-user")
+        public ResponseEntity<ApiResponse<String>> sendMailExistingUser(@RequestBody EmailDTO emailDto) {
 
             String emailToAdd = emailDto.getEmail();
+            Long nodeId = emailDto.getNodeId();
 
-            relationshipConfirmationService.requestRelationshipConfirmation(userId, emailToAdd);
+            System.out.println("EMAIL => " + emailToAdd);
+            System.out.println("NODE ID => " + nodeId);
+
+            relationshipConfirmationService.requestRelationshipConfirmation(emailToAdd, nodeId);
 
             //
             ApiResponse<String> response = new ApiResponse<>("Ok");
