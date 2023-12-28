@@ -23,97 +23,6 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
 
     const [modalMode, setModalMode] = useState("edit")
 
-    const myRef = useRef();
-    const [treeOptions, setTreeOptions] = useState({
-        mouseScroll: FamilyTree.none,
-        mode: 'light',
-        //miniMap: true,
-        template: 'tommy',
-        roots: [],
-        nodeMenu: {
-            edit: {text: 'Modifier'},
-            details: {text: 'Détails'},
-        },
-        nodeTreeMenu: true,
-        nodeBinding: {
-            field_0: 'name',
-            //field_1: 'born',
-            img_0: 'photo'
-        },
-        toolbar: {
-            layout: false,
-            zoom: true,
-            fit: true,
-            expandAll: false,
-            fullScreen: false
-        },
-        lazyLoading: true,
-        nodeContextMenu: {
-            myMenuItem: {
-                text: "My node menu Item", onClick: () => {
-                }
-            },
-        },
-        filterBy: ['name', 'gender', 'country'],
-        /*filterBy: {
-            name: { 'femme 2': { checked: false, text: 'My text 2'} },
-            title: {}
-        },*/
-        editForm: {
-            readOnly: !isOwner, // Si isOwner est false, alors readOnly est true
-            titleBinding: "name",
-            photoBinding: "photo",
-            addMoreBtn: 'Ajouter élement',
-            addMore: 'Ajouter elements en plus',
-            addMoreFieldName: 'Element name',
-            saveAndCloseBtn: 'Confirmer',
-            generateElementsFromFields: false,
-            buttons: {
-                addNewMember: {
-                    icon: 'Add Member',
-                    text: 'addNewMember',
-                },
-                addExistingMember: {
-                    icon: 'Add existing member',
-                    text: 'addExistingMember',
-                },
-                edit: {
-                    icon: 'Edit',
-                    text: 'edit',
-                },
-
-            },
-            elements:
-                (modalMode === "newMember") || (modalMode === "edit") ? (
-                    [
-                        {type: 'textbox', label: 'Full Name', binding: 'name'},
-                        {type: 'textbox', label: 'Email Address', binding: 'email'},
-                        [
-                            {type: 'textbox', label: 'Phone', binding: 'phone',},
-                            {type: 'date', label: 'Date Of Birth', binding: 'born'}
-                        ],
-                        [
-                            {
-                                type: 'select',
-                                options: [{value: 'bg', text: 'Bulgaria'}, {value: 'ru', text: 'Russia'}, {
-                                    value: 'gr',
-                                    text: 'Greece'
-                                }],
-                                label: 'Country',
-                                binding: 'country'
-                            },
-                            {type: 'textbox', label: 'City', binding: 'city'},
-                        ],
-                        {type: 'textbox', label: 'Photo Url', binding: 'photo', btn: 'Upload'},
-
-                    ]) : (
-                    [
-                        {type: 'textbox', label: 'Email Address', binding: 'email'},
-                    ])
-        },
-        nodes: data
-    });
-
     useEffect(() => {
         /*const newRoots = findUserAndParentRoots(data, userId);
         setTreeOptions(currentOptions => ({
@@ -144,8 +53,6 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
         if (error.payload.response.status === 400) {
             if (error.payload.response.data.content.includes("Relation parent-enfant invalide")) {
                 setErrorMessage("La date de naissance de l'enfant est invalide par rapport à celle des parents.");
-                //navigate('/family-tree/born-date-error');
-                //setShowErrorBornDate(true);
                 handleError(true);
             } else {
                 setErrorMessage("Une erreur inattendue est survenue.");
@@ -174,7 +81,6 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
     const editNode = (nodeId, updatedNode) => {
         try {
             handleAddMember({updatedNode}).then(async r => {
-                console.log("Response =>", r);
                 await dispatch(getTreeByUserIdAction(userId));
             });
         } catch (error) {
@@ -185,25 +91,108 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
     const editExistingNode = (nodeId, email) => {
         // Simuler un appel API pour éditer un nœud
         handleExistingMember({email}).then(async r => {
-            console.log("Response =>", r);
             await dispatch(getTreeByUserIdAction(userId));
         });
     };
 
     useEffect(() => {
         if (treeContainer.current) {
-            console.log("Initialisation de FamilyTree avec les options : ", treeOptions);
-            const tree = new FamilyTree(treeContainer.current, treeOptions);
-            console.log("Instance de FamilyTree créée : ", tree);
+            const tree = new FamilyTree(treeContainer.current, {
+                mouseScroll: FamilyTree.none,
+                mode: 'light',
+                //miniMap: true,
+                template: 'tommy',
+                roots: [],
+                nodeMenu: {
+                    edit: {text: 'Modifier'},
+                    details: {text: 'Détails'},
+                },
+                nodeTreeMenu: true,
+                nodeBinding: {
+                    field_0: 'name',
+                    //field_1: 'born',
+                    img_0: 'photo'
+                },
+                toolbar: {
+                    layout: false,
+                    zoom: true,
+                    fit: true,
+                    expandAll: false,
+                    fullScreen: false
+                },
+                lazyLoading: true,
+                nodeContextMenu: {
+                    myMenuItem: {
+                        text: "My node menu Item", onClick: () => {
+                        }
+                    },
+                },
+                filterBy: ['name', 'gender', 'country'],
+                /*filterBy: {
+                    name: { 'femme 2': { checked: false, text: 'My text 2'} },
+                    title: {}
+                },*/
+                editForm: {
+                    readOnly: !isOwner, // Si isOwner est false, alors readOnly est true
+                    titleBinding: "name",
+                    photoBinding: "photo",
+                    addMoreBtn: 'Ajouter élement',
+                    addMore: 'Ajouter elements en plus',
+                    addMoreFieldName: 'Element name',
+                    saveAndCloseBtn: 'Confirmer',
+                    generateElementsFromFields: false,
+                    buttons: {
+                        addNewMember: {
+                            icon: 'Add Member',
+                            text: 'addNewMember',
+                        },
+                        addExistingMember: {
+                            icon: 'Add existing member',
+                            text: 'addExistingMember',
+                        },
+                        edit: {
+                            icon: 'Edit',
+                            text: 'edit',
+                        },
+
+                    },
+                    elements:
+                        (modalMode === "newMember") || (modalMode === "edit") ? (
+                            [
+                                {type: 'textbox', label: 'Full Name', binding: 'name'},
+                                {type: 'textbox', label: 'Email Address', binding: 'email'},
+                                [
+                                    {type: 'textbox', label: 'Phone', binding: 'phone',},
+                                    {type: 'date', label: 'Date Of Birth', binding: 'born'}
+                                ],
+                                [
+                                    {
+                                        type: 'select',
+                                        options: [{value: 'bg', text: 'Bulgaria'}, {value: 'ru', text: 'Russia'}, {
+                                            value: 'gr',
+                                            text: 'Greece'
+                                        }],
+                                        label: 'Country',
+                                        binding: 'country'
+                                    },
+                                    {type: 'textbox', label: 'City', binding: 'city'},
+                                ],
+                                {type: 'textbox', label: 'Photo Url', binding: 'photo', btn: 'Upload'},
+
+                            ]) : (
+                            [
+                                {type: 'textbox', label: 'Email Address', binding: 'email'},
+                            ])
+                },
+                nodes: data
+            });
             setTreeInstance(tree);
         }
-    }, [treeContainer, modalMode, isOwner, treeOptions]);
+    }, [treeContainer, modalMode, isOwner]);
 
     function editHandler(nodeId) {
         if (treeInstance) {
-            console.log("nodeId", nodeId);
             var nodeData = treeInstance.current.get(nodeId);
-            console.log("nodeData", nodeData);
         } else {
             console.log("L'instance de l'arbre n'est pas encore prête.");
         }
@@ -268,7 +257,6 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
     const handleAddMember = async (data) => {
         try {
             const response = await dispatch(addMemberToTreeAction({data}));
-            console.log("Réponse handleAddMember =>", response);
             await dispatch(getTreeByUserIdAction(userId));
             if (response) {
                 handleServerError(response);
@@ -276,6 +264,14 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
         } catch (error) {
             console.error("Erreur lors de l'ajout du membre:", error);
             handleServerError(error);
+        }
+    }
+
+    const handleExistingMember = async (data) => {
+        try {
+            const response = await dispatch(addExistingMemberToTreeAction({data}));
+        } catch (error) {
+            console.error("Erreur lors de l'ajout du membre:", error);
         }
     }
 

@@ -133,3 +133,7 @@
 #tree.viewer #base_tree_menu {
     display: none;
 }
+
+#tree.viewer .bft-img-button {
+    display: none;
+}

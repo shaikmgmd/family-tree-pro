@@ -47,7 +47,7 @@ const FamilyTreeUser = () => {
             {treeLoader ? (
                 <FTProLoader/>
             ) : (
-                <FamilyTreeComponent isOwner={false}/>
+                <FamilyTreeComponent isOwner={false} />
             )}
 
         </MainWrapper>
