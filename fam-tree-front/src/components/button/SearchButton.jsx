@@ -1,14 +1,16 @@
 // components/PowerButton.js
 import React, { useState } from 'react';
 import { Button } from 'antd';
+/*
 import './SearchButton.css';
 import { Input, Space } from "antd";
 import type { SearchProps } from "../Search";
+*/
 
 const SearchButton = () => {
     const [loading, setLoading] = useState(false);
 
-    const enterLoading = () => {
+    /*const enterLoading = () => {
         setLoading(true);
         setTimeout(() => {
             setLoading(false);
@@ -19,12 +21,10 @@ const SearchButton = () => {
 
     const onSearch: SearchProps["onSearch"] = (value, _e, info) =>
         console.log(info?.source, value);
-
+*/
 
     return (
-        <Space direction="vertical">
-            <Search placeholder="arbre (clé publique)" onClick={enterLoading} onSearch={onSearch} enterButton />
-        </Space>
+        <></>
     );
 };
 

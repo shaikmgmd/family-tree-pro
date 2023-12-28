@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("${api.base.url}/user")
@@ -30,13 +32,18 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // Endpoint pour récupérer tous les utilisateurs sauf l'utilisateur actuel
     @GetMapping("/all-except-current/{page}/{size}")
-    public ResponseEntity<ApiResponse<List<User>>> getAllUsersExceptCurrent(
+    public ResponseEntity<ApiResponse<Map<String, Object>>> getAllUsersExceptCurrent(
             @PathVariable int page,
             @PathVariable int size) {
-        ApiResponse<List<User>> users = new ApiResponse<>(userService.getAllUsersExceptCurrent(page, size));
-        return new ResponseEntity<>(users, HttpStatus.OK);
+        Map<String, Object> response = new HashMap<>();
+        List<User> users = userService.getAllUsersExceptCurrent(page, size);
+        boolean hasMore = userService.hasMore(page, size); // Méthode pour déterminer s'il y a plus d'utilisateurs
+        response.put("users", users);
+        response.put("hasMore", hasMore);
+
+        ApiResponse<Map<String, Object>> apiResponse = new ApiResponse<>(response);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
     @GetMapping("/all-except-current-no-pagination")

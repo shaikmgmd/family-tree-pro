@@ -79,16 +79,21 @@ public class UserService {
 
     public List<User> getAllUsersExceptCurrent(int page, int size) {
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("\n currentPrivateCode : " + currentPrivateCode);
         User currentUser = userRepository.findByPrivateCode(currentPrivateCode);
-        System.out.println("\n currentUser : " + currentUser.getFirstName());
         Pageable pageable = PageRequest.of(page, size);
         Page<User> usersPage = userRepository.findAll(pageable);
         List<User> users = usersPage.getContent().stream()
                 .filter(user -> !user.getPrivateCode().equals(currentUser.getPrivateCode()))
                 .collect(Collectors.toList());
-        System.out.println("\n Taille users : " + users.size());
         return users;
+    }
+
+    public boolean hasMore(int page, int size) {
+        String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currentUser = userRepository.findByPrivateCode(currentPrivateCode);
+        Pageable pageable = PageRequest.of(page + 1, size);
+        Page<User> usersPage = userRepository.findAll(pageable);
+        return usersPage.hasContent();
     }
 
     public List<User> getAllUsers(){

@@ -13,7 +13,7 @@ export const ListUserWrapper = ({ title = "", description = "", userCount, child
                     <h1 className="text-2xl font-bold">{title}</h1>
                     <h2 className="text-sm">{description}</h2>
                 </div>
-                <div>
+                {/*<div>
                     <Space>
                         <Switch checked={show} onChange={() => setShow(!show)} />
                         <Badge count={show ? "User : " : "X"} showZero color="#faad14" />
@@ -30,7 +30,7 @@ export const ListUserWrapper = ({ title = "", description = "", userCount, child
                 </div>
                 <div className="search-button">
                     <SearchButton />
-                </div>
+                </div>*/}
             </div>
             <Divider/>
             {children}

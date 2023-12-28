@@ -152,7 +152,7 @@ const Chat = () => {
                                 className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
                             />
                         </div>
-                        {allUsers.payload && allUsers.payload.map((userItem, index) => (
+                        {allUsers?.payload && allUsers?.payload.map((userItem, index) => (
                             <div
                                 className={`flex flex-row py-4 px-2 justify-center items-center border-b-2 ${
                                     (currChatUsersIds.userId2 === userItem.id) || (currChatUsersIds.userId1 === userItem.id) ? "bg-gray-300 border-green-ftpro" : "hover:bg-gray-200"
@@ -178,9 +178,9 @@ const Chat = () => {
                     </div>
                     <div className="w-full px-5 flex flex-col justify-between ">
                         <div className="flex flex-col mt-5 overflow-y-auto">
-                            {tab && chatMessages.payload && chatMessages.payload.map((message, index) => (
+                            {tab && chatMessages?.payload && chatMessages.payload.map((message, index) => (
                                 <div key={index}
-                                     className={`flex flex-col mb-4 ${message.senderName === user.payload.lastName ? "items-end" : "items-start"}`}>
+                                     className={`flex flex-col mb-4 ${message.senderName === user?.payload.lastName ? "items-end" : "items-start"}`}>
 
                                     {/* Afficher le nom de l'expéditeur au-dessus du message */}
                                     <div className="text-sm text-gray-600 mb-1">
@@ -189,8 +189,8 @@ const Chat = () => {
 
                                     {/* Structure flex pour le message et l'image */}
                                     <div
-                                        className={`flex ${message.senderName === user.payload.lastName ? "justify-end" : "justify-start"}`}>
-                                        {message.senderName !== user.payload.lastName && (
+                                        className={`flex ${message.senderName === user?.payload.lastName ? "justify-end" : "justify-start"}`}>
+                                        {message.senderName !== user?.payload.lastName && (
                                             <img
                                                 src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
                                                 className="object-cover h-8 w-8 rounded-full mr-2"

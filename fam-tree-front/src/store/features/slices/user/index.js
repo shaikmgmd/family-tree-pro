@@ -24,22 +24,23 @@ export const updateUserAction = createAsyncThunk('user-update', async ({payload}
     return response.data.content;
 });*/
 
-export const getAllUsersExceptCurrentAction = createAsyncThunk('get-all-users-except-current', async ({ page, size }, { rejectWithValue }) => {
-    try {
-        console.log("page : " + page);
-        console.log("size : " + size);
-        const response = await getAllUsersExceptCurrent(page, size);
-        return response.data.content; // ou response.data
-    } catch (error) {
-        return rejectWithValue(error.response.data);
+export const getAllUsersExceptCurrentAction = createAsyncThunk(
+    'get-all-users-except-current',
+    async ({ page, size }, { rejectWithValue }) => {
+        try {
+            const response = await getAllUsersExceptCurrent(page, size);
+            return {
+                users: response.data.content.users,
+                hasMore: response.data.content.hasMore,
+            };
+        } catch (error) {
+            return rejectWithValue(error.response.data);
+        }
     }
-});
+);
 
 export const getAllUsersAction = createAsyncThunk('get-all-users', async () => {
     const response = await getAllUsers();
-    console.log("response : " + response);
-    console.log("response.data.length : " + response.data.length);
-    console.log("response.data.content.length : " + response.data.content.length);
     return response.data.content;
 });
 
@@ -67,6 +68,11 @@ const initialState = {
         page: 0,
         size: 2,
         hasMore: true,
+    },
+    allUsersExceptCurrentNP: {
+        loading: false,
+        payload: null,
+        errors: null,
     },
     AllUsers: {
         loading: false,
@@ -155,16 +161,28 @@ const userStore = createSlice({
             })
             .addCase(getAllUsersExceptCurrentAction.fulfilled, (state, action) => {
                 state.allUsersExceptCurrent.loading = false;
-                state.allUsersExceptCurrent.payload = action.payload; // maj de l'état pour stocker les data des user recup dans la partie appropriée de l'état global => application réagit et affiche ces data à l'user.
-                state.allUsersExceptCurrent.errors = undefined;
-                state.allUsersExceptCurrent.data = [...state.allUsersExceptCurrent.data, ...action.payload];
+                state.allUsersExceptCurrent.data = [...state.allUsersExceptCurrent.data, ...action.payload.users];
                 state.allUsersExceptCurrent.page += 1;
-                state.allUsersExceptCurrent.hasMore = action.payload.length !== 0; // condition hasMore
+                state.allUsersExceptCurrent.hasMore = action.payload.hasMore;
+                state.allUsersExceptCurrent.errors = undefined;
             })
             .addCase(getAllUsersExceptCurrentAction.rejected, (state, action) => {
                 state.allUsersExceptCurrent.loading = false;
                 state.allUsersExceptCurrent.errors = action.error.message; // suivre les erreurs associées à la requête
                 state.allUsersExceptCurrent.hasMore = false;
+            })
+            // users except curr user without pagination
+            .addCase(getAllUsersExceptCurrentNoPaginationAction.pending, (state) => {
+                state.allUsersExceptCurrentNP.loading = true;
+            })
+            .addCase(getAllUsersExceptCurrentNoPaginationAction.fulfilled, (state, action) => {
+                state.allUsersExceptCurrentNP.loading = false;
+                state.allUsersExceptCurrentNP.payload = action.payload; // maj de l'état pour stocker les data des user recup dans la partie appropriée de l'état global => application réagit et affiche ces data à l'user.
+                state.allUsersExceptCurrentNP.errors = undefined;
+            })
+            .addCase(getAllUsersExceptCurrentNoPaginationAction.rejected, (state, action) => {
+                state.allUsersExceptCurrentNP.loading = false;
+                state.allUsersExceptCurrentNP.errors = action.error.message; // suivre les erreurs associées à la requête
             })
             // GET USER BY HIS ID
             .addCase(getUserByIdAction.pending, (state) => {
@@ -182,5 +200,5 @@ const userStore = createSlice({
     }
 })
 
-export const { setUsers, addUsers, setLoading, setHasMore, resetAllUsersExceptCurrent} = userStore.actions;
+export const {setUsers, addUsers, setLoading, setHasMore, resetAllUsersExceptCurrent} = userStore.actions;
 export default userStore.reducer;
