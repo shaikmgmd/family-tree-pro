@@ -117,7 +117,7 @@ const SideMenu = () => {
                 selectedKeys={[location.pathname]}
                 style={{
                     height: userData ? '100px' : '60px',
-                    borderRight: 0,
+
                     background: 'transparent',
                     color: 'white',
                     position: 'absolute',
