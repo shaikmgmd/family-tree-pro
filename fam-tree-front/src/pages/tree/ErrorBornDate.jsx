@@ -1,9 +1,10 @@
-// src/components/ErrorBornDate/ErrorBornDate.jsx
 import React from "react";
-import { Result, Button } from "antd";
-import ErrorBornDateButton from "../../components/button/ErrorBornDateButton"; // Assurez-vous que le chemin est correct
+import { Button } from "antd";
+import ErrorBornDateButton from "../../components/button/ErrorBornDateButton";
 import '../../components/button/PowerButton.css';
-const ErrorBornDate = ( {onHide}) => (
+
+const ErrorBornDate = ({ onHide }) => (
+    <div className="conteneur">
     <Result
         status="error"
         title="Vos données sont incohérentes"
@@ -15,7 +16,10 @@ const ErrorBornDate = ( {onHide}) => (
         ]}
     >
         <ErrorBornDateButton />
-    </Result>
+        <Button type="primary" key="console" className="billyButton okButton" onClick={onHide}>
+            Ok
+        </Button>
+    </div>
 );
 
 export default ErrorBornDate;

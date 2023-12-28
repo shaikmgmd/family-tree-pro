@@ -9,3 +9,14 @@
     background-color: #08CC0A;
     opacity: 0.9;
 }
+
+.conteneur{
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.ok:hover .ant-btn-primary:hover {
+    background-color: darkgreen;
+    opacity: 0.9;
+}
