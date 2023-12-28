@@ -35,7 +35,6 @@ const FamilyTreeUser = () => {
         navigate('/user/all-except-current');
     };
 
-
     return (
         <MainWrapper
             title={`${treeData ? `Arbre généalogique pour l'utilisateur ${userById?.firstName} ${userById?.lastName}` : "Il n'y aucun arbre associé à cet utilisateur"} `}

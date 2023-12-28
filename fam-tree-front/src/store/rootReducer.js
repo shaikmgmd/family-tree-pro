@@ -12,7 +12,6 @@ const rootReducer = {
     user,
     role,
     tree,
-    familytreeuser,
     chat
 };
 
