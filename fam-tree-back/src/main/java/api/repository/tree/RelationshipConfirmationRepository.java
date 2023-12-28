@@ -9,6 +9,6 @@ import java.util.Optional;
 public interface RelationshipConfirmationRepository extends JpaRepository<RelationshipConfirmation, Long> {
     Optional<RelationshipConfirmation> findByConfirmationCode(String confirmationCode);
 
-    Optional<RelationshipConfirmation> findByTargetMember(User targetMember);
+    Optional<RelationshipConfirmation> findBySourceMemberAndTargetMember(User sourceMember, User TargetMember);
 }
 

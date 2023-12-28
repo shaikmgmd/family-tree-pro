@@ -190,12 +190,29 @@ public class PersonneService {
     }
 
     private Map<String, Object> convertToTreeFormat(Personne personne) {
+
         Map<String, Object> formattedPersonne = new HashMap<>();
         formattedPersonne.put("id", personne.getId());
-        formattedPersonne.put("name", personne.getName());
+        if(personne.getIs_registered()) {
+            formattedPersonne.put("name", personne.getName() + "_t");
+        } else {
+            if(personne.getName() != null) {
+                formattedPersonne.put("name", personne.getName() + "_f");
+            } else {
+                formattedPersonne.put("name", personne.getName());
+            }
+        }
+
+        Date born = personne.getBorn();
+        if(born != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Example pattern, change as needed
+            String formattedDate = sdf.format(born);
+            formattedPersonne.put("born", formattedDate);
+        } else {
+            formattedPersonne.put("born", born);
+        }
+
         formattedPersonne.put("gender", personne.getGender());
-        /*formattedPersonne.put("born", formatDate(personne.getBorn()));*/
-        formattedPersonne.put("born", personne.getBorn());
         formattedPersonne.put("photo", personne.getPhoto());
         formattedPersonne.put("city", personne.getCity());
         formattedPersonne.put("country", personne.getCountry());

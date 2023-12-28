@@ -26,5 +26,5 @@ public class Personne {
     private String country;
     private Long treeId; // Ajouté pour lier à un arbre spécifique
     private String address;
-    private Boolean is_registered;
+    private Boolean is_registered = false;
 }
