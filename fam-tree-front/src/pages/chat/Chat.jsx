@@ -27,6 +27,8 @@ const Chat = () => {
     const [imageURL, setImageURL] = useState('');
     const [isUploading, setIsUploading] = useState(false);
 
+    const [filteredUsers, setFilteredUsers] = useState([]);
+
     const user = useSelector((state) => state.user.getConnectedUser);
     const dispatch = useDispatch();
     const {userChats, currentChat, chatMessages} = useSelector(state => state.chat);
@@ -50,6 +52,9 @@ const Chat = () => {
         }
     }, [tab, dispatch]);
 
+    const handleSearchUsersChatsChange = (e) => setFilteredUsers(e.target.value.toLowerCase());
+
+    const filteredDatas = allUsers?.payload?.filter(item => item.firstName.toLowerCase().includes(filteredUsers) || item.lastName.toLowerCase().includes(filteredUsers))
     const simulateImageUpload = (pics) => {
         setIsUploading(true); // Indique que l'upload a commencé
 
@@ -145,16 +150,32 @@ const Chat = () => {
             {user.payload ?
                 <div className="shadow-md mx-5 mt-1 p-5 flex flex-row h-screen">
                     <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
-                        <div className="border-b-2 py-4 px-2">
+                        <div className="border-b-2 py-4 px-2 relative">
+                            <svg className="w-6 h-6 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
+                                 xmlns="http://www.w3.org/2000/svg" fill="#a0aec0" viewBox="0 0 256 256">
+                                <path
+                                    d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
+                            </svg>
+                            <style>
+                                {`
+                                    #searchInput:focus {
+                                        border-color: #4CC425;
+                                        outline: none;
+                                    }
+                                `}
+                            </style>
                             <input
+                                id="searchInput"
                                 type="text"
-                                placeholder="search chatting"
-                                className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
+                                placeholder="Recherche"
+                                className="py-2 pl-12 pr-2 border-2 border-gray-200 rounded-2xl w-full focus:border-green-500"
+                                onChange={handleSearchUsersChatsChange}
                             />
                         </div>
-                        {allUsers?.payload && allUsers?.payload.map((userItem, index) => (
+
+                        {filteredDatas && filteredDatas.map((userItem, index) => (
                             <div
-                                className={`flex flex-row py-4 px-2 justify-center items-center border-b-2 ${
+                                className={`flex flex-row py-4 px-2 justify-center items-center border-b-2 rounded-md ${
                                     (currChatUsersIds.userId2 === userItem.id) || (currChatUsersIds.userId1 === userItem.id) ? "bg-gray-300 border-green-ftpro" : "hover:bg-gray-200"
                                 } cursor-pointer`}
                                 onClick={() => handleUserClick(userItem.id)}
@@ -174,7 +195,9 @@ const Chat = () => {
                                 </div>
                             </div>
                         ))}
-
+                        {filteredDatas && filteredDatas.length === 0 && (
+                            <div>Aucun chats trouvé</div>
+                        )}
                     </div>
                     <div className="w-full px-5 flex flex-col justify-between ">
                         <div className="flex flex-col mt-5 overflow-y-auto">
@@ -239,17 +262,19 @@ const Chat = () => {
                                     disabled={isUploading}
                                     className="hidden"
                                 />
+
                                 <input
-                                    className="w-full bg-gray-300 py-3 px-3 rounded-md"
+                                    className="w-full py-3 px-3 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                                     type="text"
                                     placeholder="Message"
-                                    value={imageURL?.startsWith("http://res.cloudinary.com/") ? "Image chargé" : userData.message}
+                                    value={imageURL?.startsWith("http://res.cloudinary.com/") ? "Image chargée" : userData.message}
                                     onChange={(e) => setUserData({...userData, "message": e.target.value})}
                                     disabled={imageURL || isUploading}
                                 />
                                 <FTProFancyButton icon={<PaperPlaneRight size={20} color="#ffffff"/>}
                                                   onClick={sendMessage}/>
                             </div>
+
                         )}
                     </div>
                 </div>
