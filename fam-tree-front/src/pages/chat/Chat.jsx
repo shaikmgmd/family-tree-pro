@@ -148,7 +148,8 @@ const Chat = () => {
     return (
         <>
             {user.payload ?
-                <div className="shadow-md mx-5 mt-1 p-5 flex flex-row h-screen">
+                <div className="shadow-md mx-5 p-5 flex flex-row h-screen">
+                    {/*Liste utilisateur pour chatter*/}
                     <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
                         <div className="border-b-2 py-4 px-2 relative">
                             <svg className="w-6 h-6 text-gray-500 absolute left-3 top-1/2 transform -translate-y-1/2"
@@ -199,7 +200,12 @@ const Chat = () => {
                             <div>Aucun chats trouvé</div>
                         )}
                     </div>
-                    <div className="w-full px-5 flex flex-col justify-between ">
+                    {/*Discussion*/}
+                    <div className="w-full px-5 flex flex-col justify-between"
+                         style={{
+                             backgroundImage: "url('/images/floral-background.jpg')",
+                             backgroundSize: "cover",
+                         }}>
                         <div className="flex flex-col mt-5 overflow-y-auto">
                             {tab && chatMessages?.payload && chatMessages.payload.map((message, index) => (
                                 <div key={index}

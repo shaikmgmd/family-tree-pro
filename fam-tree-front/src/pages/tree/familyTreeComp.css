@@ -3,11 +3,11 @@
 }
 
 #tree .male>rect {
-    fill: #a7da47;
+    fill: #71a4cc;
 }
 
 #tree .female>rect {
-    fill: #c97be3;
+    fill: #d39cf5;
 }
 
 /* Restyle les nœuds féminins */
@@ -139,7 +139,7 @@
 }
 
 svg.tommy .node.border-t rect {
-    stroke: green; /* Couleur de la bordure */
+    stroke: #1dd71d; /* Couleur de la bordure */
     stroke-width: 3px; /* Épaissit la bordure */
 }
 
