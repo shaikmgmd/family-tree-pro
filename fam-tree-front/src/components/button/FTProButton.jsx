@@ -2,23 +2,51 @@ import React, {useState} from 'react';
 import {Button} from 'antd';
 import {PoweroffOutlined} from '@ant-design/icons';
 import './PowerButton.css';
+import {Link} from "react-router-dom";
 
 const FTProButton = ({
-                         content = "",
+                         content,
                          noMarginTop = false,
                          isDanger = false,
-                         icon = (<></>),
-                         className,
+                         icon,
+                         className = "",
+                         link = false,
+                         path = "",
+                         isReverse = false,
                          ...props
                      }) => {
+    const stringClassName = `${noMarginTop ? '' : 'mt-6'} w-full transition-all ease-in-out hover:animate-bounce text-white 
+        ${isDanger ? 'bg-red-500 hover:bg-red-600' : 'bg-green-ftpro hover:bg-green-ftpro-h'} 
+        transition duration-75 px-3.5 py-1.5 rounded-md ${className}`;
+
+    const buttonContent = isReverse ? (
+        <div className={`flex items-center justify-center whitespace-nowrap ${icon && content && "space-x-3"}`}>
+            <span>{content}</span>
+            <span>{icon}</span></div>
+    ) : (
+        <div className={`flex items-center justify-center whitespace-nowrap ${icon && content && "space-x-3"}`}><span>{icon}</span>
+            <span>{content}</span>
+        </div>
+    );
 
     return (
-        <button type="default" htmlType="submit"
-                className={`${!noMarginTop && 'mt-6'} w-full transition-all ease-in-out hover:animate-bounce text-white ${isDanger ? 'bg-red-500 hover:bg-red-600' : 'bg-green-ftpro hover:bg-green-ftpro-h'} transition duration-75 px-3.5 py-1.5 rounded-md ${className}`}
-                {...props}
-        >
-            <div className="whitespace-nowrap"><p>{icon} {content}</p></div>
-        </button>
+        <>
+            {link ? (
+                <div className={stringClassName}>
+                    <Link to={path}
+                          {...props} >
+                        {buttonContent}
+                    </Link>
+                </div>
+            ) : (
+                <button type="default" htmlType="submit"
+                        className={stringClassName}
+                        {...props}
+                >
+                    {buttonContent}
+                </button>
+            )}
+        </>
     );
 };
 

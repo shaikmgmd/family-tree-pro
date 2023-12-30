@@ -13,6 +13,7 @@ import FamilyTreeUser from "../pages/familytreeuser/FamilyTreeUser";
 import ChatList from "../pages/chat/ChatList";
 import ErrorBornDate from "../pages/tree/ErrorBornDate";
 import ConfirmRelationship from "../pages/confirm-relationship/ConfirmRelationship";
+import ErrorPageNotFound from "../pages/error/ErrorPageNotFound";
 
 const AppRoute = () => {
     return (
@@ -28,10 +29,11 @@ const AppRoute = () => {
             <Route path='/presentation' element={<Presentation/>}/>
             <Route path='/family-tree' element={<FamilyTree/>}/>
             <Route path='/family-tree/born-date-error' element={<ErrorBornDate/>}/>
-            <Route path='/user/all-except-current' element={<ListUser />}/>
-            <Route path='/family-tree/user/:userId' element={<FamilyTreeUser />}/>
+            <Route path='/user/all-except-current' element={<ListUser/>}/>
+            <Route path='/family-tree/user/:userId' element={<FamilyTreeUser/>}/>
             <Route path='/chat-list' element={<ChatList/>}/>
-            <Route path='/confirm-relationship/:confirmationCode' element={<ConfirmRelationship />}/>
+            <Route path='/confirm-relationship/:confirmationCode' element={<ConfirmRelationship/>}/>
+            <Route path='*' element={<ErrorPageNotFound/>}/>
         </Routes>
     )
 }

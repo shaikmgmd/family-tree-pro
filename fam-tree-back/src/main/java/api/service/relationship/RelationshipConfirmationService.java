@@ -16,6 +16,7 @@ import api.repository.user.UserRepository;
 import api.service.mail.MailService;
 import api.service.tree.FamilyTreeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +34,7 @@ public class RelationshipConfirmationService {
     private final MailService emailService;
     private final RelationshipConfirmationRepository relationshipConfirmationRepository;
     private final PersonneRepository personneRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
 
 //    public void requestRelationshipConfirmation(String emailOfMemberToAdd, FamilyMember sourceMember, RelationshipType relationshipType) {
@@ -104,6 +106,10 @@ public class RelationshipConfirmationService {
         personneRepository.save(tmpPrsn);
 
         emailService.sendRelationshipConfirmationEmail(emailOfMemberToAdd, confirmationCode);
+
+        // Envoyer une notification WebSocket
+        String notificationMessage = "Un email de confirmation a été envoyé à " + emailOfMemberToAdd;
+        simpMessagingTemplate.convertAndSend("/topic/notifications", notificationMessage);
 
     }
 
