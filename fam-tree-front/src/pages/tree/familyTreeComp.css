@@ -2,12 +2,12 @@
     filter: blur(10px);
 }
 
-#tree .male>rect {
+#tree .male > rect {
     fill: #71a4cc;
 }
 
-#tree .female>rect {
-    fill: #d39cf5;
+#tree .female > rect {
+    fill: #c8a2f8
 }
 
 /* Restyle les nœuds féminins */
@@ -22,11 +22,10 @@
 
 #tree .bft-family-menu {
     display: block;
-
     background-color: transparent;
 }
 
-#tree .bft-family-menu>div {
+#tree .bft-family-menu > div {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -34,8 +33,9 @@
 }
 
 
-#tree .female .bft-edit-form-header{
-    background-image: linear-gradient(105deg,#359b00 0%, #e8f95a 100% );
+#tree .female .bft-edit-form-header {
+    /*background-image: linear-gradient(105deg, #359b00 0%, #e8f95a 100%);*/
+    background-color: #a96ff1;
 }
 
 /* CustomEditForm.css */
@@ -48,33 +48,43 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
-.bft-edit-form-header {
+#tree .bft-edit-form-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid #e8e8e8;
     padding-bottom: 1rem;
+    /*background-color: #039BE5;*/
 }
 
-.bft-edit-form-title {
+#tree .bft-edit-form-title {
     font-size: 1.25rem; /* Taille de police 20px */
-    color: #333;
-    margin: 0;
+    color: #fff;
+    margin-left: 170px;
 }
 
 #tree .male .bft-img-button {
     vertical-align: auto;
 }
+
+#tree .female .bft-img-button {
+    vertical-align: auto;
+    background-color: #a96ff1;
+}
+
 .bft-edit-form-close {
     margin: 15px;
     cursor: pointer;
 }
 
 #tree .bft-edit-form-avatar {
-    margin: 1rem 0;
     display: flex;
     justify-content: center;
+    margin-left: -90px;
+    margin-top: -40px;
     border-radius: 0;
+    width: 150px;
+    height: 150px;
 }
 
 .bft-edit-form-fields {
@@ -136,6 +146,18 @@
 
 #tree.viewer .bft-img-button {
     display: none;
+}
+
+#tree .bft-img-button svg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+
+#tree .bft-img-button:hover {
+    background-color: #1dd71d;
 }
 
 svg.tommy .node.border-t rect {

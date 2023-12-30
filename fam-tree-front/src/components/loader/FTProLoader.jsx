@@ -6,7 +6,7 @@ export const FTProLoader = () => (
         <Circles
             height="80"
             width="80"
-            color="#0000FF"
+            color="#4CC425"
             ariaLabel="circles-loading"
             wrapperStyle={{}}
             wrapperClass=""
