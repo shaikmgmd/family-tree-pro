@@ -171,9 +171,6 @@ public class PersonneService {
     }
 
 
-
-
-
     private Long getIdFromObject(Object idObject, Map<String, Long> idMapping) {
         if (idObject instanceof String) {
             String tempId = (String) idObject;
@@ -210,8 +207,6 @@ public class PersonneService {
     }
 
 
-
-
     private List<Map<String, Object>> getAsListOfMap(Object object) {
         System.out.println("Object =" + object);
         if (object instanceof List<?>) {
@@ -224,10 +219,10 @@ public class PersonneService {
 
         Map<String, Object> formattedPersonne = new HashMap<>();
         formattedPersonne.put("id", personne.getId());
-        if(personne.getIs_registered()) {
+        if (personne.getIs_registered()) {
             formattedPersonne.put("name", personne.getName() + "_t");
         } else {
-            if(personne.getName() != null) {
+            if (personne.getName() != null) {
                 formattedPersonne.put("name", personne.getName() + "_f");
             } else {
                 formattedPersonne.put("name", personne.getName());
@@ -235,7 +230,7 @@ public class PersonneService {
         }
 
         Date born = personne.getBorn();
-        if(born != null) {
+        if (born != null) {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Example pattern, change as needed
             String formattedDate = sdf.format(born);
             formattedPersonne.put("born", formattedDate);
@@ -308,7 +303,7 @@ public class PersonneService {
 
         if (nodeData.containsKey("pids")) {
             Long partnerId = resolveId(nodeData.get("pids"), idMapping);
-            if(partnerId != null) {
+            if (partnerId != null) {
                 // Set partner only if ID is not null
                 newRelation.setPartner(personneRepository.findById(partnerId)
                         .orElseThrow(() -> new RuntimeException("Partner not found with ID: " + partnerId)));

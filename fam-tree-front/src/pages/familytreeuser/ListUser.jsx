@@ -13,6 +13,7 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {ListUserWrapper} from "../../components/wrapper/ListUserWrapper";
 import {AllUsersLoadedMessage} from "../../components/popup/AllUsersLoadedMessage";
 import {PlusCircleFilled} from "@ant-design/icons";
+import {postRecordViewAction} from "../../store/features/slices/stats";
 
 const ListUser = () => {
     const {data, loading, hasMore, page} = useSelector((state) => state.user.allUsersExceptCurrent);
@@ -28,7 +29,7 @@ const ListUser = () => {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user.getConnectedUser);
     const userCount = useSelector((state) => state.user.allUsersExceptCurrent);
-    const pageSize = 2;
+    const pageSize = 10;
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -110,8 +111,9 @@ const ListUser = () => {
         </div>
     ) : null;
 
-    const handlePowerButtonClick = (userId) => {
+    const handlePowerButtonClick = async (userId) => {
         //navigate(`/family-tree/user/${userId}`);
+        await dispatch(postRecordViewAction(userId));
         navigate(`/family-tree/user/${userId}`);
     };
 
