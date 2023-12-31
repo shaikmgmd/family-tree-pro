@@ -19,7 +19,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-//
+
     @GetMapping
     public ResponseEntity<ApiResponse<User>> findConnectedUser() {
         ApiResponse<User> response = new ApiResponse<>(userService.getCurrentConnectedUser());
