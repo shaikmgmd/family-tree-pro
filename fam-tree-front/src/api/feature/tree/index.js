@@ -6,10 +6,15 @@ export const getTreeByUserId = async (id) => (
 )
 
 export const addUserOnTree = async (id, payload) => (
-    backend.post(treeUrl.ADD_USER_ON_TREE(id), payload) // si on a cette url => on fait une requête POST
+    backend.post(treeUrl.ADD_USER_ON_TREE(id), payload)
 )
 
-// Ajouter le back-end
+export const getBFS = async () => (
+    backend.get(treeUrl.GET_BFS)
+)
+export const getDFS = async () => (
+    backend.get(treeUrl.GET_DFS)
+)
 export const addExistingUserOnTree = async (id, payload) => (
     backend.post(treeUrl.ADD_EXISTING_USER_ON_TREE(id), payload)
 )

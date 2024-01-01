@@ -1,28 +1,13 @@
-package api.service.relationship;
+package api.service.relation;
 
-import api.model.tree.FamilyMember;
-import api.model.tree.relationship.RelationshipConfirmation;
-import api.model.tree.relationship.RelationshipType;
 import api.model.user.User;
-import api.repository.tree.FamilyMemberRepository;
 import api.repository.tree.RelationshipConfirmationRepository;
-import api.repository.tree.RelationshipRepository;
 import api.repository.user.UserRepository;
 import api.service.mail.MailService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class RelationshipConfirmationServiceTest {
@@ -32,19 +17,13 @@ public class RelationshipConfirmationServiceTest {
     @Mock
     private RelationshipConfirmationRepository confirmationRepository;
     @Mock
-    private FamilyMemberRepository familyMemberRepository;
-    @Mock
     private MailService emailService;
-    @Mock
-    private RelationshipRepository relationshipRepository;
 
     @InjectMocks
     private RelationshipConfirmationService relationshipConfirmationService;
 
-    private FamilyMember sourceMember;
     private User user;
     private String email;
-    private RelationshipType relationshipType;
     private String confirmationCode;
 
 /*    @BeforeEach

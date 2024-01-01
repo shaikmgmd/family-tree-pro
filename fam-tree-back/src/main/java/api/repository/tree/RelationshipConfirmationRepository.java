@@ -1,6 +1,6 @@
 package api.repository.tree;
 
-import api.model.tree.relationship.RelationshipConfirmation;
+import api.model.tree.RelationshipConfirmation;
 import api.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 

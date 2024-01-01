@@ -7,6 +7,7 @@ import {Button, Divider, Input, Typography} from "antd";
 import {useNavigate} from "react-router-dom";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import FTProButton from "../../components/button/FTProButton";
 
 function PasswordChange() {
     const [password, setPassword] = useState('');
@@ -36,6 +37,7 @@ function PasswordChange() {
 
             if (response && typeof response === "object" && response.type === "user-login/fulfilled") {
                 localStorage.setItem("userData", JSON.stringify(response.payload));
+                navigate("/presentation")
             } else {
                 navigate("/error");
             }
@@ -70,9 +72,7 @@ function PasswordChange() {
                         name="confirmPassword"
                     />
 
-                    <Button type="default" htmlType="submit" className="mt-4">
-                        Modifier
-                    </Button>
+                    <FTProButton content={"Modifier"} onClick={handleSubmit}/>
                 </form>
             </div>
         </div>

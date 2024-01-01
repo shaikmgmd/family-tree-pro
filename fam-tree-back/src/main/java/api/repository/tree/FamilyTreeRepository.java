@@ -1,6 +1,5 @@
 package api.repository.tree;
 
-import api.model.tree.FamilyMember;
 import api.model.tree.FamilyTree;
 import api.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
