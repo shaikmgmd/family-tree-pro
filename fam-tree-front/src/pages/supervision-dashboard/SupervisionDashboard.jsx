@@ -17,22 +17,25 @@ const SupervisionDashboard = () => {
         totalTimeElapsed: 0
     });
 
-
     useEffect(() => {
-        dispatch(getAllTestsResultsAction())
-    }, []);
+        dispatch(getAllTestsResultsAction());
+    }, [dispatch]);
 
     useEffect(() => {
         if (allTestsResults.payload) {
-            const totalValues = Object.values(allTestsResults.payload).reduce((acc, result) => {
-                return {
-                    totalRuns: acc.totalRuns + result.testsRun,
-                    totalFailures: acc.totalFailures + result.failures,
-                    totalErrors: acc.totalErrors + result.errors,
-                    totalSkipped: acc.totalSkipped + result.skipped,
-                    totalTimeElapsed: acc.totalTimeElapsed + result.timeElapsed
-                };
-            }, { ...totals });
+            const totalValues = Object.values(allTestsResults.payload).reduce((acc, result) => ({
+                totalRuns: acc.totalRuns + result.testsRun,
+                totalFailures: acc.totalFailures + result.failures,
+                totalErrors: acc.totalErrors + result.errors,
+                totalSkipped: acc.totalSkipped + result.skipped,
+                totalTimeElapsed: acc.totalTimeElapsed + result.timeElapsed
+            }), {
+                totalRuns: 0,
+                totalFailures: 0,
+                totalErrors: 0,
+                totalSkipped: 0,
+                totalTimeElapsed: 0
+            });
 
             setTotals(totalValues);
         }

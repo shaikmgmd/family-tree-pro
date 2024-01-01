@@ -28,4 +28,8 @@ public class ViewTest {
         assertEquals(tree, view.getTree(), "The FamilyTree should be associated with the View");
     }
 
+    /*@Test
+    void testThatAlwaysFails() {
+        assertEquals(1, 2, "Ce test échouera toujours car 1 n'est pas égal à 2.");
+    }*/
 }
