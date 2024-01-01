@@ -10,6 +10,8 @@ import axios from "axios";
 import {toast} from "react-toastify";
 import {ReactComponent as ImageIcon} from "../../assets/ui/svg/adhesionForm/image.svg";
 import FTProButton from "../../components/button/FTProButton";
+import {GenderFemale, GenderMale} from "@phosphor-icons/react";
+import {countries} from "../../utils/countries";
 
 const AdhesionSchema = Yup.object().shape({
     socialSecurityNumber: Yup.string().required('Requis'),
@@ -25,12 +27,17 @@ const AdhesionSchema = Yup.object().shape({
 export const AdhesionForm = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [countries, setCountries] = useState([]);
+    const [countriesData, setCountries] = useState(countries);
     const {Option} = Select;
     const [idCardFile, setIdCardFile] = useState(null); // TODO : utiliser le setIdCardFile dans le .then(data) du cloud
     const [photoFile, setPhotoFile] = useState(null); // TODO : utiliser le setPhotoFile dans le .then(data) du cloud
     const [picMessageIdCardFile, setPicMessageIdCardFile] = useState("");
     const [picMessagePhotoFile, setPicMessagePhotoFile] = useState("");
+
+    // États pour gérer le bouton actif
+    const [isMaleActive, setIsMaleActive] = useState(false);
+    const [isFemaleActive, setIsFemaleActive] = useState(false);
+
     const formik = useFormik({
         initialValues: {
             socialSecurityNumber: '',
@@ -41,6 +48,9 @@ export const AdhesionForm = () => {
             email: '',
             idCardPath: undefined,
             photoPath: undefined,
+            gender: '',
+            city: '',
+            country: ''
         },
         validationSchema: AdhesionSchema,
         onSubmit: async (values) => {
@@ -60,10 +70,20 @@ export const AdhesionForm = () => {
             navigate("/home");
         },
     });
+
+    // Gestionnaires de clic pour les boutons de genre
+    const handleMaleClick = () => {
+        setIsMaleActive(true);
+        setIsFemaleActive(false);
+    };
+
+    const handleFemaleClick = () => {
+        setIsFemaleActive(true);
+        setIsMaleActive(false);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(e.target)
-        // Créer un objet FormData pour soumettre les fichiers et les autres champs
         const socialSecurityNumber = e.target.socialSecurityNumber.value;
         const lastName = e.target.lastName.value;
         const firstName = e.target.firstName.value;
@@ -72,16 +92,19 @@ export const AdhesionForm = () => {
         const email = e.target.email.value;
         let idCardPath;
         if (idCardFile) {
-            idCardPath = idCardFile; // TODO : ajouter le lien du cloud
+            idCardPath = idCardFile;
         } else {
             idCardPath = '';
         }
         let photoPath;
         if (photoFile) {
-            photoPath = photoFile; // TODO : ajouter le lien du cloud
+            photoPath = photoFile;
         } else {
             photoPath = '';
         }
+        const gender = isMaleActive ? "male" : "female";
+        const city = e.target.city.value;
+        const country = e.target.country.value;
 
         const values = {
             socialSecurityNumber,
@@ -91,7 +114,10 @@ export const AdhesionForm = () => {
             nationality,
             email,
             idCardPath,
-            photoPath
+            photoPath,
+            gender,
+            city,
+            country
         };
 
         const response = await dispatch(createAdhesionAction({payload: values}));
@@ -106,20 +132,7 @@ export const AdhesionForm = () => {
         });
         navigate(-1);
     };
-    const fetchCountries = async () => {
-        try {
-            const response = await axios.get('https://restcountries.com/v3.1/all');
-            const countryData = response.data.map(country => ({name: country.name.common, code: country.alpha2Code}));
-            setCountries(countryData);
-        } catch (error) {
-            console.error("Erreur lors de la récupération des pays:", error);
-        }
-    };
-    useEffect(() => {
-        fetchCountries();
-    }, []);
 
-    // Gérer le glisser-déposer
     const handleDrop = (event, setFileFunc, fieldName) => {
         event.preventDefault();
         event.stopPropagation();
@@ -131,7 +144,6 @@ export const AdhesionForm = () => {
         }
     };
 
-    // Gérer les changements de fichier
     const handleFileChange = (e, setFileFunc) => {
         const file = e.target.files[0];
         if (file) {
@@ -140,17 +152,10 @@ export const AdhesionForm = () => {
         }
     };
 
-    // Générer l'URL de prévisualisation
-    /*    const getPreview = (file) => {
-            return file ? URL.createObjectURL(file) : '';
-        };*/
-
     const getPreview = (file) => {
         return typeof file === 'string' ? file : '';
     };
 
-
-    // Fonction pour gérer la suppression de l'image
     const removeFile = (setFileFunc, fieldName) => {
         setFileFunc(null);
         formik.setFieldValue(fieldName, null);
@@ -220,6 +225,21 @@ export const AdhesionForm = () => {
 
             <form onSubmit={handleSubmit}
                   className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 flex flex-col my-2">
+                {/* Boutons de genre */}
+                <div className="flex justify-center mb-4">
+                    <button
+                        onClick={handleMaleClick}
+                        className={`p-2 rounded-full ${isMaleActive ? 'bg-green-ftpro' : 'bg-gray-300'}`}
+                    >
+                        <GenderMale size={32} color="#ffffff"/>
+                    </button>
+                    <button
+                        onClick={handleFemaleClick}
+                        className={`ml-2 p-2 rounded-full ${isFemaleActive ? 'bg-green-ftpro' : 'bg-gray-300'}`}
+                    >
+                        <GenderFemale size={32} color="#ffffff"/>
+                    </button>
+                </div>
                 {/* Nom et Prénom */}
                 <div className="-mx-3 md:flex mb-6">
                     {/* Nom */}
@@ -285,9 +305,10 @@ export const AdhesionForm = () => {
                     </div>
                 </div>
 
-                {/* Numéro de sécurité sociale */}
+                {/* Numéro de sécurité sociale, Date de naissance, et Email */}
                 <div className="-mx-3 md:flex mb-6">
-                    <div className="md:w-full px-3 relative">
+                    {/* Numéro de sécurité sociale */}
+                    <div className="md:w-1/3 px-3 relative">
                         <label className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2"
                                htmlFor="socialSecurityNumber">
                             Numéro de sécurité sociale
@@ -315,11 +336,7 @@ export const AdhesionForm = () => {
                             />
                         </div>
                     </div>
-                </div>
-
-
-                {/* Date de naissance, Nationalité, et Email */}
-                <div className="-mx-3 md:flex mb-6">
+                    {/* Date de naissance */}
                     <div className="md:w-1/3 px-3 relative">
                         <label className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2"
                                htmlFor="birthDate">
@@ -351,6 +368,40 @@ export const AdhesionForm = () => {
                             />
                         </div>
                     </div>
+                    {/* Email */}
+                    <div className="md:w-1/3 px-3 relative">
+                        <label className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2"
+                               htmlFor="email">
+                            Email
+                        </label>
+                        <div className="relative">
+                            <svg className="w-6 h-6 text-gray-500 absolute left-3 inset-y-0 my-auto"
+                                 xmlns="http://www.w3.org/2000/svg" fill="#a0aec0" viewBox="0 0 256 256">
+                                <path
+                                    d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM203.43,64,128,133.15,52.57,64ZM216,192H40V74.19l82.59,75.71a8,8,0,0,0,10.82,0L216,74.19V192Z"></path>
+                            </svg>
+                            <style>
+                                {`
+                                    #email:focus {
+                                        border-color: #4CC425;
+                                        outline: none;
+                                    }
+                                `}
+                            </style>
+                            <input
+                                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 pl-12"
+                                id="email" name="email" type="email" onChange={formik.handleChange}
+                                value={formik.values.email}
+                                placeholder="Entrez votre email"
+                                required
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Nationalité, Pays et Ville */}
+                <div className="-mx-3 md:flex mb-6">
+                    {/* Nationalité */}
                     <div className="md:w-1/3 px-3 relative">
                         <label className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2"
                                htmlFor="nationality">
@@ -374,26 +425,27 @@ export const AdhesionForm = () => {
                                 className="block appearance-none w-full bg-white text-grey-darker border border-grey-lighter text-gray-700 py-3 px-4 pr-8 rounded pl-12"
                                 id="nationality" name="nationality" onChange={formik.handleChange}
                                 value={formik.values.nationality}>
-                                {countries.map((country) => (
-                                    <option key={country.code} value={country.name}>{country.name}</option>
+                                {countriesData.map((country, idx) => (
+                                    <option key={idx} value={country}>{country}</option>
                                 ))}
                             </select>
                         </div>
                     </div>
+                    {/* Pays */}
                     <div className="md:w-1/3 px-3 relative">
                         <label className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2"
-                               htmlFor="email">
-                            Email
+                               htmlFor="country">
+                            Pays
                         </label>
                         <div className="relative">
-                            <svg className="w-6 h-6 text-gray-500 absolute left-3 inset-y-0 my-auto "
+                            <svg className="w-6 h-6 text-gray-500 absolute left-3 inset-y-0 my-auto"
                                  xmlns="http://www.w3.org/2000/svg" fill="#a0aec0" viewBox="0 0 256 256">
                                 <path
-                                    d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM203.43,64,128,133.15,52.57,64ZM216,192H40V74.19l82.59,75.71a8,8,0,0,0,10.82,0L216,74.19V192Z"></path>
+                                    d="M34.76,42A8,8,0,0,0,32,48V216a8,8,0,0,0,16,0V171.77c26.79-21.16,49.87-9.75,76.45,3.41,16.4,8.11,34.06,16.85,53,16.85,13.93,0,28.54-4.75,43.82-18a8,8,0,0,0,2.76-6V48A8,8,0,0,0,210.76,42c-28,24.23-51.72,12.49-79.21-1.12C103.07,26.76,70.78,10.79,34.76,42ZM208,164.25c-26.79,21.16-49.87,9.74-76.45-3.41-25-12.35-52.81-26.13-83.55-8.4V51.79c26.79-21.16,49.87-9.75,76.45,3.4,25,12.35,52.82,26.13,83.55,8.4Z"></path>
                             </svg>
                             <style>
                                 {`
-                                    #email:focus {
+                                    #country:focus {
                                         border-color: #4CC425;
                                         outline: none;
                                     }
@@ -401,15 +453,45 @@ export const AdhesionForm = () => {
                             </style>
                             <input
                                 className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 pl-12"
-                                id="email" name="email" type="email" onChange={formik.handleChange}
-                                value={formik.values.email}
-                                placeholder="Entrez votre email"
+                                id="country" name="country" type="text" onChange={formik.handleChange}
+                                value={formik.values.country}
+                                placeholder="Entrez votre pays"
+                                required
+                            />
+                        </div>
+                    </div>
+                    {/* Ville */}
+                    <div className="md:w-1/3 px-3 relative">
+                        <label className="block uppercase tracking-wide text-gray-darker text-xs font-bold mb-2"
+                               htmlFor="city">
+                            Ville
+                        </label>
+                        <div className="relative">
+                            <svg className="w-6 h-6 text-gray-500 absolute left-3 inset-y-0 my-auto"
+                                 xmlns="http://www.w3.org/2000/svg" fill="#a0aec0" viewBox="0 0 256 256">
+                                <path
+                                    d="M230.76,51.73A8,8,0,0,0,224,48H32a8,8,0,0,0-5.41,13.9l42.09,38.57-42.56,46.1A8,8,0,0,0,32,160H165.62l-28.84,60.56a8,8,0,1,0,14.44,6.88l80-168A8,8,0,0,0,230.76,51.73ZM173.23,144h-123l35.61-38.57a8,8,0,0,0-.47-11.33L52.57,64H211.33Z"></path>
+                            </svg>
+                            <style>
+                                {`
+                                    #city:focus {
+                                        border-color: #4CC425;
+                                        outline: none;
+                                    }
+                                `}
+                            </style>
+                            <input
+                                className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 pl-12"
+                                id="city" name="city" type="text" onChange={formik.handleChange}
+                                value={formik.values.city}
+                                placeholder="Entrez votre ville"
                                 required
                             />
                         </div>
                     </div>
                 </div>
                 <Divider/>
+
                 {/* Champ de téléchargement de la carte d'identité */}
                 <div className="-mx-3 md:flex mb-6">
                     <div className="md:w-1/2 px-3 mb-6 md:mb-0 relative">
