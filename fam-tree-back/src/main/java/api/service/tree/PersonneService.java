@@ -43,18 +43,10 @@ public class PersonneService {
         });
         newPersonne.setTreeId(familyTree.getId());
 
-<<<<<<< Updated upstream
-        Object tempIdObj = personneData.get("id");
-        String tempId = null;
-        if (tempIdObj != null) {
-            tempId = tempIdObj.toString(); // Convertit en String peu importe le type initial
-        }
-
-=======
+        // Récupérer l'ID bizarre ou utiliser l'ID réel si le tempId est null.
         String tempId = (String) personneData.get("id");
->>>>>>> Stashed changes
         if (tempId != null && !tempId.isEmpty()) {
-            newPersonne.setTempId(tempId);
+            newPersonne.setTempId(tempId); // Set the temporary ID only if it's not null and not empty
         }
 
         newPersonne = personneRepository.save(newPersonne);
