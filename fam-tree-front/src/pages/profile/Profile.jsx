@@ -7,6 +7,7 @@ import {toast} from "react-toastify";
 import {FTProLoader} from "../../components/loader/FTProLoader";
 import FTProGlassButton from "../../components/button/FTProGlassButton";
 import FTProButton from "../../components/button/FTProButton";
+import {GenderFemale, GenderMale} from "@phosphor-icons/react";
 
 
 const Profile = () => {
@@ -44,7 +45,18 @@ const Profile = () => {
     };
 
     return (
-        <MainWrapper title={"Mon Profil"} description={"Consultez ou modifiez votre profil :"}>
+        <MainWrapper title={"Mon Profil"} description={"Consultez ou modifiez votre profil :"} buttonComponent={<div
+            className="flex justify-center mb-4">
+            {user?.gender === "male" ? (<span
+                className={`p-2 rounded-md bg-green-ftpro hover:bg-green-ftpro-h transition-all`}
+            >
+                <GenderMale size={32} color="#ffffff"/>
+            </span>) : (<span
+                className={`p-2 rounded-md bg-green-ftpro hover:bg-green-ftpro-h transition-all`}
+            >
+                <GenderFemale size={32} color="#ffffff"/>
+            </span>)}
+        </div>}>
             {!user ? (
                 <FTProLoader/>
             ) : (
@@ -246,9 +258,10 @@ const Profile = () => {
                             </div>
                         </div>
 
-                        {/* Adresse */}
+                        {/* Adresse, Ville et Pays */}
                         <div className="-mx-3 md:flex mb-6">
-                            <div className="md:w-full px-3 relative">
+                            { /* Adresse */}
+                            <div className="md:w-1/3 px-3 relative">
                                 <label
                                     className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2 text-gray-500"
                                     htmlFor="address">
@@ -271,6 +284,60 @@ const Profile = () => {
                                     <input
                                         className="appearance-none block w-full bg-grey-lighter text-grey-darker border border-grey-lighter rounded py-3 px-4 pl-12 mb-3"
                                         name="address" id="address" type="text" defaultValue={user.address}
+                                    />
+                                </div>
+                            </div>
+                            {/* Ville */}
+                            <div className="md:w-1/3 px-3 relative">
+                                <label
+                                    className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2 text-gray-500"
+                                    htmlFor="city">
+                                    Ville
+                                </label>
+                                <div className="relative">
+                                    <svg className="w-6 h-6 text-gray-500 absolute left-3 inset-y-0 my-auto"
+                                         xmlns="http://www.w3.org/2000/svg" fill="#a0aec0" viewBox="0 0 256 256">
+                                        <path
+                                            d="M230.76,51.73A8,8,0,0,0,224,48H32a8,8,0,0,0-5.41,13.9l42.09,38.57-42.56,46.1A8,8,0,0,0,32,160H165.62l-28.84,60.56a8,8,0,1,0,14.44,6.88l80-168A8,8,0,0,0,230.76,51.73ZM173.23,144h-123l35.61-38.57a8,8,0,0,0-.47-11.33L52.57,64H211.33Z"></path>
+                                    </svg>
+                                    <style>
+                                        {`
+                                            #city:focus {
+                                                border-color: #4CC425;
+                                                outline: none;
+                                            }
+                                        `}
+                                    </style>
+                                    <input
+                                        className="appearance-none block w-full bg-gray-200 text-gray-500 border border-gray-200 rounded py-3 px-4 pl-12"
+                                        id="city" name="city" type="text" defaultValue={user.city} disabled
+                                    />
+                                </div>
+                            </div>
+                            {/* Pays */}
+                            <div className="md:w-1/3 px-3 relative">
+                                <label
+                                    className="block uppercase tracking-wide text-grey-darker text-xs font-bold mb-2 text-gray-500"
+                                    htmlFor="country">
+                                    Pays
+                                </label>
+                                <div className="relative">
+                                    <svg className="w-6 h-6 text-gray-500 absolute left-3 inset-y-0 my-auto"
+                                         xmlns="http://www.w3.org/2000/svg" fill="#a0aec0" viewBox="0 0 256 256">
+                                        <path
+                                            d="M34.76,42A8,8,0,0,0,32,48V216a8,8,0,0,0,16,0V171.77c26.79-21.16,49.87-9.75,76.45,3.41,16.4,8.11,34.06,16.85,53,16.85,13.93,0,28.54-4.75,43.82-18a8,8,0,0,0,2.76-6V48A8,8,0,0,0,210.76,42c-28,24.23-51.72,12.49-79.21-1.12C103.07,26.76,70.78,10.79,34.76,42ZM208,164.25c-26.79,21.16-49.87,9.74-76.45-3.41-25-12.35-52.81-26.13-83.55-8.4V51.79c26.79-21.16,49.87-9.75,76.45,3.4,25,12.35,52.82,26.13,83.55,8.4Z"></path>
+                                    </svg>
+                                    <style>
+                                        {`
+                                            #country:focus {
+                                                border-color: #4CC425;
+                                                outline: none;
+                                            }
+                                        `}
+                                    </style>
+                                    <input
+                                        className="appearance-none block w-full bg-gray-200 text-gray-500 border border-gray-200 rounded py-3 px-4 pl-12"
+                                        id="country" name="country" type="text" defaultValue={user.country} disabled
                                     />
                                 </div>
                             </div>
@@ -341,14 +408,14 @@ const Profile = () => {
                         <div className="-mx-3 md:flex mt-3">
                             <div className="flex gap-2 justify-between my-2 w-full">
                                 <div className="space-x-2">
-                                <FTProGlassButton content="Voir CNI" noMarginTop
-                                                  onClick={() => showModal(user.idCardPath)}/>
-                                <FTProGlassButton content="Voir Photo" noMarginTop
-                                                  onClick={() => showModal(user.photoPath)}/>
+                                    <FTProGlassButton content="Voir CNI" noMarginTop
+                                                      onClick={() => showModal(user.idCardPath)}/>
+                                    <FTProGlassButton content="Voir Photo" noMarginTop
+                                                      onClick={() => showModal(user.photoPath)}/>
                                 </div>
-                                    <div className="px-3 text-right">
-                                        <FTProButton content="Mettre à jour" type="submit" noMarginTop/>
-                                    </div>
+                                <div className="px-3 text-right">
+                                    <FTProButton content="Mettre à jour" type="submit" noMarginTop/>
+                                </div>
                             </div>
 
                             {/* Bouton de soumission */}

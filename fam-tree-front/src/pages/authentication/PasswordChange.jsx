@@ -8,6 +8,7 @@ import {useNavigate} from "react-router-dom";
 import {toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import FTProButton from "../../components/button/FTProButton";
+import {ReactComponent as PasswordChangeIcon} from "../../assets/ui/svg/passwordChange/password.svg";
 
 function PasswordChange() {
     const [password, setPassword] = useState('');
@@ -47,15 +48,13 @@ function PasswordChange() {
 
     return (
         <div className="flex h-screen">
-            <div className="w-1/2 flex items-center justify-center border-r">
-                <Typography.Title level={1} className="text-white">
-                    mettre photo
-                </Typography.Title>
+            <div className="w-1/2 flex items-center justify-center border-r p-10">
+                <PasswordChangeIcon/>
             </div>
             <div className="w-1/2 flex items-center justify-center p-10">
                 <form onSubmit={handleSubmit} className="w-full max-w-lg">
-                    <Typography.Title level={2} className="mb-4">
-                        Changer mot de passe
+                    <Typography.Title level={2} className="mb-10 text-center">
+                        Changez votre mot de passe
                     </Typography.Title>
                     <Input.Password
                         value={password}
