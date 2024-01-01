@@ -229,11 +229,11 @@ const ListUser = () => {
                         </svg>
                         <style>
                             {`
-                                #filterBy:focus {
-                                    border-color: #4CC425;
-                                    outline: none;
-                                }
-                            `}
+                                    #filterBy:focus {
+                                        border-color: #4CC425;
+                                        outline: none;
+                                    }
+                                `}
                         </style>
                         <select
                             className="appearance-none block w-full bg-white text-gray-500 border border-gray-200 rounded py-3 px-4 pl-12 leading-tight focus:outline-none focus:bg-white focus:border-green-500"
@@ -260,22 +260,70 @@ const ListUser = () => {
                             <Skeleton avatar title={false} loading={loading} active>
                                 <List.Item.Meta
                                     className="custom-list-item-meta"
-                                    avatar={<Avatar className="custom-avatar" src={item.photoPath}/>}
-                                    title={<div className="font-bold">{item.firstName + " " + item.lastName}</div>}
+                                    avatar={<Avatar className="h-16 w-16 rounded-full" src={item.photoPath}/>}
+                                    title={<div
+                                        className="font-bold text-lg">{item.firstName + " " + item.lastName}</div>}
                                     description={
-                                        <span>
-                                                <strong>{item.firstName} {item.lastName}</strong>, est originaire de <strong>{item.nationality}</strong> et est né le <strong>{new Date(item.birthDate).toLocaleDateString()}</strong>. Cet utilisateur, dont le numéro de sécurité sociale est le <strong>{item.socialSecurityNumber}</strong> et le code public est <strong>{item.publicCode}</strong>. Il réside à '<strong>{item.address}</strong>' et peut être contacté par email à '<strong>{item.email}</strong>' ou par téléphone au <strong>{item.phone}</strong>.
-                                        </span>
+                                        <div className="text-base text-gray-500">
+                                            {/*<strong>{item.firstName} {item.lastName}</strong>, */}
+                                            Est originaire
+                                            de <strong>{item.nationality}</strong> et est né
+                                            le <strong>{new Date(item.birthDate).toLocaleDateString()}</strong>. Cet
+                                            utilisateur, dont le numéro de sécurité sociale est
+                                            le <strong>{item.socialSecurityNumber}</strong> et le code public
+                                            est <strong>{item.publicCode}</strong>. Il réside à
+                                            '<strong>{item.address}</strong>' et peut être contacté par email à
+                                            '<strong>{item.email}</strong>' ou par téléphone
+                                            au <strong>{item.phone}</strong>.
+                                        </div>
                                     }
                                 />
-
                             </Skeleton>
                             <PowerButton index={item.id} onClick={() => handlePowerButtonClick(item.id)}
                                          text="Voir l'arbre" duration={1000}/>
                         </List.Item>
+
                     );
                 }}
             />
+            <div className="bg-white shadow overflow-hidden sm:rounded-md">
+                {loading ? (
+                    <div>Loading...</div> // Remplace par un composant de chargement si tu en as un
+                ) : (
+                    <ul>
+                        {filteredData.map((item) => (
+                            <li key={item.id} className="border-t border-gray-200">
+                                <div
+                                    className="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out">
+                                    <div className="flex items-center px-4 py-4 sm:px-6">
+                                        <img className="h-12 w-12 rounded-full" src={item.photoPath} alt=""/>
+                                        <div className="ml-4">
+                                            <div className="font-bold text-xl text-gray-900">
+                                                {item.firstName} {item.lastName}
+                                            </div>
+                                            <div className="text-sm text-gray-500">
+                                                <strong>Né(e)
+                                                    le:</strong> {new Date(item.birthDate).toLocaleDateString()}
+                                            </div>
+                                            <div className="text-sm text-gray-500">
+                                                <strong>Email:</strong> {item.email} | <strong>Tél:</strong> {item.phone}
+                                            </div>
+                                        </div>
+                                        <div className="ml-auto">
+                                            <button
+                                                onClick={() => handlePowerButtonClick(item.id)}
+                                                className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
+                                            >
+                                                Voir l'arbre
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
             {
                 showAllUsersLoadedMessage && <AllUsersLoadedMessage/>
             }
