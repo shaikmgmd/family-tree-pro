@@ -15,7 +15,7 @@ public class UserConstructorTest {
         Date birthDate = new Date();
         User user = new User("Doe", "John", birthDate, "Nationality",
                 "PublicCode", "PrivateCode", "SSN", "IdCardPath", "PhotoPath",
-                "email@example.com", "password");
+                "email@example.com", "password", "cergy", "france", "male");
 
         assertEquals("Doe", user.getLastName());
         assertEquals("John", user.getFirstName());
@@ -28,5 +28,8 @@ public class UserConstructorTest {
         assertEquals("PhotoPath", user.getPhotoPath());
         assertEquals("email@example.com", user.getEmail());
         assertEquals("password", user.getPassword());
+        assertEquals("cergy", user.getCity());
+        assertEquals("france", user.getCountry());
+        assertEquals("male", user.getGender());
     }
 }
