@@ -60,3 +60,7 @@ export const statsUrl = {
     GET_VIEWS_PER_DAY: `/view/views-per-day-since-creation`,
     POST_RECORD: `/view/record`,
 }
+
+export const testsUrl = {
+    GET_ALL_TESTS_RESULTS: `/test-results`,
+}

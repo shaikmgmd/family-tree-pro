@@ -27,4 +27,5 @@ public class ViewTest {
 
         assertEquals(tree, view.getTree(), "The FamilyTree should be associated with the View");
     }
+
 }

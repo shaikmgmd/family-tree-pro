@@ -1,4 +1,4 @@
-package api.view;
+package api.service.view;
 
 import api.model.tree.FamilyTree;
 import api.model.user.User;

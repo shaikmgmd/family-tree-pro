@@ -17,6 +17,7 @@ import {
     ChartLine, Question
 } from "@phosphor-icons/react";
 import {getConnectedUserAction} from "../../store/features/slices/user";
+import {getAllTestsResultsAction} from "../../store/features/slices/tests";
 
 const {Sider} = Layout;
 const {SubMenu} = Menu;
@@ -126,15 +127,22 @@ const SideMenu = () => {
                     user?.firstLogin === false
                     && (
                         <>
-                            <SubMenu key="admin" title={<span style={{color: 'white'}}>Administrateur</span>}
+                            {/*<SubMenu key="admin" title={<span style={{color: 'white'}}>Administrateur</span>}
                                      icon={<Gauge style={{color: 'white'}}/>}
                                      style={{background: 'transparent'}}>
-                                <Menu.Item key="/adhesion/dashboard">
-                                    <Link to="/adhesion/dashboard"
-                                          style={{color: location.pathname === '/adhesion/dashboard' ? '#333' : '#333'}}>Adhésion
-                                        Dashboard</Link>
-                                </Menu.Item>
-                            </SubMenu>
+
+                            </SubMenu>*/}
+                            <Menu.Item key="/adhesion/dashboard">
+                                <Link to="/adhesion/dashboard"
+                                      style={{color: location.pathname === '/adhesion/dashboard' ? '#333' : '#333'}}>Adhésion
+                                    Dashboard</Link>
+                            </Menu.Item>
+                            <Menu.Item key="/supervision-dashboard" icon={<Clipboard
+                                style={{color: location.pathname === '/supervision-dashboard' ? selectedIconColor : 'white'}}/>}>
+                                <Link to="/supervision-dashboard"
+                                      style={{color: location.pathname === '/supervision-dashboard' ? '#333' : 'white'}}>Supervision</Link>
+                            </Menu.Item>
+
                         </>
                     )}
                 {!userData && (

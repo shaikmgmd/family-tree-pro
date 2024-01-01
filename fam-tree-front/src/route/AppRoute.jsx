@@ -16,6 +16,7 @@ import ConfirmRelationship from "../pages/confirm-relationship/ConfirmRelationsh
 import ErrorPageNotFound from "../pages/error/ErrorPageNotFound";
 import DashboardPage from "../pages/stats/DashboardPage";
 import PageFaq from "../pages/faq/PageFaq";
+import SupervisionDashboard from "../pages/supervision-dashboard/SupervisionDashboard";
 
 const AppRoute = () => {
     return (
@@ -37,6 +38,7 @@ const AppRoute = () => {
             <Route path='/confirm-relationship/:confirmationCode' element={<ConfirmRelationship/>}/>
             <Route path='/stats' element={<DashboardPage />}/>
             <Route path='/faq' element={<PageFaq />}/>
+            <Route path='/supervision-dashboard' element={<SupervisionDashboard />}/>
             <Route path='*' element={<ErrorPageNotFound/>}/>
         </Routes>
     )

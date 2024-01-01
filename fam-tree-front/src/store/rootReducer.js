@@ -5,6 +5,7 @@ import role from "./features/slices/role";
 import tree from "./features/slices/tree";
 import chat from "./features/slices/chat";
 import stats from "./features/slices/stats";
+import tests from "./features/slices/tests";
 
 const rootReducer = {
     adhesion,
@@ -13,7 +14,8 @@ const rootReducer = {
     role,
     tree,
     chat,
-    stats
+    stats,
+    tests
 };
 
 export default rootReducer;
