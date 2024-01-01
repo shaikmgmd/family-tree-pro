@@ -197,7 +197,7 @@ const Chat = () => {
                             </div>
                         ))}
                         {filteredDatas && filteredDatas.length === 0 && (
-                            <div>Aucun chats trouvé</div>
+                            <div className="flex items-center justify-center my-10">Aucun chats trouvé</div>
                         )}
                     </div>
                     {/*Discussion*/}

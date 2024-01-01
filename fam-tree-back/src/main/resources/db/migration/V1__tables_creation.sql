@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS ftpro_user (
     password TEXT NOT NULL,
     gender TEXT NOT NULL,
     first_login BOOLEAN DEFAULT TRUE,
-    city TEXT NOT NULL
+    city TEXT NOT NULL,
+    country TEXT NOT NULL
     );
 
 -- Création de la table adhesion_request
@@ -36,6 +37,9 @@ CREATE TABLE IF NOT EXISTS adhesion_request (
     id_card_path VARCHAR(255),
     photo_path VARCHAR(255),
     email VARCHAR(255) NOT NULL,
+    gender TEXT NOT NULL,
+    city TEXT NOT NULL,
+    country TEXT NOT NULL,
     status VARCHAR(255) DEFAULT 'PENDING'
     );
 

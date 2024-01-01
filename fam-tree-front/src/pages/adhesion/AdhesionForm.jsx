@@ -229,12 +229,14 @@ export const AdhesionForm = () => {
                 <div className="flex justify-center mb-4">
                     <button
                         onClick={handleMaleClick}
+                        type="button"
                         className={`p-2 rounded-full ${isMaleActive ? 'bg-green-ftpro' : 'bg-gray-300'}`}
                     >
                         <GenderMale size={32} color="#ffffff"/>
                     </button>
                     <button
                         onClick={handleFemaleClick}
+                        type="button"
                         className={`ml-2 p-2 rounded-full ${isFemaleActive ? 'bg-green-ftpro' : 'bg-gray-300'}`}
                     >
                         <GenderFemale size={32} color="#ffffff"/>

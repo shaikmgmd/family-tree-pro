@@ -34,6 +34,7 @@ public class User extends BaseEntityWithAudit {
     @Column(unique = true)
     private String email;
     private String password;
+    private String country;
     private String gender;
     private boolean firstLogin = true;
 
@@ -50,7 +51,7 @@ public class User extends BaseEntityWithAudit {
     public User(String lastName, String firstName, Date birthDate, String nationality,
                 String publicCode, String privateCode,
                 String socialSecurityNumber, String idCardPath, String photoPath,
-                String email, String password) {
+                String email, String password, String city, String country, String gender) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.birthDate = birthDate;
@@ -62,5 +63,8 @@ public class User extends BaseEntityWithAudit {
         this.photoPath = photoPath;
         this.email = email;
         this.password = password;
+        this.city = city;
+        this.country = country;
+        this.gender = gender;
     }
 }

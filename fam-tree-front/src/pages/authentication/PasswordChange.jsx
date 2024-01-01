@@ -1,6 +1,6 @@
 // PasswordChange.jsx
 
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {handleFirstLoginPasswordUpdateAction, userLoginAction} from "../../store/features/slices/auth";
 import {Button, Divider, Input, Typography} from "antd";
@@ -17,32 +17,34 @@ function PasswordChange() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const handleSubmit = async () => {
+    const handleSubmit = (e) => {
+        e.preventDefault();
         if (password === confirmPassword) {
-            await dispatch(handleFirstLoginPasswordUpdateAction({
+            dispatch(handleFirstLoginPasswordUpdateAction({
                 payload: {
                     privateCode: userData.privateCode,
                     newPassword: password
                 }
-            }));
-            toast.success("Votre mot de passe a été modifié !", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
+            })).then((response) => {
+                if (response && typeof response === "object" && response.type === "user-password-change/fulfilled") {
+                    localStorage.setItem("userData", JSON.stringify(response.payload));
+                    if (localStorage.getItem("userData")) {
+                        localStorage.removeItem("userData");
+                    }
+                    toast.success("Votre mot de passe a été modifié !", {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                    console.log("Attempting to navigate to /login");
+                    navigate("/login");
+                    window.location.href = '/login'
+                }
             });
-            const response = await dispatch(userLoginAction({payload: loginInfo}));
-
-            if (response && typeof response === "object" && response.type === "user-login/fulfilled") {
-                localStorage.setItem("userData", JSON.stringify(response.payload));
-                navigate("/presentation")
-            } else {
-                navigate("/error");
-            }
-            navigate("/home");
         }
     }
 
@@ -71,7 +73,7 @@ function PasswordChange() {
                         name="confirmPassword"
                     />
 
-                    <FTProButton content={"Modifier"} onClick={handleSubmit}/>
+                    <FTProButton content={"Modifier"} type="submit"/>
                 </form>
             </div>
         </div>

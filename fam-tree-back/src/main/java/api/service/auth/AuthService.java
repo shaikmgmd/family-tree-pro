@@ -73,7 +73,8 @@ public class AuthService {
                 generatePublicCode(), generatePrivateCode(),
                 request.getSocialSecurityNumber(),
                 request.getIdCardPath(), request.getPhotoPath(),
-                request.getEmail(), passwordEncoder.encode(request.getFirstName())
+                request.getEmail(), passwordEncoder.encode(request.getFirstName()),
+                request.getCity(), request.getCountry(), request.getGender()
         );
 
         Role userRole = roleRepository.findByName("USER");
@@ -98,10 +99,13 @@ public class AuthService {
         Personne personne = new Personne();
         //personne.setGender();
         personne.setEmail(request.getEmail());
-        personne.setName(request.getFirstName()+ " "+ request.getLastName());
+        personne.setName(request.getFirstName() + " " + request.getLastName());
         personne.setBorn(request.getBirthDate());
         personne.setPhoto(request.getPhotoPath());
         personne.setTreeId(tree.getId());
+        personne.setGender(request.getGender());
+        personne.setCity(request.getCity());
+        personne.setCountry(request.getCountry());
 
 
         emailService.sendCodesByEmail(user.getEmail(), user.getPublicCode(), user.getPrivateCode());

@@ -51,16 +51,6 @@ const ErrorPageNotFound = () => {
         }
     ];
 
-    const handleConfirmRelationship = data => {
-        const response = dispatch(confirmRelationshipAction(data));
-        // console.log("response useEffect =>", response);
-        // if(response) { navigate("/home") }
-    }
-
-    useEffect(() => {
-        handleConfirmRelationship(confirmationCode);
-    }, [confirmationCode])
-
     return (
         <>
             <div className="max-w-screen-xl mx-auto px-4 flex items-center justify-start h-screen md:px-8">

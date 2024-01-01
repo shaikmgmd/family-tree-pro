@@ -26,6 +26,9 @@ public class AdhesionRequest extends BaseEntityWithAudit {
     private String idCardPath;
     private String photoPath;
     private String email;
+    private String city;
+    private String country;
+    private String gender;
     @Enumerated(EnumType.STRING)
     private AdhesionStatus status = AdhesionStatus.PENDING;
 }
