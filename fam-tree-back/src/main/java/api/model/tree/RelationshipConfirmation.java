@@ -1,7 +1,5 @@
-package api.model.tree.relationship;
+package api.model.tree;
 
-import api.model.tree.FamilyMember;
-import api.model.tree.Personne;
 import api.model.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,7 +14,7 @@ import java.time.LocalDateTime;
 @ToString
 @Table(name = "relationship_confirmation")
 public class RelationshipConfirmation {
-//
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,17 +30,13 @@ public class RelationshipConfirmation {
     @JoinColumn(name = "target_member_id")
     private User targetMember;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "relationship_type")
-//    private RelationshipType relationshipType;
-
     @Column(name = "expiry_date")
     private LocalDateTime expiryDate;
 
     @Column(name = "is_confirmed")
-    private Boolean isConfirmed = false;  // Par défaut, il est mis à false. Il sera mis à true lorsque la personne confirmera le lien.
+    private Boolean isConfirmed = false;
 
     @Column(name = "is_processed")
-    private Boolean isProcessed = false;  // Indique si cette demande a été traitée ou non.
+    private Boolean isProcessed = false;
 
 }
