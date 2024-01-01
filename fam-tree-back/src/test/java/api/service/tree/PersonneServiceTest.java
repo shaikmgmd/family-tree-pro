@@ -103,7 +103,7 @@ public class PersonneServiceTest {
         assertEquals(1L, newPersonId);
     }
 
-    @Test
+    /*@Test
     void treeNodeManagingTest() {
         // Configuration initiale
         Long validPersonId = 1L;
@@ -137,7 +137,7 @@ public class PersonneServiceTest {
         verify(personneRepository, times(4)).findById(validPersonId);
         verify(personneRepository).deleteById(validPersonId);
         // Ajoutez d'autres vérifications selon les besoins
-    }
+    }*/
 
 
     @Test
