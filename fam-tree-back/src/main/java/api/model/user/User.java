@@ -1,20 +1,14 @@
 package api.model.user;
 
 import api.model.BaseEntityWithAudit;
-import api.model.role.Role;
 import api.model.user_role.UserRole;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Entity
