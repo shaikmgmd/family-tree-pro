@@ -11,6 +11,7 @@ import {
 import familyTree from "./FamilyTree";
 import {addExistingUserOnTree} from "../../api/feature/tree";
 import {PencilSimple} from "@phosphor-icons/react";
+import {countriesSelect} from "../../utils/countriesSelect";
 
 const FamilyTreeComponent = ({isOwner, handleError}) => {
     const treeContainer = useRef(null); // Création d'une référence au conteneur
@@ -173,29 +174,26 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
                     elements:
                         (modalMode === "newMember") || (modalMode === "edit") ? (
                             [
-                                {type: 'textbox', label: 'Full Name', binding: 'name'},
-                                {type: 'textbox', label: 'Email Address', binding: 'email'},
+                                {type: 'textbox', label: 'Nom entier', binding: 'name'},
+                                {type: 'textbox', label: 'Adresse email', binding: 'email'},
                                 [
-                                    {type: 'textbox', label: 'Phone', binding: 'phone',},
-                                    {type: 'date', label: 'Date Of Birth', binding: 'born'}
+                                    {type: 'textbox', label: 'Numéro de tel.', binding: 'phone',},
+                                    {type: 'date', label: 'Date de naissance', binding: 'born'}
                                 ],
                                 [
                                     {
                                         type: 'select',
-                                        options: [{value: 'bg', text: 'Bulgaria'}, {value: 'ru', text: 'Russia'}, {
-                                            value: 'gr',
-                                            text: 'Greece'
-                                        }],
-                                        label: 'Country',
+                                        options: countriesSelect,
+                                        label: 'Pays',
                                         binding: 'country'
                                     },
-                                    {type: 'textbox', label: 'City', binding: 'city'},
+                                    {type: 'textbox', label: 'Ville', binding: 'city'},
                                 ],
-                                {type: 'textbox', label: 'Photo Url', binding: 'photo', btn: 'Upload'},
+                                {type: 'textbox', label: 'Lien photo', binding: 'photo', btn: 'Upload'},
 
                             ]) : (
                             [
-                                {type: 'textbox', label: 'Email Address', binding: 'email'},
+                                {type: 'textbox', label: 'Adresse email', binding: 'email'},
                             ])
                 },
                 nodes: data

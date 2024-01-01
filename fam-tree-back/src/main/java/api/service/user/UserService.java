@@ -2,10 +2,12 @@ package api.service.user;
 
 import api.model.tree.FamilyTree;
 import api.model.tree.Personne;
+import api.model.tree.Relation;
 import api.model.user.User;
 import api.model.user.UserUpdate;
 import api.repository.tree.FamilyTreeRepository;
 import api.repository.tree.PersonneRepository;
+import api.repository.tree.RelationRepository;
 import api.repository.user.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +15,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import java.util.Optional;
 
 //
 @Service
@@ -31,6 +30,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final FamilyTreeRepository familyTreeRepository;
     private final PersonneRepository personneRepository;
+    private final RelationRepository relationRepository;
 
     public User getCurrentConnectedUser() {
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -79,24 +79,26 @@ public class UserService {
     public List<User> findAllUsersExceptCurrentWoutPagination() {
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = userRepository.findByPrivateCode(currentPrivateCode);
+        Personne currentPerson = personneRepository.findByEmail(currentUser.getEmail()).orElse(null);
 
-        Optional<FamilyTree> currentUserTreeOpt = familyTreeRepository.findByUser(currentUser);
-        if (!currentUserTreeOpt.isPresent()) {
-            return new ArrayList<>();
+        Set<Long> treeIdsWithCurrentUser = new HashSet<>();
+        if (currentPerson != null) {
+            treeIdsWithCurrentUser.add(currentPerson.getTreeId());
         }
-        FamilyTree currentUserTree = currentUserTreeOpt.get();
 
-        List<Personne> personsInFamilyTree = personneRepository.findByTreeId(currentUserTree.getId());
-
-        List<User> relatedUsers = personsInFamilyTree.stream()
+        Set<User> relatedUsersSet = treeIdsWithCurrentUser.stream()
+                .flatMap(treeId -> personneRepository.findByTreeId(treeId).stream())
+                .distinct()
                 .map(personne -> userRepository.findByEmail(personne.getEmail()))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .filter(user -> !user.getPrivateCode().equals(currentUser.getPrivateCode()))
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet());
 
-        return relatedUsers;
+        return new ArrayList<>(relatedUsersSet);
     }
+
+
 
     public List<User> getAllUsersExceptCurrent(int page, int size) {
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
