@@ -42,14 +42,14 @@ const SupervisionDashboard = () => {
     }, [allTestsResults.payload]);
 
     return (
-        <MainWrapper title="Dashboard de supervision - résultats des Tests"
+        <MainWrapper title="Dashboard de supervision des tests"
                      description="Voici un aperçu des résultats des tests d'API.">
 
             {allTestsResults.payload ? (
                 <div className=" px-4 md:px-8">
-                    <div className="mt-1 shadow-sm border rounded-lg overflow-x-auto">
-                        <table className="w-full table-auto text-sm text-left">
-                            <thead className="bg-gray-50 text-gray-600 font-medium border-b">
+                    <div className="mt-1 shadow-sm border rounded-lg overflow-x-auto max-h-[75vh] overflow-y-auto">
+                        <table className="w-full table-auto text-sm text-left sticky top-0">
+                            <thead className="bg-gray-50 text-gray-600 font-medium border-b sticky top-0">
                             <tr>
                                 <th className="py-3 px-6">Package du test</th>
                                 <th className="py-3 px-6 text-center">Test joués</th>
@@ -60,7 +60,7 @@ const SupervisionDashboard = () => {
                             </tr>
                             </thead>
                             <tbody className="text-gray-600 divide-y">
-                            <tr className="bg-gray-200">
+                            <tr className="bg-green-200">
                                 <td className="px-6 py-4">Total</td>
                                 <td className="px-6 py-4 text-center">{totals.totalRuns}</td>
                                 <td className="px-6 py-4 text-center">{totals.totalFailures}</td>
@@ -70,7 +70,7 @@ const SupervisionDashboard = () => {
                             </tr>
                             {
                                 Object.entries(allTestsResults?.payload)?.map(([testName, result], idx) => (
-                                    <tr key={idx}>
+                                    <tr key={idx}  className="hover:bg-gray-200">
                                         <td className="px-6 py-4 whitespace-nowrap">{testName}</td>
                                         <td className="px-6 py-4 whitespace-nowrap flex items-center space-x-1.5 justify-center">
                                             <span>{result.testsRun}</span> {result.failures === 0 ?
