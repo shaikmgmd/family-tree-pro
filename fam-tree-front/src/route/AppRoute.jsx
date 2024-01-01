@@ -15,6 +15,7 @@ import ErrorBornDate from "../pages/tree/ErrorBornDate";
 import ConfirmRelationship from "../pages/confirm-relationship/ConfirmRelationship";
 import ErrorPageNotFound from "../pages/error/ErrorPageNotFound";
 import DashboardPage from "../pages/stats/DashboardPage";
+import PageFaq from "../pages/faq/PageFaq";
 
 const AppRoute = () => {
     return (
@@ -35,6 +36,7 @@ const AppRoute = () => {
             <Route path='/chat-list' element={<ChatList/>}/>
             <Route path='/confirm-relationship/:confirmationCode' element={<ConfirmRelationship/>}/>
             <Route path='/stats' element={<DashboardPage />}/>
+            <Route path='/faq' element={<PageFaq />}/>
             <Route path='*' element={<ErrorPageNotFound/>}/>
         </Routes>
     )

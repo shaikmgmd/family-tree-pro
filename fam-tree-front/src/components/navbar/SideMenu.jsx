@@ -1,8 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Link, useLocation} from 'react-router-dom';
 import {Layout, Menu, Typography} from 'antd';
 import {UserOutlined} from '@ant-design/icons';
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {
     House,
     Clipboard,
@@ -14,8 +14,9 @@ import {
     Gauge,
     User,
     SignOut,
-    ChartLine
+    ChartLine, Question
 } from "@phosphor-icons/react";
+import {getConnectedUserAction} from "../../store/features/slices/user";
 
 const {Sider} = Layout;
 const {SubMenu} = Menu;
@@ -25,8 +26,13 @@ const selectedIconColor = "#4CC425";
 const SideMenu = () => {
     const location = useLocation();
     const userData = JSON.parse(localStorage.getItem('userData'));
+    const dispatch = useDispatch();
     const user = useSelector((state) => state.user.getConnectedUser.payload);
-    // TODO supprimer user du store quand déconnexion
+
+    useEffect(() => {
+        dispatch(getConnectedUserAction());
+    }, []);
+
 
     return (
         <Sider
@@ -98,6 +104,13 @@ const SideMenu = () => {
                             <Link to="/stats"
                                   style={{color: location.pathname === '/stats' ? '#333' : 'white'}}>Statistiques</Link>
                         </Menu.Item>
+                        <Menu.Item key="/faq"
+                                   icon={<Question
+                                       style={{color: location.pathname === '/faq' ? selectedIconColor : 'white'}}/>}
+                                   style={{marginBottom: '15px'}}>
+                            <Link to="/faq"
+                                  style={{color: location.pathname === '/faq' ? '#333' : 'white'}}>FAQ</Link>
+                        </Menu.Item>
                     </>
                 )}
 
@@ -160,8 +173,7 @@ const SideMenu = () => {
                                     backgroundColor: location.pathname === '/profile' ? '#E6F4FF' : 'transparent',
                                 }}>
                                 <Link to="/profile"
-                                      style={{color: location.pathname === '/profile' ? '#333' : 'white'}}>Mon
-                                    Profil</Link>
+                                      style={{color: location.pathname === '/profile' ? '#333' : 'white'}}>{user?.firstName}</Link>
                             </Menu.Item>
                             <Menu.Item key="/logout" icon={<SignOut
                                 style={{color: location.pathname === '/logout' ? selectedIconColor : 'white'}}/>}

@@ -4,13 +4,9 @@ import Chat from "./Chat";
 
 const ChatList = () => {
     return (
-
         <>
-            {/*<MainWrapper title={'Liste de chats'} description={'Discussion'}>*/}
             <Chat/>
-            {/* </MainWrapper>*/}
         </>
-
     );
 }
 
