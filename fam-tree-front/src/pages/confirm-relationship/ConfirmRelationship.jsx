@@ -34,8 +34,6 @@ const ConfirmRelationship = () => {
 
     const handleConfirmRelationship = data => {
         const response = dispatch(confirmRelationshipAction(data));
-        // console.log("response useEffect =>", response);
-        // if(response) { navigate("/home") }
     }
 
     useEffect(() => {

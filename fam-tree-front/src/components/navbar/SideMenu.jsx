@@ -155,7 +155,7 @@ const SideMenu = () => {
                                 icon={<User
                                     style={{color: location.pathname === '/profile' ? selectedIconColor : 'white'}}/>}
                                 style={{
-                                    marginBottom: '15px',
+                                    marginBottom: '5px',
                                     color: location.pathname === '/profile' ? '#333' : 'white',
                                     backgroundColor: location.pathname === '/profile' ? '#E6F4FF' : 'transparent',
                                 }}>
@@ -164,7 +164,11 @@ const SideMenu = () => {
                                     Profil</Link>
                             </Menu.Item>
                             <Menu.Item key="/logout" icon={<SignOut
-                                style={{color: location.pathname === '/logout' ? selectedIconColor : 'white'}}/>}>
+                                style={{color: location.pathname === '/logout' ? selectedIconColor : 'white'}}/>}
+                                       style={{
+                                           color: location.pathname === '/logout' ? '#333' : 'white',
+                                           backgroundColor: location.pathname === '/logout' ? '#E6F4FF' : 'transparent',
+                                       }}>
                                 <Link to="/logout"
                                       style={{color: location.pathname === '/logout' ? '#333' : 'white'}}>Déconnexion</Link>
                             </Menu.Item>
