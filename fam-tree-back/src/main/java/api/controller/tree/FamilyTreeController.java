@@ -33,6 +33,7 @@ public class FamilyTreeController {
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getFamilyTree(@PathVariable Long userId) {
         ApiResponse<List<Map<String, Object>>> response = new ApiResponse<>(familyTreeService.getFamilyTreeByUserId(userId));
+        System.out.println("=========="+personneService.findRelationToRootPerson(0L));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

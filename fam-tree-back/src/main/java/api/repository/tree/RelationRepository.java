@@ -20,7 +20,11 @@ public interface RelationRepository extends JpaRepository<Relation, Long> {
 
     Optional<List<Relation>> findByMother_Id(Long personId);
 
+    Optional<List<Relation>> findByFather_Id(Long personId);
+
     Optional<List<Relation>> findByPartner_Id(Long personId);
+
+    Optional<List<Relation>> findByMother_IdOrFather_Id(Long motherId, Long fatherId);
 
     //Optional<List<Relation>> findByTree_Id(Long treeId);
 }

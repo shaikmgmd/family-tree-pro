@@ -10,6 +10,7 @@ CREATE TABLE personne (
                            phone VARCHAR(50),
                            city VARCHAR(100),
                            country VARCHAR(100),
+                            is_registered BOOLEAN DEFAULT FALSE,
                            CONSTRAINT fk_member_tree FOREIGN KEY (tree_id) REFERENCES family_tree (id)
 );
 

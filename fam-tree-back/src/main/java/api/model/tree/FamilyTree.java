@@ -25,4 +25,8 @@ public class FamilyTree {
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
+
+    public Long getOwnerId() {
+        return this.user != null ? this.user.getId() : null;
+    }
 }

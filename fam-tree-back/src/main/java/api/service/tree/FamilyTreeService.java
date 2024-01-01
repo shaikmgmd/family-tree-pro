@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 //
 @Service
@@ -56,10 +57,12 @@ public class FamilyTreeService {
             Personne current = queue.poll();
             if (!visited.contains(current)) {
                 visited.add(current);
-                for (Relation relation : getRelations(current)) {
-                    queue.offer(relation.getPartner());
-                    queue.offer(relation.getMother());
-                    queue.offer(relation.getFather());
+                List<Relation> relations = getRelations(current);
+                for (Relation relation : relations) {
+                    if (relation.getPartner() != null && !visited.contains(relation.getPartner())) {
+                        queue.offer(relation.getPartner());
+                    }
+                    queue.addAll(findChildren(current, visited));
                 }
             }
         }
@@ -72,23 +75,39 @@ public class FamilyTreeService {
         return visited;
     }
 
-
     private void dfsHelper(Personne current, Set<Personne> visited) {
         if (current == null || visited.contains(current)) return;
 
         visited.add(current);
-        // Here you would process the current person, e.g., print their name
         System.out.println(current.getName());
 
-        // Assume getRelations() is a method that retrieves all Relation objects for the current person
         List<Relation> relations = getRelations(current);
-        if (relations != null) {
-            for (Relation relation : relations) {
-                dfsHelper(relation.getPartner(), visited);
-                dfsHelper(relation.getMother(), visited);
-                dfsHelper(relation.getFather(), visited);
-                // And so on for other relatives...
-            }
+        for (Relation relation : relations) {
+            dfsHelper(relation.getPartner(), visited);
+            // Recursively visit children
+            findChildren(current, visited).forEach(child -> dfsHelper(child, visited));
         }
     }
+
+    private List<Personne> findChildren(Personne parent, Collection<Personne> visited) {
+        // This method should return all Personne entities that have the given parent as either mother or father
+        // and have not yet been visited.
+        List<Personne> children = new ArrayList<>();
+        Optional<List<Relation>> motherRelationsOpt = relationRepository.findByMother_Id(parent.getId());
+        Optional<List<Relation>> fatherRelationsOpt = relationRepository.findByFather_Id(parent.getId());
+        List<Relation> motherRelations = motherRelationsOpt.get();
+        List<Relation> fatherRelations = fatherRelationsOpt.get();
+        for (Relation relation : motherRelations) {
+            if (!visited.contains(relation.getPerson())) {
+                children.add(relation.getPerson());
+            }
+        }
+        for (Relation relation : fatherRelations) {
+            if (!visited.contains(relation.getPerson())) {
+                children.add(relation.getPerson());
+            }
+        }
+        return children;
+    }
+
 }

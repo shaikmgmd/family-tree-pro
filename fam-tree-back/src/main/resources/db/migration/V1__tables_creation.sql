@@ -5,20 +5,21 @@ CREATE TABLE IF NOT EXISTS ftpro_user (
                                           created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                                           updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
                                           social_security_number VARCHAR(255),
-    last_name VARCHAR(255) NOT NULL,
-    first_name VARCHAR(255) NOT NULL,
+    last_name TEXT NOT NULL,
+    first_name TEXT NOT NULL,
     birth_date DATE,
-    nationality VARCHAR(255),
-    id_card_path VARCHAR(255),
-    photo_path VARCHAR(255),
-    public_code VARCHAR(255),
-    private_code VARCHAR(255) UNIQUE,
-    phone VARCHAR(255),
-    address TEXT,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    role VARCHAR(255),
-    first_login BOOLEAN DEFAULT TRUE
+    nationality TEXT,
+    id_card_path TEXT,
+    photo_path TEXT,
+    public_code TEXT,
+    private_code TEXT UNIQUE,
+    phone TEXT,
+    address TEXT DEFAULT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    gender TEXT NOT NULL,
+    first_login BOOLEAN DEFAULT TRUE,
+    city TEXT NOT NULL
     );
 
 -- Création de la table adhesion_request
@@ -58,17 +59,6 @@ CREATE TABLE IF NOT EXISTS family_tree (
                                            CONSTRAINT fk_family_tree_user FOREIGN KEY (user_id) REFERENCES ftpro_user (id)
     );
 
--- Création de la table family_member
-CREATE TABLE IF NOT EXISTS family_member (
-                                             id BIGSERIAL PRIMARY KEY,
-                                             tree_id BIGINT,
-                                             user_id BIGINT,
-                                             name VARCHAR(255),
-    birthdate DATE,
-    CONSTRAINT fk_family_member_tree FOREIGN KEY (tree_id) REFERENCES family_tree (id),
-    CONSTRAINT fk_family_member_user FOREIGN KEY (user_id) REFERENCES ftpro_user (id)
-    );
-
 -- Création de la table relationship_confirmation
 CREATE TABLE IF NOT EXISTS relationship_confirmation (
                                                          id BIGSERIAL PRIMARY KEY,
@@ -81,16 +71,4 @@ CREATE TABLE IF NOT EXISTS relationship_confirmation (
     is_processed BOOLEAN DEFAULT FALSE,
     CONSTRAINT fk_relationship_confirmation_source_member FOREIGN KEY (source_member_id) REFERENCES ftpro_user (id),
     CONSTRAINT fk_relationship_confirmation_target_member FOREIGN KEY (target_member_id) REFERENCES ftpro_user (id)
-    );
-
--- Création de la table relationship
-CREATE TABLE IF NOT EXISTS relationship (
-                                            id BIGSERIAL PRIMARY KEY,
-                                            source_member_id BIGINT,
-                                            target_member_id BIGINT,
-                                            relationship_type VARCHAR(50),
-    created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_relationship_source_member FOREIGN KEY (source_member_id) REFERENCES family_member (id),
-    CONSTRAINT fk_relationship_target_member FOREIGN KEY (target_member_id) REFERENCES family_member (id)
     );
