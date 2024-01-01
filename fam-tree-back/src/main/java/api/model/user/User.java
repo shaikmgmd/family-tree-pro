@@ -1,20 +1,14 @@
 package api.model.user;
 
 import api.model.BaseEntityWithAudit;
-import api.model.role.Role;
 import api.model.user_role.UserRole;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDate;
 import java.util.*;
 
 @Entity
@@ -27,7 +21,7 @@ public class User extends BaseEntityWithAudit {
     private String socialSecurityNumber;
     private String lastName;
     private String firstName;
-    private LocalDate birthDate;
+    private Date birthDate;
     private String nationality;
     private String idCardPath;
     private String photoPath;
@@ -40,7 +34,7 @@ public class User extends BaseEntityWithAudit {
     @Column(unique = true)
     private String email;
     private String password;
-    private String role;
+    private String gender;
     private boolean firstLogin = true;
 
 
@@ -53,7 +47,7 @@ public class User extends BaseEntityWithAudit {
         this.password = password;
     }
 
-    public User(String lastName, String firstName, LocalDate birthDate, String nationality,
+    public User(String lastName, String firstName, Date birthDate, String nationality,
                 String publicCode, String privateCode,
                 String socialSecurityNumber, String idCardPath, String photoPath,
                 String email, String password) {

@@ -1,12 +1,12 @@
 package api.service.mail;
 
-import api.model.tree.FamilyMember;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.messaging.MessagingException;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -27,34 +27,25 @@ public class MailService {
         mailSender.send(message);
     }
 
-//    public void sendRelationshipConfirmationEmail(FamilyMember sourceMember, String sourceMemberEmail, String confirmationCode) {
-//        String confirmationUrl = "http://localhost:8080/api/relationship-confirmation/" + confirmationCode;
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setFrom("familytree.pro2024@gmail.com");
-//        message.setTo(sourceMemberEmail);
-//        message.setSubject("Vous avez une demande d'ajout dans un arbre généalogique !");
-//        message.setText("Merci de vous intéresser à Arbre Généalogique Pro++.\n\n" +
-//                " Voici votre lien de confirmation pour intégrer un arbre " +
-//                /*+ sourceMember + " :\n\n"*/
-//                 confirmationUrl + "\n"
-//                + "Veuillez conserver ce lien en lieu sûr.");
-//
-//        mailSender.send(message);
-//    }
-
-//
     public void sendRelationshipConfirmationEmail(String sourceMemberEmail, String confirmationCode) {
-        String confirmationUrl = "http://localhost:3000/confirm-relationship/" + confirmationCode;
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("familytree.pro2024@gmail.com");
-        message.setTo(sourceMemberEmail);
-        message.setSubject("Vous avez une demande d'ajout dans un arbre généalogique !");
-        message.setText("Merci de vous intéresser à Arbre Généalogique Pro++.\n\n" +
-                " Voici votre lien de confirmation pour intégrer un arbre " +
-                /*+ sourceMember + " :\n\n"*/
-                confirmationUrl + "\n"
-                + "Veuillez conserver ce lien en lieu sûr.");
+        try {
+            String confirmationUrl = "http://localhost:3000/confirm-relationship/" + confirmationCode;
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
+            helper.setFrom("familytree.pro2024@gmail.com");
+            helper.setTo(sourceMemberEmail);
+            helper.setSubject("Vous avez une demande d'ajout dans un arbre généalogique !");
+            String link = "<a href='" + confirmationUrl + "'>Cliquez ici</a>";
+            helper.setText("<html><body>Merci de vous intéresser à Arbre Généalogique Pro++.<br><br>" +
+                    "Voici votre lien de confirmation pour intégrer un arbre :<br><br>" +
+                    link + "<br>" +
+                    "Veuillez conserver ce lien en lieu sûr.</body></html>", true);
 
-        mailSender.send(message);
+            mailSender.send(mimeMessage);
+        } catch (MessagingException | jakarta.mail.MessagingException e) {
+            System.err.println("Un problème est survenu lors de l'envoi du mail à " + sourceMemberEmail);
+            e.printStackTrace();
+        }
     }
+
 }

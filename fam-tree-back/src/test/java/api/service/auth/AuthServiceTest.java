@@ -5,12 +5,10 @@ import api.model.adhesion.AdhesionRequest;
 import api.model.auth.request.LoginReq;
 import api.model.auth.response.LoginRes;
 import api.model.role.Role;
-import api.model.tree.FamilyMember;
 import api.model.tree.FamilyTree;
 import api.model.user.User;
 import api.repository.adhesion.AdhesionRepository;
 import api.repository.role.RoleRepository;
-import api.repository.tree.FamilyMemberRepository;
 import api.repository.tree.FamilyTreeRepository;
 import api.repository.user.UserRepository;
 import api.security.JwtUtil;
@@ -68,8 +66,6 @@ public class AuthServiceTest {
     @Mock
     private FamilyTreeRepository familyTreeRepository;
 
-    @Mock
-    private FamilyMemberRepository familyMemberRepository;
 
 
     @BeforeEach
@@ -79,7 +75,6 @@ public class AuthServiceTest {
         CodeUtils.setUserRepository(userRepository);
         lenient().when(roleRepository.findByName(anyString())).thenReturn(new Role());
         lenient().when(familyTreeRepository.save(any())).thenReturn(new FamilyTree());
-        lenient().when(familyMemberRepository.save(any())).thenReturn(new FamilyMember());
     }
 
     @Test

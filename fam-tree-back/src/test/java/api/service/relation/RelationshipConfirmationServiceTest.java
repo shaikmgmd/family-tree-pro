@@ -1,9 +1,10 @@
-package api.service.relationship;
+package api.service.relation;
 
 import api.model.tree.Personne;
-import api.model.tree.relationship.RelationshipConfirmation;
+import api.model.tree.RelationshipConfirmation;
 import api.model.user.User;
 import api.repository.tree.*;
+import api.repository.tree.RelationshipConfirmationRepository;
 import api.repository.user.UserRepository;
 import api.service.mail.MailService;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,8 +35,6 @@ public class RelationshipConfirmationServiceTest {
     @Mock
     private UserRepository userRepository;
 
-    @Mock
-    private FamilyMemberRepository familyMemberRepository;
 
     @Mock
     private MailService emailService;
@@ -52,6 +52,8 @@ public class RelationshipConfirmationServiceTest {
     private RelationshipConfirmationService relationshipConfirmationService;
 
     private String currentPrivateCode = "currentPrivateCode";
+    private User user;
+    private String email;
 
     @BeforeEach
     void setUp() {
@@ -170,7 +172,8 @@ public class RelationshipConfirmationServiceTest {
 
         User targetUser = new User();
         targetUser.setId(targetUserId);
-        targetUser.setBirthDate(LocalDate.of(1990, 1, 1));
+        Date date = new Date(1990, 1, 1);
+        targetUser.setBirthDate(date);
 
         User sourceUser = new User();
         sourceUser.setId(sourceUserId);

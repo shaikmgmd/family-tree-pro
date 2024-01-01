@@ -1,32 +1,24 @@
 package api.service.tree;
 
-import api.exception.UserNotFoundException;
 import api.model.tree.*;
-import api.model.tree.relationship.AddMemberRequest;
-import api.model.tree.relationship.Relationship;
-import api.model.tree.relationship.RelationshipType;
-import api.model.user.User;
-import api.repository.tree.FamilyMemberRepository;
-import api.repository.tree.FamilyTreeRepository;
-import api.repository.tree.RelationshipRepository;
+import api.repository.tree.*;
 import api.repository.user.UserRepository;
 //import api.service.relationship.RelationshipConfirmationService;
-import api.service.relationship.RelationshipService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.*;
+
 //
 @Service
 @RequiredArgsConstructor
 public class FamilyTreeService {
 
     private final FamilyTreeRepository familyTreeRepository;
-    private final FamilyMemberRepository familyMemberRepository;
-    private final RelationshipRepository relationshipRepository;
+    private final RelationRepository relationRepository;
     private final PersonneService personneService;
+    private final PersonneRepository personneRepository;
     private final UserRepository userRepository;
 
     public List<Map<String, Object>> getFamilyTreeByUserId(Long userId) {
@@ -42,81 +34,61 @@ public class FamilyTreeService {
         }
     }
 
-    private TreeNode buildTree(FamilyMember rootMember) {
-        TreeNode rootNode = new TreeNode(rootMember);
-        List<Relationship> childRelationships = relationshipRepository.findBySourceMember(rootMember);
-        for (Relationship relationship : childRelationships) {
-            TreeNode childNode = buildTree(relationship.getTargetMember());
-            rootNode.addChild(childNode);
+    private List<Relation> getRelations(Personne person) {
+        if (person != null) {
+            Optional<List<Relation>> listRelationOpt = relationRepository.findByPerson_Id(person.getId());
+            if (listRelationOpt.isPresent()) {
+                return listRelationOpt.get();
+            }
         }
-        return rootNode;
+        return Collections.emptyList();
     }
 
-    public void addMemberToTree(Long userId, Long sourceMemberId, AddMemberRequest request) {
-        FamilyMember sourceMember = familyMemberRepository.findById(sourceMemberId)
-                .orElseThrow(() -> new EntityNotFoundException("Membre source non trouvé avec ID " + sourceMemberId));
-        FamilyMember newMember = new FamilyMember();
-        newMember.setName(request.getName());
-        newMember.setBirthDate(request.getBirthDate());
 
-        // Mettre à jour les autres champs de newMember ici
+    public List<Personne> traverseBFS(Personne rootPerson) {
+        if (rootPerson == null) return Collections.emptyList();
 
-        // Sauvegarder le nouveau membre
-        newMember = familyMemberRepository.save(newMember);
+        List<Personne> visited = new ArrayList<>();
+        Queue<Personne> queue = new LinkedList<>();
+        queue.offer(rootPerson);
 
-        // Créer une relation
-        Relationship relationship = new Relationship();
-        relationship.setSourceMember(sourceMember);
-        relationship.setTargetMember(newMember);
-        relationship.setType(request.getType());
-
-        // Sauvegarder la relation
-        relationshipRepository.save(relationship);
-    }
-
-    public FamilyMember updateMemberToTree(Long memberId, AddMemberRequest updateRequest) {
-        // Trouver le membre existant par son ID
-        FamilyMember existingMember = familyMemberRepository.findById(memberId)
-                .orElseThrow(() -> new EntityNotFoundException("Membre non trouvé avec ID " + memberId));
-
-        // Mettre à jour les informations du membre
-        if (updateRequest.getName() != null) {
-            existingMember.setName(updateRequest.getName());
+        while (!queue.isEmpty()) {
+            Personne current = queue.poll();
+            if (!visited.contains(current)) {
+                visited.add(current);
+                for (Relation relation : getRelations(current)) {
+                    queue.offer(relation.getPartner());
+                    queue.offer(relation.getMother());
+                    queue.offer(relation.getFather());
+                }
+            }
         }
-        if (updateRequest.getBirthDate() != null) {
-            existingMember.setBirthDate(updateRequest.getBirthDate());
+        return visited;
+    }
+
+    public Set<Personne> traverseDFS(Personne rootPerson) {
+        Set<Personne> visited = new HashSet<>();
+        dfsHelper(rootPerson, visited);
+        return visited;
+    }
+
+
+    private void dfsHelper(Personne current, Set<Personne> visited) {
+        if (current == null || visited.contains(current)) return;
+
+        visited.add(current);
+        // Here you would process the current person, e.g., print their name
+        System.out.println(current.getName());
+
+        // Assume getRelations() is a method that retrieves all Relation objects for the current person
+        List<Relation> relations = getRelations(current);
+        if (relations != null) {
+            for (Relation relation : relations) {
+                dfsHelper(relation.getPartner(), visited);
+                dfsHelper(relation.getMother(), visited);
+                dfsHelper(relation.getFather(), visited);
+                // And so on for other relatives...
+            }
         }
-
-        return familyMemberRepository.save(existingMember);
-    }
-
-    public void deleteMemberToTree(Long memberId) {
-        if (!familyMemberRepository.existsById(memberId)) {
-            throw new EntityNotFoundException("Membre non trouvé avec ID " + memberId);
-        }
-
-        // Supprimer toutes les relations associées au membre
-        deleteAllRelationsForMember(memberId);
-
-        // Supprimer le membre
-        familyMemberRepository.deleteById(memberId);
-    }
-
-    private void deleteAllRelationsForMember(Long memberId) {
-        // Supprimer les relations où le membre est le sourceMember ou le targetMember
-        relationshipRepository.deleteBySourceMemberId(memberId);
-        relationshipRepository.deleteByTargetMemberId(memberId);
-    }
-
-    public void deleteRelatedRelations(Long memberId) {
-        // Trouver et supprimer les relations où le membre est impliqué
-        Optional<List<Relationship>> personRelationsOptional = Optional.ofNullable(relationshipRepository.findByPerson_Id(memberId));
-        Optional<List<Relationship>> motherRelationsOptional = Optional.ofNullable(relationshipRepository.findByMother_Id(memberId));
-        Optional<List<Relationship>> partnerRelationsOptional = Optional.ofNullable(relationshipRepository.findByPartner_Id(memberId));
-
-        // Supprimer toutes les relations trouvées
-        personRelationsOptional.ifPresent(relationshipRepository::deleteAll);
-        motherRelationsOptional.ifPresent(relationshipRepository::deleteAll);
-        partnerRelationsOptional.ifPresent(relationshipRepository::deleteAll);
     }
 }

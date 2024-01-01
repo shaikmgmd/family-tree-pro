@@ -3,7 +3,19 @@ import {Link, useLocation} from 'react-router-dom';
 import {Layout, Menu, Typography} from 'antd';
 import {UserOutlined} from '@ant-design/icons';
 import {useSelector} from "react-redux";
-import {House, Clipboard, SignIn, Info, Tree, UserList, Chat, Gauge, User, SignOut} from "@phosphor-icons/react";
+import {
+    House,
+    Clipboard,
+    SignIn,
+    Info,
+    Tree,
+    UserList,
+    Chat,
+    Gauge,
+    User,
+    SignOut,
+    ChartLine
+} from "@phosphor-icons/react";
 
 const {Sider} = Layout;
 const {SubMenu} = Menu;
@@ -78,6 +90,13 @@ const SideMenu = () => {
                                    style={{marginBottom: '15px'}}>
                             <Link to="/chat-list"
                                   style={{color: location.pathname === '/chat-list' ? '#333' : 'white'}}>Discussions</Link>
+                        </Menu.Item>
+                        <Menu.Item key="/stats"
+                                   icon={<ChartLine
+                                       style={{color: location.pathname === '/stats' ? selectedIconColor : 'white'}}/>}
+                                   style={{marginBottom: '15px'}}>
+                            <Link to="/stats"
+                                  style={{color: location.pathname === '/stats' ? '#333' : 'white'}}>Statistiques</Link>
                         </Menu.Item>
                     </>
                 )}

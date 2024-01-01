@@ -1,28 +1,18 @@
-package api.service.relationship;
+package api.service.relation;
 
-import api.model.tree.FamilyMember;
-import api.model.tree.FamilyTree;
 import api.model.tree.Personne;
-import api.model.tree.relationship.AddMemberRequest;
-import api.model.tree.relationship.Relationship;
-import api.model.tree.relationship.RelationshipConfirmation;
-import api.model.tree.relationship.RelationshipType;
+import api.model.tree.RelationshipConfirmation;
 import api.model.user.User;
-import api.repository.tree.FamilyMemberRepository;
 import api.repository.tree.PersonneRepository;
 import api.repository.tree.RelationshipConfirmationRepository;
-import api.repository.tree.RelationshipRepository;
 import api.repository.user.UserRepository;
 import api.service.mail.MailService;
-import api.service.tree.FamilyTreeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -30,42 +20,10 @@ import java.util.*;
 public class RelationshipConfirmationService {
 
     private final UserRepository userRepository;
-    private final FamilyMemberRepository familyMemberRepository;
     private final MailService emailService;
     private final RelationshipConfirmationRepository relationshipConfirmationRepository;
     private final PersonneRepository personneRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
-
-
-//    public void requestRelationshipConfirmation(String emailOfMemberToAdd, FamilyMember sourceMember, RelationshipType relationshipType) {
-//        Optional<User> existingUser = userRepository.findByEmail(emailOfMemberToAdd);
-//        if (existingUser.isEmpty()) {
-//            throw new RuntimeException("User not found");
-//        }
-//
-//        FamilyMember targetMember = familyMemberRepository.findByUserId(existingUser.get().getId())
-//                .orElseGet(() -> {
-//                    FamilyMember newFamilyMember = new FamilyMember();
-//                    newFamilyMember.setUser(existingUser.get());
-//                    newFamilyMember.setName(existingUser.get().getFirstName()); // Assuming the User entity has a name attribute
-//                    newFamilyMember.setBirthDate(existingUser.get().getBirthDate()); // You might want to handle this differently if the User entity has a birthdate attribute
-//                    return familyMemberRepository.save(newFamilyMember);
-//                });
-//
-//        String confirmationCode = UUID.randomUUID().toString();
-//
-//        RelationshipConfirmation confirmation = new RelationshipConfirmation();
-//        confirmation.setConfirmationCode(confirmationCode);
-//        confirmation.setSourceMember(sourceMember);
-//        confirmation.setTargetMember(targetMember);
-//        confirmation.setRelationshipType(relationshipType);
-//        confirmation.setExpiryDate(LocalDateTime.now().plusDays(7));
-//
-//        confirmationRepository.save(confirmation);
-//
-//        emailService.sendRelationshipConfirmationEmail(sourceMember, existingUser.get().getEmail(), confirmationCode);
-//    }
-
 
     public void requestRelationshipConfirmation(String emailOfMemberToAdd, Long nodeId) {
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -77,10 +35,6 @@ public class RelationshipConfirmationService {
         if (targetMember.isEmpty()) {
             throw new RuntimeException("User not found");
         }
-
-        System.out.println("TARGET =>" + targetMember.get().getEmail());
-        System.out.println("SOURCE =>" + sourceMember.getEmail());
-
 
         String confirmationCode = UUID.randomUUID().toString();
 
@@ -107,7 +61,6 @@ public class RelationshipConfirmationService {
 
         emailService.sendRelationshipConfirmationEmail(emailOfMemberToAdd, confirmationCode);
 
-        // Envoyer une notification WebSocket
         String notificationMessage = "Un email de confirmation a été envoyé à " + emailOfMemberToAdd;
         simpMessagingTemplate.convertAndSend("/topic/notifications", notificationMessage);
 
@@ -115,7 +68,6 @@ public class RelationshipConfirmationService {
 
     public String confirmRelationship(String confirmationCode) {
         RelationshipConfirmation confirmation = retrieveConfirmation(confirmationCode);
-//        System.out.println("CONFIRMATION CODE =>" + confirmation.getConfirmationCode());
 
         boolean isProcessed = confirmation.getIsProcessed();
         if(isProcessed) {
@@ -149,47 +101,28 @@ public class RelationshipConfirmationService {
         return confirmation;
     }
 
-//    private void handleConfirmedRelationship(RelationshipConfirmation confirmation) {
-//        FamilyTree sourceTree = confirmation.getSourceMember().getTree();
-//
-//        FamilyMember targetMember = familyMemberRepository.findById(confirmation.getTargetMember().getId())
-//                .orElseThrow(() -> new RuntimeException("Family member not found for id"));
-//
-//        targetMember.setTree(sourceTree);
-//        familyMemberRepository.save(targetMember);
-//
-//        // Créer une relation
-//        Relationship relationship = new Relationship();
-//        relationship.setSourceMember(confirmation.getSourceMember());
-//        relationship.setTargetMember(targetMember);
-//        relationship.setType(RelationshipType.PARENT);
-//
-//        relationshipRepository.save(relationship);
-//
-//        // TODO: Ajouter d'autres logiques ou notifications si nécessaire
-//        confirmation.setIsConfirmed(true);
-//        confirmationRepository.save(confirmation);
-//    }
-//
     private void handleConfirmedRelationship(RelationshipConfirmation confirmation) {
-        // Retrouver le fto_user grace a target dans relaction_ship_confirmation
         Optional<User> user = userRepository.findById(confirmation.getTargetMember().getId());
 
+        RelationshipConfirmation confirmed = confirmation;
+        confirmation.setIsConfirmed(true);
+        relationshipConfirmationRepository.save(confirmed);
+
+        // Envoyer une notification WebSocket
         if(user.isEmpty()) {
             throw new RuntimeException("User not found");
         }
-
-        Date date = Date.from(user.get().getBirthDate().atStartOfDay(ZoneId.systemDefault()).toInstant());
-
         // Si oui changer dans la bdd les infos de personne par ftp_pro_user
         Optional<Personne> personne = personneRepository.findByEmail(user.get().getEmail());
 
         // Assign the retrieved Personne object to a temporary variable for clarity and to avoid multiple calls to .get()
         Personne tmpPrsn = personne.get();
 
+
         // Update the Personne object with user details
-        tmpPrsn.setName(user.get().getFirstName() + " " + user.get().getLastName());
-        tmpPrsn.setBorn(date);
+        String fullName = user.get().getFirstName() + " " + user.get().getLastName();
+        tmpPrsn.setName(fullName);
+        tmpPrsn.setBorn(user.get().getBirthDate());
         tmpPrsn.setPhoto(user.get().getPhotoPath());
         tmpPrsn.setPhone(user.get().getPhone());
         tmpPrsn.setCity(user.get().getCity());
@@ -198,24 +131,27 @@ public class RelationshipConfirmationService {
         // tmpPrsn.setGender(user.get().getGender()); // This line is commented out, as in your original code
         tmpPrsn.setIs_registered(true);
 
+        String notificationMessage = fullName+" a accepté d'être présent sur votre arbre. Rechargez la page si vous êtes actuellement sur l'arbre pour le mettre à jour.";
+        simpMessagingTemplate.convertAndSend("/topic/notifications", notificationMessage);
+
         // Save the updated Personne object to the repository
         personneRepository.save(tmpPrsn);
 
-
+        // return "La demande a été validée avec succès.";
     }
 
     private void handleDeniedRelationship(RelationshipConfirmation confirmation) {
-        // Si refusé, gérer les actions appropriées, comme envoyer une notification
-        // TODO: Implémenter la logique ici
-        // Pas besoin de mettre à jour la confirmation puisqu'elle est déjà définie comme refusée
+        RelationshipConfirmation confirmed = confirmation;
+        confirmation.setIsConfirmed(false);
+        relationshipConfirmationRepository.save(confirmed);
+
+        // return "La demande a été refusée avec succès.";
     }
 
     private void markConfirmationAsProcessed(RelationshipConfirmation confirmation) {
         confirmation.setIsProcessed(true);
         relationshipConfirmationRepository.save(confirmation);
     }
-
-
 
 }
 

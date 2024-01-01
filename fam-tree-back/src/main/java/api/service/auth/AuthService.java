@@ -2,37 +2,30 @@ package api.service.auth;
 
 import api.model.adhesion.AdhesionRequest;
 import api.model.auth.request.LoginReq;
-import api.model.auth.request.SignUpReq;
-import api.model.auth.response.ErrorRes;
 import api.model.auth.response.LoginRes;
 import api.model.role.Role;
-import api.model.tree.FamilyMember;
 import api.model.tree.FamilyTree;
+import api.model.tree.Personne;
 import api.model.user.User;
 import api.model.user_role.UserRole;
 import api.repository.adhesion.AdhesionRepository;
 import api.repository.role.RoleRepository;
-import api.repository.tree.FamilyMemberRepository;
 import api.repository.tree.FamilyTreeRepository;
 import api.repository.user.UserRepository;
 import api.security.JwtUtil;
 import api.service.mail.MailService;
 import api.utils.CodeUtils;
-import api.utils.FTProPrecondition;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +33,6 @@ import java.util.stream.Collectors;
 public class AuthService {
     private final UserRepository userRepository;
     private final AdhesionRepository adhesionRepository;
-    private final FamilyMemberRepository familyMemberRepository;
     private final FamilyTreeRepository familyTreeRepository;
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
@@ -103,13 +95,14 @@ public class AuthService {
         tree.setUser(user);
         familyTreeRepository.save(tree);
 
-        // Add the user as the first node/member in the tree
-        FamilyMember member = new FamilyMember();
-        member.setUser(user);
-        member.setTree(tree);
-        member.setName(user.getFirstName());
-        member.setBirthDate(user.getBirthDate());
-        familyMemberRepository.save(member);
+        Personne personne = new Personne();
+        //personne.setGender();
+        personne.setEmail(request.getEmail());
+        personne.setName(request.getFirstName()+ " "+ request.getLastName());
+        personne.setBorn(request.getBirthDate());
+        personne.setPhoto(request.getPhotoPath());
+        personne.setTreeId(tree.getId());
+
 
         emailService.sendCodesByEmail(user.getEmail(), user.getPublicCode(), user.getPrivateCode());
     }

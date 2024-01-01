@@ -1,9 +1,14 @@
 import React, {useState, useEffect} from 'react';
 import Tree from 'react-d3-tree';
-import {Modal, Button, Switch} from 'antd';
+import {Modal, Button, Divider} from 'antd';
 import {MainWrapper} from "../../components/wrapper/MainWrapper";
 import AddMemberForm from "./AddMemberForm";
-import {addMemberToTreeAction, getTreeByUserIdAction} from "../../store/features/slices/tree";
+import {
+    addMemberToTreeAction,
+    getBfsAction,
+    getDfsAction,
+    getTreeByUserIdAction
+} from "../../store/features/slices/tree";
 import {useDispatch, useSelector} from "react-redux";
 import ExistingMemberForm from "./ExistingMemberForm";
 import './custom-tree.css'
@@ -13,6 +18,10 @@ import FamilyTreeComponent from "./FamilyTreeComponent";
 import ErrorBornDateButton from "../../components/button/ErrorBornDateButton";
 import ErrorBornDate from "./ErrorBornDate";
 import {getConnectedUserAction} from "../../store/features/slices/user";
+import FTProGlassButton from "../../components/button/FTProGlassButton";
+import FTProFancyButton from "../../components/button/FTProFancyButton";
+import FTProButton from "../../components/button/FTProButton";
+import { TailSpin } from 'react-loader-spinner';
 
 const FamilyTree = ({userId}) => {
     const [treeData, setTreeData] = useState(null);
@@ -21,25 +30,37 @@ const FamilyTree = ({userId}) => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [modalMode, setModalMode] = useState('newMember');  // 'newMember' ou 'existingMember'
 
+    const [isAlgorithmsModalVisible, setIsAlgorithmsModalVisible] = useState(false);
+    const [selectedAlgorithm, setSelectedAlgorithm] = useState(null);
+
+
     const dispatch = useDispatch();
     const tree = useSelector((state) => state.tree.getUserTree.payload);
     const user = useSelector((state) => state.user.getConnectedUser);
 
+    const {treeDFS, treeBFS} = useSelector((state) => state.tree);
+
     const [showErrorBornDate, setShowErrorBornDate] = useState(false);
 
-    const getDynamicPathClass = ({source, target}, orientation) => {
-        if (!target.children) {
-            return 'link__to-leaf';
-        }
-        return 'link__to-branch';
+    const [showLoader, setShowLoader] = useState(false);
+
+    const showAlgorithmsModal = () => {
+        setIsAlgorithmsModalVisible(true);
     };
 
-    const showModal = () => {
-        setIsModalVisible(true);
+    const handleAlgorithmClick = (algorithm) => {
+        setShowLoader(true);
+        setSelectedAlgorithm(null);
+
+        setTimeout(() => {
+            setSelectedAlgorithm(algorithm);
+            setShowLoader(false);
+        }, 1500);
     };
 
-    const handleCancel = () => {
-        setIsModalVisible(false);
+    const handleAlgorithmsModalClose = () => {
+        setIsAlgorithmsModalVisible(false);
+        setSelectedAlgorithm(null);
     };
 
     const fetcher = async () => {
@@ -48,6 +69,8 @@ const FamilyTree = ({userId}) => {
             await dispatch(getConnectedUserAction()).then(async (res) => {
                 await dispatch(getTreeByUserIdAction(res.payload.id));
             })
+            await dispatch(getBfsAction());
+            await dispatch(getDfsAction());
         } catch (error) {
             console.error("Erreur lors de la récupération de l'arbre:", error);
         } finally {
@@ -71,27 +94,6 @@ const FamilyTree = ({userId}) => {
         };
     };
 
-
-    const handleAddMember = async (data) => {
-        try {
-            const response = await dispatch(addMemberToTreeAction({sourceMemberId: selectedNodeId, data}));
-            console.log("AFFICHE TOI", response);
-            fetcher();
-            setIsModalVisible(false);
-        } catch (error) {
-            console.error("Erreur lors de l'ajout du membre:", error);
-        }
-    }
-
-    const nodeStyleCallback = (nodeData) => {
-        return {
-            circle: {
-                fill: nodeData.data.isRegistered ? '#28a745' : '#dc3545' // Vert pour inscrit, Rouge pour non-inscrit
-            },
-            // autres styles si nécessaire
-        };
-    };
-
     const handleError = (isError) => {
         setShowErrorBornDate(isError);
     }
@@ -100,40 +102,64 @@ const FamilyTree = ({userId}) => {
         setShowErrorBornDate(false);
     };
 
+    const renderAlgorithmResults = (algorithm) => {
+        const data = algorithm === 'DFS' ? treeDFS?.payload : treeBFS?.payload;
+        if (!data) {
+            return <p>Aucunes données</p>;
+        }
+
+        return (
+            <>
+                <Divider/>
+                <div>
+                    <p>{getAlgorithmExplanation(algorithm)}</p>
+                    <Divider/>
+                    <h3 className="font-semibold mb-3">Résultat de l'algorithme {algorithm} :</h3>
+                    <ul>
+                        {data.map((person, index) => person && <li key={index}>{person.name}</li>)}
+                    </ul>
+
+                </div>
+            </>
+
+        );
+    };
+
+    const getAlgorithmExplanation = (algorithm) => {
+        if (algorithm === 'DFS') {
+            return "DFS (Depth-First Search) explore aussi loin que possible le long de chaque branche avant de revenir en arrière. Cette liste montre l'ordre de parcours du nœud racine vers le bas à travers ses descendants dans un mouvement de profondeur vers le haut";
+        } else if (algorithm === 'BFS') {
+            return "BFS (Breadth-First Search) explore tous les nœuds voisins à la profondeur actuelle avant de passer aux nœuds du niveau de profondeur suivant. Cette liste montre l'ordre de parcours à travers la largeur de l'arbre";
+        }
+    };
+
     return (
         <MainWrapper title={"Votre arbre généalogique"}
-                     description={"Consultez ou modifiez votre arbre généalogique :"}>
+                     description={"Consultez ou modifiez votre arbre généalogique :"}
+                     buttonComponent={<FTProButton noMarginTop content="Algorithmes" onClick={showAlgorithmsModal}/>}>
             {showErrorBornDate && <ErrorBornDate onHide={handleHideError}/>}
             {isLoading ? (
-                <FTProLoader />
+                <FTProLoader/>
             ) : tree && (
-                <div id="treeWrapper" style={{ width: '100%', height: '100%' }}>
-                    <FamilyTreeComponent familytree_id={1} isOwner={true} handleError={handleError} />
+                <div id="treeWrapper" style={{width: '100%', height: '100%'}}>
+                    <FamilyTreeComponent familytree_id={1} isOwner={true} handleError={handleError}/>
                 </div>
 
             )}
-            <Modal title={
-                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}} className="mb-5">
-                    <span>Ajouter un membre</span>
-                    <Switch
-                        style={switchStyle}
-                        checked={modalMode === 'newMember'}
-                        onChange={checked => setModalMode(checked ? 'newMember' : 'existingMember')}
-                        checkedChildren="Nouveau membre"
-                        unCheckedChildren="Membre existant"
-                        className="mr-6"
-                    />
+            <Modal
+                title="Choisissez un algorithme"
+                visible={isAlgorithmsModalVisible}
+                onCancel={handleAlgorithmsModalClose}
+                footer={null}
+            >
+                <div className="flex justify-center items-center space-x-3 mt-4">
+                    <FTProGlassButton content="DFS" onClick={() => handleAlgorithmClick('DFS')}/>
+                    <FTProGlassButton content="BFS" onClick={() => handleAlgorithmClick('BFS')}/>
                 </div>
-            } visible={isModalVisible} onCancel={handleCancel} footer={null}>
-                {
-                    modalMode === 'newMember' ? (
-                        <AddMemberForm nodeId={selectedNodeId} onSubmit={handleAddMember}/>
-                    ) : (
-                        <ExistingMemberForm nodeId={selectedNodeId} onSubmit={handleAddMember}/>
-                    )
-                }
-
+                {showLoader && <div className="flex justify-center my-4"><TailSpin color="#4CC425" height={80} width={80} /></div>}
+                {!showLoader && selectedAlgorithm && renderAlgorithmResults(selectedAlgorithm)}
             </Modal>
+
         </MainWrapper>
     );
 }

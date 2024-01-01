@@ -1,29 +1,30 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {getTreeByUserId, addUserOnTree, addExistingUserOnTree, confirmRelationShip} from "../../../../api/feature/tree";
+import {
+    getTreeByUserId,
+    addUserOnTree,
+    addExistingUserOnTree,
+    confirmRelationShip,
+    getDFS,
+    getBFS
+} from "../../../../api/feature/tree";
 import {userLoginAction} from "../auth";
 import confirmRelationship from "../../../../pages/confirm-relationship/ConfirmRelationship";
 
-export const getTreeByUserIdAction = createAsyncThunk('get-tree-by-user-id', async (id, { rejectWithValue }) => {
+export const getTreeByUserIdAction = createAsyncThunk('get-tree-by-user-id', async (id, {rejectWithValue}) => {
         try {
             const response = await getTreeByUserId(id);
-            console.log("GET TREE", response.data.content);
             return response.data.content;
         } catch (error) {
-            // Utilisez rejectWithValue pour transmettre une erreur personnalisée à l'action rejetée
             return rejectWithValue(error.response.data);
         }
     }
 );
 
-export const addMemberToTreeAction = createAsyncThunk('add-member-to-tree', async ({ data }, { rejectWithValue }) => {
+export const addMemberToTreeAction = createAsyncThunk('add-member-to-tree', async ({data}, {rejectWithValue}) => {
         try {
-            console.log("DATA = " + data);
             const response = await addUserOnTree(3, data);
-            console.log("response addmembertotree",response);
             return response.data.content;
         } catch (error) {
-            console.log("error addmembertotree",error);
-            console.log("error response addmembertotree",error.response);
             return rejectWithValue(error);
         }
     }
@@ -36,8 +37,17 @@ export const addExistingMemberToTreeAction = createAsyncThunk('add-existing-memb
 });
 
 export const confirmRelationshipAction = createAsyncThunk('add-existing-member-to-tree', async (data) => {
-    console.log("string confirmation code =>", data);
     const response = await confirmRelationShip(data);
+    return response.data.content;
+});
+
+export const getDfsAction = createAsyncThunk('get-dfs', async () => {
+    const response = await getDFS();
+    return response.data.content;
+});
+
+export const getBfsAction = createAsyncThunk('get-bfs', async () => {
+    const response = await getBFS();
     return response.data.content;
 });
 
@@ -48,6 +58,16 @@ const initialState = {
         errors: null
     },
     relationConfirmation: {
+        loading: null,
+        payload: null,
+        errors: null
+    },
+    treeDFS: {
+        loading: null,
+        payload: null,
+        errors: null
+    },
+    treeBFS: {
         loading: null,
         payload: null,
         errors: null
@@ -71,7 +91,7 @@ const treeStore = createSlice({
             })
             .addCase(getTreeByUserIdAction.rejected, (state, action) => {
                 state.getUserTree.loading = false;
-                state.getUserTree.errors = action.errors; // très important
+                state.getUserTree.errors = action.errors;
             })
             // confirmation
             .addCase(confirmRelationshipAction.pending, (state) => {
@@ -86,6 +106,34 @@ const treeStore = createSlice({
             .addCase(confirmRelationshipAction.rejected, (state, action) => {
                 state.relationConfirmation.loading = false;
                 state.relationConfirmation.errors = undefined;
+            })
+            // BFS
+            .addCase(getBfsAction.pending, (state) => {
+                state.treeBFS.loading = true;
+                state.treeBFS.errors = undefined;
+            })
+            .addCase(getBfsAction.fulfilled, (state, action) => {
+                state.treeBFS.loading = false;
+                state.treeBFS.payload = action.payload;
+                state.treeBFS.errors = undefined;
+            })
+            .addCase(getBfsAction.rejected, (state, action) => {
+                state.treeBFS.loading = false;
+                state.treeBFS.errors = undefined;
+            })
+            // DFS
+            .addCase(getDfsAction.pending, (state) => {
+                state.treeDFS.loading = true;
+                state.treeDFS.errors = undefined;
+            })
+            .addCase(getDfsAction.fulfilled, (state, action) => {
+                state.treeDFS.loading = false;
+                state.treeDFS.payload = action.payload;
+                state.treeDFS.errors = undefined;
+            })
+            .addCase(getDfsAction.rejected, (state, action) => {
+                state.treeDFS.loading = false;
+                state.treeDFS.errors = undefined;
             })
     }
 })

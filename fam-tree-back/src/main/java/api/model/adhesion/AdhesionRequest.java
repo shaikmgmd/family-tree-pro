@@ -21,7 +21,7 @@ public class AdhesionRequest extends BaseEntityWithAudit {
     private String socialSecurityNumber;
     private String lastName;
     private String firstName;
-    private LocalDate birthDate;
+    private Date birthDate;
     private String nationality;
     private String idCardPath;
     private String photoPath;

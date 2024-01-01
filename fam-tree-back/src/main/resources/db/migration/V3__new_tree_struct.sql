@@ -24,7 +24,7 @@ CREATE TABLE relation (
 
 -- Insertion des données dans la table Personnes
 INSERT INTO personne (id, tree_id, name, gender, born, photo, email, phone, city, country) VALUES
-                                                                                       (1, 1, 'Shaik MASTER', 'male', '1954-09-29', 'https://media.licdn.com/dms/image/D4E03AQHHTIB4b7KdBg/profile-displayphoto-shrink_800_800/0/1691258212491?e=1707350400&v=beta&t=Xq8wX9sckDe6mBxkl5f1WuKn6TrLd2A3YWjdAMwSkrg', NULL, NULL, NULL, NULL),
+                                                                                       (1, 1, 'Shaik MASTER', 'male', '1954-09-29', 'https://media.licdn.com/dms/image/D4E03AQHHTIB4b7KdBg/profile-displayphoto-shrink_800_800/0/1691258212491?e=1707350400&v=beta&t=Xq8wX9sckDe6mBxkl5f1WuKn6TrLd2A3YWjdAMwSkrg', 'mougamadoushaik2@gmail.com', NULL, NULL, NULL),
                                                                                        (2, 1,'Hashif BATCHA', 'male', '1952-10-10', 'https://media.licdn.com/dms/image/C4E03AQHH8oM-mc-xUQ/profile-displayphoto-shrink_800_800/0/1649011599937?e=1707350400&v=beta&t=bW4LIfJE5Pe9Aj7axGZCsylHwNjj-Hf-c4-Y28wBbl0', NULL, NULL, NULL, NULL),
                                                                                        (3,  1,'Laura Shepherd', 'female', '1943-01-13', 'https://cdn.balkan.app/shared/w60/1.jpg', 'laura.shepherd@gmail.com', '+44 845 5752 547', 'Moscow', 'ru'),
                                                                                        (4, 1, 'Rowan Annable', 'male', '1975-11-12', 'https://cdn.balkan.app/shared/m60/3.jpg', NULL, NULL, NULL, NULL),

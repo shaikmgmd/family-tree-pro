@@ -1,12 +1,11 @@
 package api.controller.tree;
 
 import api.common.ApiResponse;
-import api.model.adhesion.AdhesionRequest;
-import api.model.tree.FamilyTree;
 import api.model.tree.Personne;
-import api.model.tree.TreeNode;
-import api.model.tree.relationship.AddMemberRequest;
 //import api.service.relationship.RelationshipConfirmationService;
+import api.model.user.User;
+import api.repository.tree.PersonneRepository;
+import api.repository.user.UserRepository;
 import api.service.tree.FamilyTreeService;
 import api.service.tree.PersonneService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -14,11 +13,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("${api.base.url}/family-tree")
@@ -27,56 +26,56 @@ public class FamilyTreeController {
     private final FamilyTreeService familyTreeService;
     private final PersonneService personneService;
 
+    // A eviter
+    private final UserRepository userRepository;
+    private final PersonneRepository personneRepository;
+
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getFamilyTree(@PathVariable Long userId) {
         ApiResponse<List<Map<String, Object>>> response = new ApiResponse<>(familyTreeService.getFamilyTreeByUserId(userId));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    /*@PostMapping("/{userId}/{sourceMemberId}")
-    public ResponseEntity<ApiResponse<String>> addNewUser(@RequestBody AddMemberRequest request, @PathVariable Long userId, @PathVariable Long sourceMemberId) {
-        System.out.println("request => " + request);
-        familyTreeService.addMemberToTree(userId, sourceMemberId, request);
-        ApiResponse<String> response = new ApiResponse<>("User ajouté à l'arbre");
-        System.out.println(response);
+    @GetMapping("/bfs")
+    public ResponseEntity<ApiResponse<List<Personne>>> getFamilyTreeBFS() {
+        ApiResponse<List<Personne>> response = new ApiResponse<>(familyTreeService.traverseBFS(getCurrentUser()));
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }*/
+    }
 
-    /*@PostMapping("/{userId}")
-    public ResponseEntity<ApiResponse<String>> addNewUser(@RequestBody Object request, @PathVariable Long userId) {
-        System.out.println("\nZZZZZZZZZZZZZZZZZZZZZZZZZZZ\n");
-        System.out.println("request => " + request);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, Object> requestMap = objectMapper.convertValue(request, new TypeReference<Map<String, Object>>() {
-        });
-
-        personneService.treeNodeManaging(requestMap);
-
-        ApiResponse<String> response = new ApiResponse<>("Ok");
+    @GetMapping("/dfs")
+    public ResponseEntity<ApiResponse<Set<Personne>>> getFamilyTreeDFS() {
+        ApiResponse<Set<Personne>> response = new ApiResponse<>(familyTreeService.traverseDFS(getCurrentUser()));
         return new ResponseEntity<>(response, HttpStatus.OK);
-    }*/
+    }
+
     @PostMapping("/{userId}")
     public ResponseEntity<ApiResponse<String>> addNewUser(@RequestBody Object request, @PathVariable Long userId) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            Map<String, Object> requestMap = objectMapper.convertValue(request, new TypeReference<Map<String, Object>>() {});
+            Map<String, Object> requestMap = objectMapper.convertValue(request, new TypeReference<Map<String, Object>>() {
+            });
 
             personneService.treeNodeManaging(requestMap);
-
             ApiResponse<String> response = new ApiResponse<>("Ok");
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (ResponseStatusException e) {
-            // Log de l'exception pour confirmer qu'elle a bien été remontée jusqu'ici.
-            System.out.println("Exception interceptée dans le contrôleur: " + e.getMessage());
-
-            // Renvoyer la réponse avec le statut et le message de l'exception.
-            // Remplacez getStatus() par getStatusCode()
+            System.err.println("Exception interceptée dans le contrôleur: " + e.getMessage());
             return new ResponseEntity<>(new ApiResponse<>(e.getReason()), e.getStatusCode());
         } catch (Exception e) {
-            // Pour toutes les autres exceptions inattendues.
-            System.out.println("Exception inattendue dans le contrôleur: " + e.getMessage());
+            System.err.println("Exception inattendue dans le contrôleur: " + e.getMessage());
             return new ResponseEntity<>(new ApiResponse<>("Une erreur inattendue est survenue"), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    private Personne getCurrentUser() {
+        String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currUser = userRepository.findByPrivateCode(currentPrivateCode);
+        Optional<Personne> personneOpt = personneRepository.findByEmail(currUser.getEmail());
+
+        if (!personneOpt.isPresent()) {
+            System.err.println("No Personne associated with the current user's email.");
+        }
+        return personneOpt.get();
+    }
+
 }
