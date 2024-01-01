@@ -195,7 +195,11 @@ public class RelationshipConfirmationServiceTest {
 
         // Assert
         assertEquals("Confirmation validé", result, "Le résultat devrait indiquer que la confirmation a été validée.");
-        verify(relationshipConfirmationRepository).save(any(RelationshipConfirmation.class));
+
+        // Vérifiez que la méthode save a été appelée deux fois si c'est le comportement attendu
+        verify(relationshipConfirmationRepository, times(2)).save(any(RelationshipConfirmation.class));
+
+        // Vérifiez que la méthode save a été appelée sur personneRepository
         verify(personneRepository).save(any(Personne.class));
     }
 

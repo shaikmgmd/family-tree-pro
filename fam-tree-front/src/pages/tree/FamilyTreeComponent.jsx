@@ -15,7 +15,7 @@ import {PencilSimple} from "@phosphor-icons/react";
 const FamilyTreeComponent = ({isOwner, handleError}) => {
     const treeContainer = useRef(null); // Création d'une référence au conteneur
     const treeDataFromRedux = useSelector((state) => state.tree.getUserTree.payload);
-    const userId = useSelector((state) => state.user.getConnectedUser.payload.id);
+    const userId = useSelector((state) => state.user.getConnectedUser.payload);
     const [treeInstance, setTreeInstance] = useState(null);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -96,7 +96,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
         try {
             handleAddMember({updatedNode}).then(async r => {
                 console.log({updatedNode})
-                await dispatch(getTreeByUserIdAction(userId));
+                await dispatch(getTreeByUserIdAction(userId?.id));
             });
         } catch (error) {
             handleServerError(error);
@@ -106,7 +106,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
     const editExistingNode = (nodeId, email) => {
         // Simuler un appel API pour éditer un nœud
         handleExistingMember({nodeId, email}).then(async r => {
-            await dispatch(getTreeByUserIdAction(userId));
+            await dispatch(getTreeByUserIdAction(userId?.id));
         });
     };
 
@@ -271,7 +271,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
     const handleAddMember = async (data) => {
         try {
             const response = await dispatch(addMemberToTreeAction({data}));
-            await dispatch(getTreeByUserIdAction(userId));
+            await dispatch(getTreeByUserIdAction(userId?.id));
             if (response) {
                 handleServerError(response);
             }
