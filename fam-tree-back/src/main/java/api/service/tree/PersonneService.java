@@ -41,6 +41,7 @@ public class PersonneService {
         System.out.println(idMapping);
         Personne newPersonne = new Personne();
         updatePersonneAttributes(newPersonne, personneData);
+
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currUser = userRepository.findByPrivateCode(currentPrivateCode);
         FamilyTree familyTree = familyTreeRepository.findByUserId(currUser.getId()).orElseThrow(() -> {
@@ -48,19 +49,25 @@ public class PersonneService {
         });
         newPersonne.setTreeId(familyTree.getId());
 
-        // Récupérer l'ID bizarre ou utiliser l'ID réel si le tempId est null.
-        String tempId = (String) personneData.get("id");
+        Object tempIdObj = personneData.get("id");
+        String tempId = null;
+        if (tempIdObj != null) {
+            tempId = tempIdObj.toString(); // Convertit en String peu importe le type initial
+        }
+
         if (tempId != null && !tempId.isEmpty()) {
             newPersonne.setTempId(tempId); // Set the temporary ID only if it's not null and not empty
         }
+
         newPersonne = personneRepository.save(newPersonne);
-        /*if (!areParentChildRelationsValid(newPersonne.getTreeId())) {
-            //System.out.println("\nKAKA INVALIDE\n");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après création de la personne).");
-        }*/
+
+    /*if (!areParentChildRelationsValid(newPersonne.getTreeId())) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après création de la personne).");
+    }*/
 
         return newPersonne.getId();
     }
+
 
     public void treeNodeManaging(Map<String, Object> requestBody) {
         Map<String, Object> updatedNode = (Map<String, Object>) requestBody.get("updatedNode");
@@ -126,7 +133,7 @@ public class PersonneService {
     }
 
 
-    private Long updatePersonne(Map<String, Object> nodeData, Map<String, Long> idMapping) {
+    public Long updatePersonne(Map<String, Object> nodeData, Map<String, Long> idMapping) {
         Object idObject = nodeData.get("id");
         Long realId = resolveId(idObject, idMapping);
         // Vérifier si l'ID est une chaîne ou un nombre et le traiter en conséquence
