@@ -1,12 +1,9 @@
 package api.service.relationship;
 
-import api.model.tree.FamilyMember;
+import api.model.tree.Personne;
 import api.model.tree.relationship.RelationshipConfirmation;
-import api.model.tree.relationship.RelationshipType;
 import api.model.user.User;
-import api.repository.tree.FamilyMemberRepository;
-import api.repository.tree.RelationshipConfirmationRepository;
-import api.repository.tree.RelationshipRepository;
+import api.repository.tree.*;
 import api.repository.user.UserRepository;
 import api.service.mail.MailService;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,13 +12,19 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -29,94 +32,168 @@ public class RelationshipConfirmationServiceTest {
 
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private RelationshipConfirmationRepository confirmationRepository;
+
     @Mock
     private FamilyMemberRepository familyMemberRepository;
+
     @Mock
     private MailService emailService;
+
     @Mock
-    private RelationshipRepository relationshipRepository;
+    private RelationshipConfirmationRepository relationshipConfirmationRepository;
+
+    @Mock
+    private PersonneRepository personneRepository;
+
+    @Mock
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     @InjectMocks
     private RelationshipConfirmationService relationshipConfirmationService;
 
-    private FamilyMember sourceMember;
-    private User user;
-    private String email;
-    private RelationshipType relationshipType;
-    private String confirmationCode;
+    private String currentPrivateCode = "currentPrivateCode";
 
-/*    @BeforeEach
+    @BeforeEach
     void setUp() {
-        sourceMember = new FamilyMember();
-        user = new User();
-        email = "test@example.com";
-        relationshipType = RelationshipType.PARENT;
-        confirmationCode = UUID.randomUUID().toString();
+        User currentUser = new User();
+        currentUser.setPrivateCode(currentPrivateCode);
+        lenient().when(userRepository.findByPrivateCode(currentPrivateCode)).thenReturn(currentUser);
 
-        sourceMember.setId(1L);
-        user.setId(1L);
-        user.setEmail(email);
-        user.setFirstName("John");
+        SecurityContext securityContext = mock(SecurityContext.class);
+        Authentication authentication = mock(Authentication.class);
+        SecurityContextHolder.setContext(securityContext);
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(authentication.getPrincipal()).thenReturn(currentPrivateCode);
     }
 
     @Test
-    void requestRelationshipConfirmationUserExistsTest() {
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(familyMemberRepository.findByUserId(anyLong())).thenReturn(Optional.empty());
+    void requestRelationshipConfirmation_Success() {
+        // Arrange
+        String emailOfMemberToAdd = "target@example.com";
+        Long nodeId = 1L;
+        String confirmationCode = UUID.randomUUID().toString();
+        User targetUser = new User();
+        targetUser.setEmail(emailOfMemberToAdd);
 
-        relationshipConfirmationService.requestRelationshipConfirmation(email, sourceMember, relationshipType);
+        when(userRepository.findByEmail(emailOfMemberToAdd)).thenReturn(Optional.of(targetUser));
+        when(relationshipConfirmationRepository.findBySourceMemberAndTargetMember(any(User.class), any(User.class))).thenReturn(Optional.empty());
+        when(personneRepository.findById(nodeId)).thenReturn(Optional.of(new Personne()));
 
-        verify(confirmationRepository).save(any(RelationshipConfirmation.class));
-        verify(emailService).sendRelationshipConfirmationEmail(eq(sourceMember), eq(email), anyString());
+        doNothing().when(emailService).sendRelationshipConfirmationEmail(anyString(), anyString());
+        doNothing().when(simpMessagingTemplate).convertAndSend(anyString(), anyString());
+
+        // Act
+        relationshipConfirmationService.requestRelationshipConfirmation(emailOfMemberToAdd, nodeId);
+
+        // Assert
+        verify(relationshipConfirmationRepository).save(any(RelationshipConfirmation.class));
+        verify(emailService).sendRelationshipConfirmationEmail(eq(emailOfMemberToAdd), anyString());
+        verify(simpMessagingTemplate).convertAndSend(eq("/topic/notifications"), anyString());
+        // Vous pouvez ajouter plus de vérifications pour des valeurs spécifiques si nécessaire.
     }
 
     @Test
-    void requestRelationshipConfirmationUserNotFoundTest() {
-        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
+    void requestRelationshipConfirmation_TargetMemberFoundAndNotAdded_Success() {
+        // Arrange
+        String emailOfMemberToAdd = "target@example.com";
+        Long nodeId = 1L;
+        User currUser = new User(); // Configurez cet utilisateur comme nécessaire
+        currUser.setPrivateCode("currentPrivateCode");
+        User targetUser = new User();
+        targetUser.setEmail(emailOfMemberToAdd);
 
-        assertThrows(RuntimeException.class, () -> {
-            relationshipConfirmationService.requestRelationshipConfirmation(email, sourceMember, relationshipType);
-        });
+        // Simuler le contexte de sécurité
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken("currentPrivateCode", null));
+
+        when(userRepository.findByPrivateCode(anyString())).thenReturn(currUser);
+        when(userRepository.findByEmail(emailOfMemberToAdd)).thenReturn(Optional.of(targetUser));
+        when(relationshipConfirmationRepository.findBySourceMemberAndTargetMember(any(User.class), any(User.class))).thenReturn(Optional.empty());
+        when(personneRepository.findById(anyLong())).thenReturn(Optional.of(new Personne()));
+
+        doNothing().when(emailService).sendRelationshipConfirmationEmail(anyString(), anyString());
+        doNothing().when(simpMessagingTemplate).convertAndSend(anyString(), anyString());
+
+        // Act
+        relationshipConfirmationService.requestRelationshipConfirmation(emailOfMemberToAdd, nodeId);
+
+        // Assert
+        verify(relationshipConfirmationRepository).save(any(RelationshipConfirmation.class));
+        verify(emailService).sendRelationshipConfirmationEmail(eq(emailOfMemberToAdd), anyString());
+        verify(simpMessagingTemplate).convertAndSend(eq("/topic/notifications"), anyString());
+        // Ajoutez d'autres vérifications pour les propriétés mises à jour de 'Personne' si nécessaire.
     }
 
     @Test
-    void confirmRelationshipValidTest() {
-        FamilyMember targetMember = new FamilyMember();
-        targetMember.setId(2L);
+    void requestRelationshipConfirmation_TargetMemberNotFound_ThrowsException() {
+        // Arrange
+        String emailOfMemberToAdd = "target@example.com";
+        Long nodeId = 1L;
+        User currUser = new User();
+        currUser.setPrivateCode("currentPrivateCode");
 
-        RelationshipConfirmation confirmation = createMockConfirmation();
-        confirmation.setTargetMember(targetMember);
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken("currentPrivateCode", null));
 
-        when(confirmationRepository.findByConfirmationCode(confirmationCode)).thenReturn(Optional.of(confirmation));
-        when(familyMemberRepository.findById(targetMember.getId())).thenReturn(Optional.of(targetMember));
+        when(userRepository.findByPrivateCode(anyString())).thenReturn(currUser);
+        when(userRepository.findByEmail(emailOfMemberToAdd)).thenReturn(Optional.empty());
 
-        String result = relationshipConfirmationService.confirmRelationship(confirmationCode);
-
-        assertEquals("Confirmation pour le code " + confirmationCode + " validée", result);
-        verify(relationshipRepository).save(any());
-        verify(confirmationRepository, times(2)).save(any(RelationshipConfirmation.class));
-
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> relationshipConfirmationService.requestRelationshipConfirmation(emailOfMemberToAdd, nodeId),
+                "User not found");
     }
 
     @Test
-    void confirmRelationshipInvalidCodeTest() {
-        when(confirmationRepository.findByConfirmationCode("invalidCode")).thenReturn(Optional.empty());
+    void requestRelationshipConfirmation_TargetMemberAlreadyAdded_ThrowsException() {
+        // Arrange
+        String emailOfMemberToAdd = "target@example.com";
+        Long nodeId = 1L;
+        User currUser = new User();
+        currUser.setPrivateCode("currentPrivateCode");
+        User targetUser = new User();
 
-        assertThrows(RuntimeException.class, () -> {
-            relationshipConfirmationService.confirmRelationship("invalidCode");
-        });
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken("currentPrivateCode", null));
+
+        when(userRepository.findByPrivateCode(anyString())).thenReturn(currUser);
+        when(userRepository.findByEmail(emailOfMemberToAdd)).thenReturn(Optional.of(targetUser));
+        when(relationshipConfirmationRepository.findBySourceMemberAndTargetMember(any(User.class), any(User.class))).thenReturn(Optional.of(new RelationshipConfirmation()));
+
+        // Act & Assert
+        assertThrows(RuntimeException.class, () -> relationshipConfirmationService.requestRelationshipConfirmation(emailOfMemberToAdd, nodeId),
+                "User already add");
     }
 
-    private RelationshipConfirmation createMockConfirmation() {
+    @Test
+    void confirmRelationship_Success() {
+        // Arrange
+        String confirmationCode = "testConfirmationCode";
+        Long targetUserId = 1L;
+        Long sourceUserId = 2L;
+
+        User targetUser = new User();
+        targetUser.setId(targetUserId);
+        targetUser.setBirthDate(LocalDate.of(1990, 1, 1));
+
+        User sourceUser = new User();
+        sourceUser.setId(sourceUserId);
+
         RelationshipConfirmation confirmation = new RelationshipConfirmation();
         confirmation.setConfirmationCode(confirmationCode);
-        confirmation.setExpiryDate(LocalDateTime.now().plusDays(7));
-        confirmation.setSourceMember(sourceMember);
-        confirmation.setTargetMember(new FamilyMember());
-        confirmation.setRelationshipType(relationshipType);
+        confirmation.setTargetMember(targetUser);
+        confirmation.setSourceMember(sourceUser);
+        confirmation.setExpiryDate(LocalDateTime.now().plusDays(1));
         confirmation.setIsProcessed(false);
-        return confirmation;
-    }*/
+        confirmation.setIsConfirmed(false);
+
+        lenient().when(relationshipConfirmationRepository.findByConfirmationCode(confirmationCode)).thenReturn(Optional.of(confirmation));
+        lenient().when(userRepository.findById(targetUserId)).thenReturn(Optional.of(targetUser)); // Utilisez l'ID correct
+        lenient().when(personneRepository.findByEmail(targetUser.getEmail())).thenReturn(Optional.of(new Personne())); // Assurez-vous que l'email est défini
+
+        // Act
+        String result = relationshipConfirmationService.confirmRelationship(confirmationCode);
+
+        // Assert
+        assertEquals("Confirmation validé", result, "Le résultat devrait indiquer que la confirmation a été validée.");
+        verify(relationshipConfirmationRepository).save(any(RelationshipConfirmation.class));
+        verify(personneRepository).save(any(Personne.class));
+    }
+
 }
