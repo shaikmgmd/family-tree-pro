@@ -32,7 +32,7 @@ public class TestResultsService {
         return results;
     }
 
-    private String readFileContent(File file) {
+    public String readFileContent(File file) {
         try {
             return new String(Files.readAllBytes(file.toPath()));
         } catch (IOException e) {
@@ -40,7 +40,7 @@ public class TestResultsService {
         }
     }
 
-    private TestResult parseTestResult(String content) {
+    public TestResult parseTestResult(String content) {
         Pattern pattern = Pattern.compile("Tests run: (\\d+), Failures: (\\d+), Errors: (\\d+), Skipped: (\\d+), Time elapsed: ([\\d.]+)");
         Matcher matcher = pattern.matcher(content);
 
