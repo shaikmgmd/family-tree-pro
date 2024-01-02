@@ -6,6 +6,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
+// WebSocket controller
 @Controller
 @RequiredArgsConstructor
 public class WebSocketController {
