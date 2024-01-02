@@ -286,44 +286,6 @@ const ListUser = () => {
                     );
                 }}
             />
-            <div className="bg-white shadow overflow-hidden sm:rounded-md">
-                {loading ? (
-                    <div>Loading...</div> // Remplace par un composant de chargement si tu en as un
-                ) : (
-                    <ul>
-                        {filteredData.map((item) => (
-                            <li key={item.id} className="border-t border-gray-200">
-                                <div
-                                    className="block hover:bg-gray-50 focus:outline-none focus:bg-gray-50 transition duration-150 ease-in-out">
-                                    <div className="flex items-center px-4 py-4 sm:px-6">
-                                        <img className="h-12 w-12 rounded-full" src={item.photoPath} alt=""/>
-                                        <div className="ml-4">
-                                            <div className="font-bold text-xl text-gray-900">
-                                                {item.firstName} {item.lastName}
-                                            </div>
-                                            <div className="text-sm text-gray-500">
-                                                <strong>Né(e)
-                                                    le:</strong> {new Date(item.birthDate).toLocaleDateString()}
-                                            </div>
-                                            <div className="text-sm text-gray-500">
-                                                <strong>Email:</strong> {item.email} | <strong>Tél:</strong> {item.phone}
-                                            </div>
-                                        </div>
-                                        <div className="ml-auto">
-                                            <button
-                                                onClick={() => handlePowerButtonClick(item.id)}
-                                                className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700"
-                                            >
-                                                Voir l'arbre
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
             {
                 showAllUsersLoadedMessage && <AllUsersLoadedMessage/>
             }
