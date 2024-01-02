@@ -22,3 +22,7 @@ export const addExistingUserOnTree = async (id, payload) => (
 export const confirmRelationShip = async (confirmation) => (
     backend.post(treeUrl.CONFIRM_RELATIONSHIP(confirmation))
 )
+
+export const refuseRelationShip = async (confirmation) => (
+    backend.post(treeUrl.REFUSE_RELATIONSHIP(confirmation))
+)

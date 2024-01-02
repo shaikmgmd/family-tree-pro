@@ -69,7 +69,6 @@ CREATE TABLE IF NOT EXISTS relationship_confirmation (
                                                          confirmation_code VARCHAR(255) NOT NULL UNIQUE,
     source_member_id BIGINT,
     target_member_id BIGINT,
-    relationship_type VARCHAR(50),
     expiry_date TIMESTAMP WITHOUT TIME ZONE,
     is_confirmed BOOLEAN DEFAULT FALSE,
     is_processed BOOLEAN DEFAULT FALSE,

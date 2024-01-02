@@ -27,5 +27,7 @@ public interface RelationRepository extends JpaRepository<Relation, Long> {
     Optional<List<Relation>> findByMother_IdOrFather_Id(Long motherId, Long fatherId);
 
     //Optional<List<Relation>> findByTree_Id(Long treeId);
+
+    void deleteByPerson_Id(Long id);
 }
 
