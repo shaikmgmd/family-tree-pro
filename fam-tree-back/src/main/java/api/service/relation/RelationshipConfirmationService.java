@@ -4,6 +4,7 @@ import api.model.tree.Personne;
 import api.model.tree.RelationshipConfirmation;
 import api.model.user.User;
 import api.repository.tree.PersonneRepository;
+import api.repository.tree.RelationRepository;
 import api.repository.tree.RelationshipConfirmationRepository;
 import api.repository.user.UserRepository;
 import api.service.mail.MailService;
@@ -11,12 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class RelationshipConfirmationService {
 
     private final UserRepository userRepository;
@@ -24,6 +27,7 @@ public class RelationshipConfirmationService {
     private final RelationshipConfirmationRepository relationshipConfirmationRepository;
     private final PersonneRepository personneRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final RelationRepository relationRepository;
 
 
     public void requestRelationshipConfirmation(String emailOfMemberToAdd, Long nodeId) {
@@ -84,6 +88,28 @@ public class RelationshipConfirmationService {
 
         return "Confirmation validé";
 //        return "Confirmation pour le code " + confirmationCode + " validée";
+
+    }
+
+    public String confirmRelationshipRefuse(String confirmationCode) {
+        RelationshipConfirmation confirmation = retrieveConfirmation(confirmationCode);
+        handleDeniedRelationship(confirmation);
+        deletePersonne(confirmation);
+        return "La demande a été refusé avec succès !";
+    }
+
+    private void deletePersonne(RelationshipConfirmation relationshipConfirmation) {
+        User targetMember = relationshipConfirmation.getTargetMember();
+        Optional<Personne> optTargetPersonne = personneRepository.findByEmail(targetMember.getEmail());
+        if(optTargetPersonne.isPresent()) {
+            Personne targetPersonne = optTargetPersonne.get();
+            relationRepository.deleteByPerson_Id(targetPersonne.getId());
+            relationshipConfirmationRepository.delete(relationshipConfirmation);
+            personneRepository.delete(targetPersonne);
+            String notificationMessage = targetPersonne.getEmail() + " a refusé votre demande pour intégrer votre arbre généalogique.";
+            simpMessagingTemplate.convertAndSend("/topic/notifications", notificationMessage);
+        }
+
 
     }
 

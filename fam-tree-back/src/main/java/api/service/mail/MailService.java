@@ -29,16 +29,19 @@ public class MailService {
 
     public void sendRelationshipConfirmationEmail(String sourceMemberEmail, String confirmationCode) {
         try {
-            String confirmationUrl = "http://localhost:3000/confirm-relationship/" + confirmationCode;
+            String confirmationUrl = "http://localhost:3000/confirm-relationship/" + confirmationCode + "?accept=true";
+            String confirmationUrlRefuse = "http://localhost:3000/confirm-relationship/" + confirmationCode+ "?accept=false";
+
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setFrom("familytree.pro2024@gmail.com");
             helper.setTo(sourceMemberEmail);
             helper.setSubject("Vous avez une demande d'ajout dans un arbre généalogique !");
-            String link = "<a href='" + confirmationUrl + "'>Cliquez ici</a>";
+            String link = "<a href='" + confirmationUrl + "'>Cliquez ici pour accepter</a>";
+            String refuseLink = "<a href='" + confirmationUrlRefuse + "'>Cliquez ici pour refuser</a>";
             helper.setText("<html><body>Merci de vous intéresser à Arbre Généalogique Pro++.<br><br>" +
                     "Voici votre lien de confirmation pour intégrer un arbre :<br><br>" +
-                    link + "<br>" +
+                    link + "<br>" + refuseLink + "<br>" +
                     "Veuillez conserver ce lien en lieu sûr.</body></html>", true);
 
             mailSender.send(mimeMessage);

@@ -21,6 +21,12 @@ public class RelationshipConfirmationController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @PostMapping("/refuse/{confirmation}")
+    public ResponseEntity<ApiResponse<String>> stringCodeConfirmationRefuse(@PathVariable String confirmation) {
+        ApiResponse<String> response = new ApiResponse<>(relationshipConfirmationService.confirmRelationshipRefuse(confirmation));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("/add-existing-user")
     public ResponseEntity<ApiResponse<String>> sendMailExistingUser(@RequestBody EmailDTO emailDto) {
 

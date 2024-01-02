@@ -5,7 +5,7 @@ import {
     addExistingUserOnTree,
     confirmRelationShip,
     getDFS,
-    getBFS
+    getBFS, refuseRelationShip
 } from "../../../../api/feature/tree";
 import {userLoginAction} from "../auth";
 import confirmRelationship from "../../../../pages/confirm-relationship/ConfirmRelationship";
@@ -36,8 +36,13 @@ export const addExistingMemberToTreeAction = createAsyncThunk('add-existing-memb
     return response.data.content;
 });
 
-export const confirmRelationshipAction = createAsyncThunk('add-existing-member-to-tree', async (data) => {
+export const confirmRelationshipAction = createAsyncThunk('accept-relation', async (data) => {
     const response = await confirmRelationShip(data);
+    return response.data.content;
+});
+
+export const refuseRelationshipAction = createAsyncThunk('refuse-relation', async (data) => {
+    const response = await refuseRelationShip(data);
     return response.data.content;
 });
 
@@ -104,6 +109,20 @@ const treeStore = createSlice({
                 state.relationConfirmation.errors = undefined;
             })
             .addCase(confirmRelationshipAction.rejected, (state, action) => {
+                state.relationConfirmation.loading = false;
+                state.relationConfirmation.errors = undefined;
+            })
+            // refuse
+            .addCase(refuseRelationshipAction.pending, (state) => {
+                state.relationConfirmation.loading = true;
+                state.relationConfirmation.errors = undefined;
+            })
+            .addCase(refuseRelationshipAction.fulfilled, (state, action) => {
+                state.relationConfirmation.loading = false;
+                state.relationConfirmation.payload = action.payload;
+                state.relationConfirmation.errors = undefined;
+            })
+            .addCase(refuseRelationshipAction.rejected, (state, action) => {
                 state.relationConfirmation.loading = false;
                 state.relationConfirmation.errors = undefined;
             })

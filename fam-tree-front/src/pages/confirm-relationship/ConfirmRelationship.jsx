@@ -1,11 +1,13 @@
 import React, {useEffect} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {useParams, useNavigate, Link} from "react-router-dom";
-import {confirmRelationshipAction} from "../../store/features/slices/tree";
+import {useParams, useNavigate, Link, useSearchParams} from "react-router-dom";
+import {confirmRelationshipAction, refuseRelationshipAction} from "../../store/features/slices/tree";
 
 const ConfirmRelationship = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams(); // Utiliser useSearchParams pour accéder aux paramètres de requête
+    const accept = searchParams.get("accept");
     const {confirmationCode} = useParams();
     const confirmationPayload = useSelector((state) => state.tree.relationConfirmation.payload);
     const userData = JSON.parse(localStorage.getItem('userData'));
@@ -32,13 +34,19 @@ const ConfirmRelationship = () => {
         }
     ];
 
-    const handleConfirmRelationship = data => {
-        const response = dispatch(confirmRelationshipAction(data));
-    }
+    const handleConfirmOrRefuseRelationship = () => {
+        if (accept === "true") {
+            dispatch(confirmRelationshipAction(confirmationCode));
+        }
+        else if (accept === "false") {
+            dispatch(refuseRelationshipAction(confirmationCode));
+        }
+    };
+
 
     useEffect(() => {
-        handleConfirmRelationship(confirmationCode);
-    }, [confirmationCode])
+        handleConfirmOrRefuseRelationship();
+    }, [accept])
 
     return (
         <>
