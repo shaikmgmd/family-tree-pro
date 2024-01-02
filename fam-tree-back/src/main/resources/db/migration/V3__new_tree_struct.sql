@@ -11,6 +11,7 @@ CREATE TABLE personne (
                            city VARCHAR(100),
                            country VARCHAR(100),
                             is_registered BOOLEAN DEFAULT FALSE,
+                            visibility VARCHAR(100) DEFAULT 'PUBLIC',
                            CONSTRAINT fk_member_tree FOREIGN KEY (tree_id) REFERENCES family_tree (id)
 );
 

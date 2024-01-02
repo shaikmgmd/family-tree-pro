@@ -58,6 +58,28 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
         }
     };
 
+    // const getBorderTag = (isRegistered) => {
+    //         if (isRegistered != null) {
+    //             if (isRegistered) {
+    //                 return 'border-t'; // Tag pour les noms finissant par '_t'
+    //             } else {
+    //                 return 'border-f'; // Tag pour les noms finissant par '_f'
+    //             }
+    //         }
+    //     };
+
+    const getVisibilityTag = (visibility, currentUser, protectedUser) => {
+        if(visibility != null) {
+            if(!currentUser) {
+                if(visibility === "PRIVATE") {
+                    return "visibility-blur";
+                }
+                if(visibility === "PROTECTED" && !protectedUser) {
+                    return "visibility-blur";
+                }
+            }
+        }
+    }
 
     const handleServerError = (error) => {
         console.log("Erreur complète:", error);
@@ -104,12 +126,12 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
         }
     };
 
-    const editExistingNode = (nodeId, email) => {
-        // Simuler un appel API pour éditer un nœud
-        handleExistingMember({nodeId, email}).then(async r => {
-            await dispatch(getTreeByUserIdAction(userId?.id));
-        });
-    };
+    // const editExistingNode = (nodeId, email) => {
+    //     // Simuler un appel API pour éditer un nœud
+    //     handleExistingMember({nodeId, email}).then(async r => {
+    //         await dispatch(getTreeByUserIdAction(userId?.id));
+    //     });
+    // };
 
     useEffect(() => {
         if (treeContainer.current) {
@@ -158,21 +180,9 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
                     saveAndCloseBtn: 'Confirmer',
                     generateElementsFromFields: false,
                     buttons: {
-                        addNewMember: {
-                            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffffff" viewBox="0 0 256 256"><path d="M168,56a8,8,0,0,1,8-8h16V32a8,8,0,0,1,16,0V48h16a8,8,0,0,1,0,16H208V80a8,8,0,0,1-16,0V64H176A8,8,0,0,1,168,56Zm62.56,54.68a103.92,103.92,0,1,1-85.24-85.24,8,8,0,0,1-2.64,15.78A88.07,88.07,0,0,0,40,128a87.62,87.62,0,0,0,22.24,58.41A79.66,79.66,0,0,1,98.3,157.66a48,48,0,1,1,59.4,0,79.66,79.66,0,0,1,36.06,28.75A87.62,87.62,0,0,0,216,128a88.85,88.85,0,0,0-1.22-14.68,8,8,0,1,1,15.78-2.64ZM128,152a32,32,0,1,0-32-32A32,32,0,0,0,128,152Zm0,64a87.57,87.57,0,0,0,53.92-18.5,64,64,0,0,0-107.84,0A87.57,87.57,0,0,0,128,216Z"></path></svg>`,
-                            text: 'Add New Member',
-                        },
-                        addExistingMember: {
-                            icon: `<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#ffffff" viewBox="0 0 256 256"><path d="M32,64a8,8,0,0,1,8-8H216a8,8,0,0,1,0,16H40A8,8,0,0,1,32,64Zm8,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16Zm104,48H40a8,8,0,0,0,0,16H144a8,8,0,0,0,0-16Zm88,0H216V168a8,8,0,0,0-16,0v16H184a8,8,0,0,0,0,16h16v16a8,8,0,0,0,16,0V200h16a8,8,0,0,0,0-16Z"></path></svg>`,
-                            text: 'Add Existing Member',
-                        },
-                        edit: {
-                            icon: <PencilSimple size={32} color="#ffffff"/>,
-                            text: 'edit',
-                        },
+                        share: null
                     },
                     elements:
-                        (modalMode === "newMember") || (modalMode === "edit") ? (
                             [
                                 {type: 'textbox', label: 'Nom entier', binding: 'name'},
                                 {type: 'textbox', label: 'Adresse email', binding: 'email'},
@@ -191,10 +201,17 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
                                 ],
                                 {type: 'textbox', label: 'Lien photo', binding: 'photo', btn: 'Upload'},
 
-                            ]) : (
-                            [
-                                {type: 'textbox', label: 'Adresse email', binding: 'email'},
-                            ])
+                                [{
+                                    type: 'select',
+                                    options: [
+                                        {value: 'PUBLIC', text: 'Public'},
+                                        {value: 'PRIVATE', text: 'Privée'},
+                                        {value: 'PROTECTED', text: 'Protegée'}
+                                    ],
+                                    label: 'Visibilité',
+                                    binding: 'visibility'
+                                }]
+                            ]
                 },
                 nodes: data
             });
@@ -225,23 +242,23 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
         if (treeInstance) {
 
 
-            treeInstance.editUI.on('button-click', function (sender, args) {
-                if (args.name === 'addNewMember') {
-                    var data = treeInstance.get(args.nodeId);
-                    setModalMode("newMember")
-                    treeInstance.editUI.show(args.nodeId);
-                } else if (args.name === 'addExistingMember') {
-                    var data = treeInstance.get(args.nodeId);
-                    setModalMode("existingMember")
-                    treeInstance.editUI.show(args.nodeId);
-                } else if (args.name === 'newMember') {
-                    var data = treeInstance.get(args.nodeId);
-                    setModalMode("edit")
-                    treeInstance.editUI.show(args.nodeId);
-                }
-
-
-            });
+            // treeInstance.editUI.on('button-click', function (sender, args) {
+            //     if (args.name === 'addNewMember') {
+            //         var data = treeInstance.get(args.nodeId);
+            //         setModalMode("newMember")
+            //         treeInstance.editUI.show(args.nodeId);
+            //     } else if (args.name === 'addExistingMember') {
+            //         var data = treeInstance.get(args.nodeId);
+            //         setModalMode("existingMember")
+            //         treeInstance.editUI.show(args.nodeId);
+            //     } else if (args.name === 'newMember') {
+            //         var data = treeInstance.get(args.nodeId);
+            //         setModalMode("edit")
+            //         treeInstance.editUI.show(args.nodeId);
+            //     }
+            //
+            //
+            // });
 
 
             console.log(modalMode)
@@ -253,10 +270,6 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
                 console.log('edit node', node);
                 if (modalMode === "newMember" || modalMode === "edit") {
                     editNode(nodeId, node);
-                } else {
-                    // editNode(nodeId, node);
-                    editExistingNode(node.updateNodesData[0].id, node.updateNodesData[0].email);
-                    setModalMode("edit")
                 }
             });
             /*treeInstance.on('nodeDelete', (nodeId) => {
@@ -295,7 +308,7 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
                     return {
                         ...node,
                         name: cleanedName,
-                        tags: [getBorderTag(node?.name)] // Ajoutez les tags en fonction du nom
+                        tags: [getBorderTag(node?.name), getVisibilityTag(node?.visibility, node?.currentUser, node?.protectedUser)] // Ajoutez les tags en fonction du nom
                     }
                 }
             );

@@ -29,4 +29,6 @@ public class Personne {
     @Column(name = "temp_id")
     private String tempId;
     private Boolean is_registered = false;
+    @Enumerated(EnumType.STRING)
+    private PersonneVisibility visibility = PersonneVisibility.PUBLIC;
 }
