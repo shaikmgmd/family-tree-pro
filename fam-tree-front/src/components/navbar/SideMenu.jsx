@@ -21,6 +21,7 @@ import {
 } from "@phosphor-icons/react";
 import {getConnectedUserAction} from "../../store/features/slices/user";
 import {getAllTestsResultsAction} from "../../store/features/slices/tests";
+import {isUserAdmin} from "../../utils/isUserAdmin";
 
 const {Sider} = Layout;
 const {SubMenu} = Menu;
@@ -118,15 +119,26 @@ const SideMenu = () => {
                     </>
                 )}
 
-                {!userData && (<Menu.Item
-                    key="/home"
-                    icon={<House style={{color: location.pathname === '/home' ? selectedIconColor : 'white'}}/>}
-                    style={{marginBottom: '15px'}}>
-                    <Link to="/home"
-                          style={{color: location.pathname === '/home' ? '#333' : 'white'}}>Accueil</Link>
-                </Menu.Item>)}
-                {user &&
-                    user?.userRoles.some((ur) => ur.id === 1) &&
+                {!userData && (
+                    <>
+                        <Menu.Item
+                            key="/home"
+                            icon={<House style={{color: location.pathname === '/home' ? selectedIconColor : 'white'}}/>}
+                            style={{marginBottom: '15px'}}>
+                            <Link to="/home"
+                                  style={{color: location.pathname === '/home' ? '#333' : 'white'}}>Accueil</Link>
+                        </Menu.Item>
+                        <Menu.Item key="/presentation"
+                                   icon={<Info
+                                       style={{color: location.pathname === '/presentation' ? selectedIconColor : 'white'}}/>}
+                                   style={{marginBottom: '15px'}}>
+                            <Link to="/presentation"
+                                  style={{color: location.pathname === '/presentation' ? '#333' : 'white'}}>Présentation</Link>
+                        </Menu.Item></>)
+                }
+                {
+                    user && userData &&
+                    isUserAdmin(userData) &&
                     user?.firstLogin === false
                     && (
                         <>
@@ -155,15 +167,18 @@ const SideMenu = () => {
                             </Menu.Item>
 
                         </>
-                    )}
-                {!userData && (
-                    <Menu.Item key="/adhesion/apply" icon={<Clipboard
-                        style={{color: location.pathname === '/adhesion/apply' ? selectedIconColor : 'white'}}/>}>
-                        <Link to="/adhesion/apply"
-                              style={{color: location.pathname === '/adhesion/apply' ? '#333' : 'white'}}>Demande
-                            d'adhésion</Link>
-                    </Menu.Item>
-                )}
+                    )
+                }
+                {
+                    !userData && (
+                        <Menu.Item key="/adhesion/apply" icon={<Clipboard
+                            style={{color: location.pathname === '/adhesion/apply' ? selectedIconColor : 'white'}}/>}>
+                            <Link to="/adhesion/apply"
+                                  style={{color: location.pathname === '/adhesion/apply' ? '#333' : 'white'}}>Demande
+                                d'adhésion</Link>
+                        </Menu.Item>
+                    )
+                }
 
             </Menu>
             <Menu
@@ -213,7 +228,8 @@ const SideMenu = () => {
                 }
             </Menu>
         </Sider>
-    );
+    )
+        ;
 };
 
 export default SideMenu;

@@ -12,6 +12,7 @@ import FTProButton from "../../components/button/FTProButton";
 import {CaretDoubleRight} from "@phosphor-icons/react";
 
 const Presentation = () => {
+    const userData = JSON.parse(localStorage.getItem('userData'));
     return (
         <div className="flex flex-col h-auto p-10 bg-gray-100 overflow-y-scroll">
             <div className="text-center mb-5">
@@ -31,10 +32,13 @@ const Presentation = () => {
                     <p className="text-lg">Votre portail pour explorer et partager votre histoire familiale.
                         Découvrez un moyen interactif et convivial pour créer et manipuler des arbres
                         généalogiques.</p>
-                    <div className="text-right">
-                        <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
-                                     icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
-                    </div>
+                    {userData && (
+                        <div className="text-right">
+                            <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
+                                         icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
+                        </div>
+                    )}
+
                 </div>
                 <div className="flex justify-center items-center">
                     <FamilyIcon/>
@@ -49,12 +53,15 @@ const Presentation = () => {
                         des Utilisateurs</h3>
                     <p className="text-lg">Rejoignez notre communauté. Gérez votre profil, partagez des histoires,
                         et connectez-vous avec d'autres passionnés de généalogie.</p>
-                    <div className="flex flex-col justify-end items-end w-full mt-3">
-                        <div className="text-right">
-                            <FTProButton content="En savoir plus" type="submit" link path={"/user/all-except-current"}
-                                         icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
+                    {userData && (
+                        <div className="flex flex-col justify-end items-end w-full mt-3">
+                            <div className="text-right">
+                                <FTProButton content="En savoir plus" type="submit" link
+                                             path={"/user/all-except-current"}
+                                             icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Section 1 */}
@@ -64,10 +71,12 @@ const Presentation = () => {
                     <p className="text-lg">Créez et personnalisez votre arbre généalogique. Ajoutez des membres de la
                         famille,
                         modifiez des détails, et gardez une trace de votre héritage familial.</p>
-                    <div className="text-right">
-                        <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
-                                     icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
-                    </div>
+                    {userData && (
+                        <div className="text-right">
+                            <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
+                                         icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
+                        </div>
+                    )}
                 </div>
                 <div className="flex justify-center items-center">
                     <PersonalizationIcon/>
@@ -82,12 +91,14 @@ const Presentation = () => {
                         entre Arbres</h3>
                     <p className="text-lg">Explorez les connexions et découvrez des liens inattendus.
                         Partagez des informations avec d'autres arbres pour une expérience enrichissante.</p>
-                    <div className="flex flex-col justify-end items-end w-full mt-3">
-                        <div className="text-right">
-                            <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
-                                         icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
+                    {userData && (
+                        <div className="flex flex-col justify-end items-end w-full mt-3">
+                            <div className="text-right">
+                                <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
+                                             icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
 
                 {/* Section 1 */}
@@ -96,10 +107,12 @@ const Presentation = () => {
                         de Souvenirs</h3>
                     <p className="text-lg">Échangez des photos, des histoires, et des souvenirs.
                         Renforcez les liens familiaux en partageant votre patrimoine.</p>
-                    <div className="text-right">
-                        <FTProButton content="En savoir plus" type="submit" link path={"/chat-list"}
-                                     icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
-                    </div>
+                    {userData && (
+                        <div className="text-right">
+                            <FTProButton content="En savoir plus" type="submit" link path={"/chat-list"}
+                                         icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
+                        </div>
+                    )}
                 </div>
                 <div className="flex justify-center items-center">
                     <MemoriesIcon/>
@@ -115,10 +128,12 @@ const Presentation = () => {
                     <p className="text-lg">Suivez l'engagement et les interactions avec votre arbre.
                         Apprenez comment votre famille et vos amis interagissent avec votre histoire.</p>
                     <div className="flex flex-col justify-end items-end w-full mt-3">
-                        <div className="text-right">
-                            <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
-                                         icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
-                        </div>
+                        {userData && (
+                            <div className="text-right">
+                                <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
+                                             icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -129,10 +144,12 @@ const Presentation = () => {
                     <p className="text-lg">Notre mission est de vous fournir un outil puissant et facile à utiliser pour
                         explorer votre généalogie.
                         Nous sommes dédiés à l'amélioration continue et à l'écoute de vos besoins.</p>
-                    <div className="text-right">
-                        <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
-                                     icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
-                    </div>
+                    {userData && (
+                        <div className="text-right">
+                            <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
+                                         icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
+                        </div>
+                    )}
                 </div>
                 <div className="flex justify-center items-center">
                     <CollaborationIcon/>

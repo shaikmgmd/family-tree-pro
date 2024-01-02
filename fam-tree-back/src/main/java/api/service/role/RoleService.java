@@ -1,8 +1,10 @@
 package api.service.role;
 
+import api.model.adhesion.AdhesionRequest;
 import api.model.role.Role;
 import api.model.user.User;
 import api.model.user_role.UserRole;
+import api.repository.adhesion.AdhesionRepository;
 import api.repository.role.RoleRepository;
 import api.repository.user.UserRepository;
 import api.repository.user_role.UserRoleRepository;
@@ -15,10 +17,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class RoleService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
+    private final AdhesionRepository adhesionRepository;
     private final UserRoleRepository userRoleRepository;
 
     public String addAdminRoleToUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        AdhesionRequest adReq = adhesionRepository.findById(userId).orElseThrow(() -> new RuntimeException("Adhesin request not found"));
+        User user = userRepository.findByEmail(adReq.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
 
         Role adminRole = roleRepository.findByName("ADMIN");
 
@@ -33,7 +37,8 @@ public class RoleService {
 
     @Transactional
     public String removeAdminRoleFromUser(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        AdhesionRequest adReq = adhesionRepository.findById(userId).orElseThrow(() -> new RuntimeException("Adhesin request not found"));
+        User user = userRepository.findByEmail(adReq.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
 
         Role adminRole = roleRepository.findByName("ADMIN");
 

@@ -11,6 +11,7 @@ import api.model.user_role.UserRole;
 import api.repository.adhesion.AdhesionRepository;
 import api.repository.role.RoleRepository;
 import api.repository.tree.FamilyTreeRepository;
+import api.repository.tree.PersonneRepository;
 import api.repository.user.UserRepository;
 import api.security.JwtUtil;
 import api.service.mail.MailService;
@@ -35,6 +36,7 @@ public class AuthService {
     private final AdhesionRepository adhesionRepository;
     private final FamilyTreeRepository familyTreeRepository;
     private final RoleRepository roleRepository;
+    private final PersonneRepository personneRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
@@ -97,7 +99,6 @@ public class AuthService {
         familyTreeRepository.save(tree);
 
         Personne personne = new Personne();
-        //personne.setGender();
         personne.setEmail(request.getEmail());
         personne.setName(request.getFirstName() + " " + request.getLastName());
         personne.setBorn(request.getBirthDate());
@@ -107,7 +108,7 @@ public class AuthService {
         personne.setCity(request.getCity());
         personne.setCountry(request.getCountry());
 
-
+        personneRepository.save(personne);
         emailService.sendCodesByEmail(user.getEmail(), user.getPublicCode(), user.getPrivateCode());
     }
 

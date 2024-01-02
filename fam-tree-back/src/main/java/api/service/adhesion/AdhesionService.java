@@ -25,11 +25,9 @@ public class AdhesionService {
 
 
     public AdhesionRequest approveRequest(Long requestId) {
-        System.out.println("Approve request ...");
         AdhesionRequest request = adhesionRepository.findById(requestId)
                 .orElseThrow(() -> new RuntimeException("Request not found"));
         request.setStatus(AdhesionStatus.APPROVED);
-        System.out.println(request.toString());
         authService.approveAdhesion(request);
         return adhesionRepository.save(request);
     }

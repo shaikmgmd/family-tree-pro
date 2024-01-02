@@ -370,11 +370,14 @@ public class PersonneService {
 
     private void updatePersonneAttributes(Personne personne, Map<String, Object> attributes, String email) {
         Optional<User> targetMember = userRepository.findByEmail(email);
-        System.out.println("HANDLE ADD");
 
         if (!targetMember.isEmpty()) {
-            System.out.println("TEST => TEST");
             relationshipConfirmationService.requestRelationshipConfirmation(email, personne.getId());
+            if(attributes.containsKey("visibility")) {
+                String visibilityValue = (String) attributes.get("visibility");
+                PersonneVisibility visibility = PersonneVisibility.valueOf(visibilityValue);
+                personne.setVisibility(visibility);
+            }
             return;
         }
 
