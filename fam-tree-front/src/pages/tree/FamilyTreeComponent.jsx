@@ -141,10 +141,6 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
                 //miniMap: true,
                 template: 'tommy',
                 roots: [],
-                nodeMenu: {
-                    edit: {text: 'Modifier'},
-                    details: {text: 'Détails'},
-                },
                 nodeTreeMenu: true,
                 nodeBinding: {
                     field_0: 'name',
@@ -174,9 +170,9 @@ const FamilyTreeComponent = ({isOwner, handleError}) => {
                     readOnly: !isOwner, // Si isOwner est false, alors readOnly est true
                     titleBinding: "name",
                     photoBinding: "photo",
-                    addMoreBtn: 'Ajouter élement',
-                    addMore: 'Ajouter elements en plus',
-                    addMoreFieldName: 'Element name',
+                    addMoreBtn: null,
+                    addMore: null,
+                    addMoreFieldName: null,
                     saveAndCloseBtn: 'Confirmer',
                     generateElementsFromFields: false,
                     buttons: {
