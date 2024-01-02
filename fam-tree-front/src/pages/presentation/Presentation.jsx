@@ -7,6 +7,7 @@ import {ReactComponent as ConnectionIcon} from "../../assets/ui/svg/presentation
 import {ReactComponent as MemoriesIcon} from "../../assets/ui/svg/presentation/memories.svg";
 import {ReactComponent as AnalyticsIcon} from "../../assets/ui/svg/presentation/analytics.svg";
 import {ReactComponent as CollaborationIcon} from "../../assets/ui/svg/presentation/collaboration.svg";
+import {ReactComponent as SupervisionIcon} from "../../assets/ui/svg/presentation/supervision.svg";
 import {Link} from "react-router-dom";
 import FTProButton from "../../components/button/FTProButton";
 import {CaretDoubleRight} from "@phosphor-icons/react";
@@ -130,7 +131,7 @@ const Presentation = () => {
                     <div className="flex flex-col justify-end items-end w-full mt-3">
                         {userData && (
                             <div className="text-right">
-                                <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
+                                <FTProButton content="En savoir plus" type="submit" link path={"/stats"}
                                              icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
                             </div>
                         )}
@@ -139,20 +140,40 @@ const Presentation = () => {
 
                 {/* Section 1 */}
                 <div className="flex flex-col justify-center items-start">
-                    <h3 className="text-3xl font-bold mb-3 bg-gradient-to-b from-green-500 to-slate-900 bg-clip-text text-transparent">Notre
-                        Engagement</h3>
-                    <p className="text-lg">Notre mission est de vous fournir un outil puissant et facile à utiliser pour
-                        explorer votre généalogie.
-                        Nous sommes dédiés à l'amélioration continue et à l'écoute de vos besoins.</p>
+                    <h3 className="text-3xl font-bold mb-3 bg-gradient-to-b from-green-500 to-slate-900 bg-clip-text text-transparent">Supervision
+                        des Tests API</h3>
+                    <p className="text-lg">Accédez à une interface dédiée pour surveiller et vérifier les tests de l'API
+                        de l'Arbre Généalogique. Cette section vous permet de visualiser en temps réel les performances,
+                        les réponses et l'état de votre API.</p>
                     {userData && (
                         <div className="text-right">
-                            <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
+                            <FTProButton content="En savoir plus" type="submit" link path={"/supervision-dashboard"}
                                          icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
                         </div>
                     )}
                 </div>
                 <div className="flex justify-center items-center">
+                    <SupervisionIcon/>
+                </div>
+
+                {/* Section 2 */}
+                <div className="flex justify-center items-center order-last md:order-none">
                     <CollaborationIcon/>
+                </div>
+                <div className="flex flex-col justify-center items-start">
+                    <h3 className="text-3xl font-bold mb-3 bg-gradient-to-b from-green-500 to-slate-900 bg-clip-text text-transparent">Notre
+                        Engagement</h3>
+                    <p className="text-lg">Notre mission est de vous fournir un outil puissant et facile à utiliser pour
+                        explorer votre généalogie.
+                        Nous sommes dédiés à l'amélioration continue et à l'écoute de vos besoins.</p>
+                    <div className="flex flex-col justify-end items-end w-full mt-3">
+                        {userData && (
+                            <div className="text-right">
+                                <FTProButton content="En savoir plus" type="submit" link path={"/family-tree"}
+                                             icon={<CaretDoubleRight size={18} color="#ffffff"/>} isReverse/>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
