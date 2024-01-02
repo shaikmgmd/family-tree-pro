@@ -26,6 +26,7 @@ public class FamilyTreeController {
     private final FamilyTreeService familyTreeService;
     private final PersonneService personneService;
 
+
     // A eviter
     private final UserRepository userRepository;
     private final PersonneRepository personneRepository;
@@ -33,7 +34,6 @@ public class FamilyTreeController {
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<List<Map<String, Object>>>> getFamilyTree(@PathVariable Long userId) {
         ApiResponse<List<Map<String, Object>>> response = new ApiResponse<>(familyTreeService.getFamilyTreeByUserId(userId));
-        System.out.println("=========="+personneService.findRelationToRootPerson(0L));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -55,6 +55,7 @@ public class FamilyTreeController {
             ObjectMapper objectMapper = new ObjectMapper();
             Map<String, Object> requestMap = objectMapper.convertValue(request, new TypeReference<Map<String, Object>>() {
             });
+
 
             personneService.treeNodeManaging(requestMap);
             ApiResponse<String> response = new ApiResponse<>("Ok");

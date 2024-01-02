@@ -170,3 +170,10 @@ svg.tommy .node.border-f rect {
     stroke-width: 3px; /* Épaissit la bordure */
 }
 
+svg.tommy .node.visibility-blur {
+    filter: blur(10px);
+}
+
+.visibility-blur .bft-form-fieldset,.visibility-blur .bft-edit-form-title  {
+    display: none;
+}

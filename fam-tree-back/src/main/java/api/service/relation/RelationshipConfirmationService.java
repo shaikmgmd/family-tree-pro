@@ -25,6 +25,7 @@ public class RelationshipConfirmationService {
     private final PersonneRepository personneRepository;
     private final SimpMessagingTemplate simpMessagingTemplate;
 
+
     public void requestRelationshipConfirmation(String emailOfMemberToAdd, Long nodeId) {
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currUser = userRepository.findByPrivateCode(currentPrivateCode);

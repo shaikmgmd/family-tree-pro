@@ -2,17 +2,23 @@ package api.service.tree;
 
 import api.model.tree.FamilyTree;
 import api.model.tree.Personne;
+import api.model.tree.PersonneVisibility;
 import api.model.tree.Relation;
 import api.model.user.User;
 import api.repository.tree.FamilyTreeRepository;
 import api.repository.tree.PersonneRepository;
 import api.repository.tree.RelationRepository;
+import api.repository.tree.RelationshipConfirmationRepository;
 import api.repository.user.UserRepository;
+import api.service.relation.RelationshipConfirmationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -20,21 +26,43 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PersonneService {
     private final PersonneRepository personneRepository;
     private final RelationRepository relationRepository;
     private final UserRepository userRepository;
     private final FamilyTreeRepository familyTreeRepository;
+    private final RelationshipConfirmationRepository relationshipConfirmationRepository;
+    private final  RelationshipConfirmationService relationshipConfirmationService;
 
     public List<Map<String, Object>> findByTreeId(Long treeId) {
         List<Personne> personnes = personneRepository.findByTreeId(treeId);
-        return personnes.stream().map(this::convertToTreeFormat).collect(Collectors.toList());
+        String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currUser = userRepository.findByPrivateCode(currentPrivateCode);
+        Optional<FamilyTree> optTree = familyTreeRepository.findByUser(currUser);
+
+        if(optTree.isPresent()) {
+            FamilyTree tree = optTree.get();
+            boolean result = tree.getId().equals(treeId);
+            return personnes.stream()
+                    .map(personne -> convertToTreeFormat(personne, result, currUser))
+                    .collect(Collectors.toList());
+        } else {
+            throw new EntityNotFoundException("Arbre généalogique non trouvé pour l'utilisateur avec ID " + currUser.getId());
+        }
     }
 
-    public Long createAndSaveNewPerson(Map<String, Object> personneData, Map<String, Long> idMapping) {
+    public Long createAndSaveNewPerson(Map<String, Object> personneData, Map<String, Long> idMapping, List<Map<String, Object>> updateNodesList) {
         System.out.println(idMapping);
         Personne newPersonne = new Personne();
-        updatePersonneAttributes(newPersonne, personneData);
+
+        String email = "";
+        if(!updateNodesList.isEmpty()) {
+            Map<String, Object> firstNodeData = updateNodesList.get(0);
+            email = (String) firstNodeData.get("email");
+        }
+
+        updatePersonneAttributes(newPersonne, personneData, email);
 
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currUser = userRepository.findByPrivateCode(currentPrivateCode);
@@ -66,6 +94,8 @@ public class PersonneService {
             return;
         }
 
+
+
         Map<String, Long> idMapping = new HashMap<>();
         System.out.println("Updated Node: " + updatedNode);
 
@@ -76,9 +106,11 @@ public class PersonneService {
 
     private void handleAddNodesData(Map<String, Object> updatedNode, Map<String, Long> idMapping) {
         List<Map<String, Object>> addNodesData = getAsListOfMap(updatedNode.get("addNodesData"));
+        List<Map<String, Object>> updateNodesList = (List<Map<String, Object>>) updatedNode.get("updateNodesData");
+
         if (!addNodesData.isEmpty()) {
             for (Map<String, Object> nodeData : addNodesData) {
-                Long newPersonId = createAndSaveNewPerson(nodeData, idMapping);
+                Long newPersonId = createAndSaveNewPerson(nodeData, idMapping, updateNodesList);
                 createRelationForNewPerson(newPersonId, idMapping, nodeData);
             }
         }
@@ -87,14 +119,17 @@ public class PersonneService {
 
     private void handleUpdateNodesData(Map<String, Object> updatedNode, Map<String, Long> idMapping) {
         List<Map<String, Object>> updateNodesData = getAsListOfMap(updatedNode.get("updateNodesData"));
+        List<Map<String, Object>> updateNodesList = (List<Map<String, Object>>) updatedNode.get("updateNodesData");
+
         for (Map<String, Object> nodeData : updateNodesData) {
-            Long personId = updatePersonne(nodeData, idMapping);
+            Long personId = updatePersonne(nodeData, idMapping, updateNodesList);
             createRelationForNewPerson(personId, idMapping, nodeData); // Handle relation updates
         }
     }
 
 
     private void handleRemoveNodeId(Map<String, Object> updatedNode) {
+
 
         if (updatedNode.containsKey("removeNodeId")) {
             Long removeNodeId = null;
@@ -108,7 +143,9 @@ public class PersonneService {
                 Long treeId = removedPerson != null ? removedPerson.getTreeId() : null;
 
                 deleteRelatedRelations(removeNodeId); // Supprime d'abord les relations associées
+                deleteRelationShipConfirmation(removeNodeId);
                 personneRepository.deleteById(removeNodeId); // Ensuite, supprime la personne
+
 
                 /*if (treeId != null && !areParentChildRelationsValid(treeId)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après sup de la personne).");
@@ -118,12 +155,19 @@ public class PersonneService {
     }
 
 
-    public Long updatePersonne(Map<String, Object> nodeData, Map<String, Long> idMapping) {
+    public Long updatePersonne(Map<String, Object> nodeData, Map<String, Long> idMapping, List<Map<String, Object>> updateNodesList) {
         Object idObject = nodeData.get("id");
         Long realId = resolveId(idObject, idMapping);
         Personne personneToUpdate = personneRepository.findById(realId)
                 .orElseThrow(() -> new RuntimeException("Personne not found with ID: " + realId));
-        updatePersonneAttributes(personneToUpdate, nodeData);
+
+        String email = "";
+        if(!updateNodesList.isEmpty()) {
+            Map<String, Object> firstNodeData = updateNodesList.get(0);
+            email = (String) firstNodeData.get("email");
+        }
+
+        updatePersonneAttributes(personneToUpdate, nodeData, email);
         if (!ObjectUtils.isEmpty(idMapping)) {
             createRelationForNewPerson(realId, idMapping, nodeData);
         }
@@ -187,33 +231,52 @@ public class PersonneService {
         return new ArrayList<>();
     }
 
-    private Map<String, Object> convertToTreeFormat(Personne personne) {
+    private Map<String, Object> convertToTreeFormat(Personne personne, boolean result, User currentUser) {
 
         Map<String, Object> formattedPersonne = new HashMap<>();
         formattedPersonne.put("id", personne.getId());
-        if (personne.getIs_registered()) {
+        if(personne.getIs_registered()) {
             formattedPersonne.put("name", personne.getName() + "_t");
         } else {
-            if (personne.getName() != null) {
+            if(personne.getName() != null) {
                 formattedPersonne.put("name", personne.getName() + "_f");
             } else {
                 formattedPersonne.put("name", personne.getName());
             }
         }
+
         Date born = personne.getBorn();
-        if (born != null) {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if(born != null) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); // Example pattern, change as needed
             String formattedDate = sdf.format(born);
             formattedPersonne.put("born", formattedDate);
         } else {
             formattedPersonne.put("born", born);
         }
+
         formattedPersonne.put("gender", personne.getGender());
         formattedPersonne.put("photo", personne.getPhoto());
         formattedPersonne.put("city", personne.getCity());
         formattedPersonne.put("country", personne.getCountry());
         formattedPersonne.put("email", personne.getEmail());
         formattedPersonne.put("phone", personne.getPhone());
+//        formattedPersonne.put("isRegistered", personne.getIs_registered());
+        formattedPersonne.put("visibility", personne.getVisibility());
+
+        if(result) {
+            formattedPersonne.put("currentUser", true);
+        } else {
+            if(personne.getVisibility().equals(PersonneVisibility.PROTECTED)) {
+                if(currentUser.getEmail().equals(personne.getEmail())) {
+                    System.out.println("NON PROT");
+                    formattedPersonne.put("protectedUser", true);
+                } else {
+                    System.out.println("PROT");
+                    formattedPersonne.put("protectedUser", false);
+                }
+            }
+            formattedPersonne.put("currentUser", false);
+        }
 
         // Récupérer les relations pour cette personne
         Optional<List<Relation>> relationsOpt = relationRepository.findByPerson_Id(personne.getId());
@@ -227,6 +290,7 @@ public class PersonneService {
                 .collect(Collectors.toList());
         formattedPersonne.put("pids", partnerIds);
 
+        // Traiter les mères et pères
         // Trouver les identifiants de la mère et du père, en considérant toutes les relations
         Set<Long> motherIds = new HashSet<>();
         Set<Long> fatherIds = new HashSet<>();
@@ -239,6 +303,7 @@ public class PersonneService {
             }
         });
 
+        // S'il y a plus d'un ID, cela pourrait indiquer un problème de données ou un cas spécial à gérer.
         if (motherIds.size() == 1) {
             formattedPersonne.put("mid", motherIds.iterator().next());
         }
@@ -258,6 +323,25 @@ public class PersonneService {
 
         Optional<List<Relation>> relationsAsFather = relationRepository.findByPartner_Id(personId);
         relationsAsFather.ifPresent(relationRepository::deleteAll);
+
+    }
+
+    public void deleteRelationShipConfirmation(Long targetMemberId) {
+        String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User currUser = userRepository.findByPrivateCode(currentPrivateCode);
+        System.out.println("PERSONNE3 =>" + currUser.getEmail() + currUser.getId());
+        Optional<Personne> optTargetPersonne = personneRepository.findById(targetMemberId);
+        if(optTargetPersonne.isPresent()) {
+            Personne targetPersonne = optTargetPersonne.get();
+            System.out.println("PERSONNE =>" + targetPersonne.getEmail());
+            Optional<User> optTargetUser = userRepository.findByEmail(targetPersonne.getEmail());
+            if(optTargetUser.isPresent()) {
+                User targetUser = optTargetUser.get();
+                System.out.println("PERSONNE2 =>" + targetUser.getEmail() + targetUser.getId());
+                relationshipConfirmationRepository.deleteBySourceMemberAndTargetMember(currUser, targetUser);
+            }
+        }
+
     }
 
     private void createRelationForNewPerson(Long personId, Map<String, Long> idMapping, Map<String, Object> nodeData) {
@@ -284,7 +368,16 @@ public class PersonneService {
         relationRepository.save(newRelation);
     }
 
-    private void updatePersonneAttributes(Personne personne, Map<String, Object> attributes) {
+    private void updatePersonneAttributes(Personne personne, Map<String, Object> attributes, String email) {
+        Optional<User> targetMember = userRepository.findByEmail(email);
+        System.out.println("HANDLE ADD");
+
+        if (!targetMember.isEmpty()) {
+            System.out.println("TEST => TEST");
+            relationshipConfirmationService.requestRelationshipConfirmation(email, personne.getId());
+            return;
+        }
+
         if (attributes.containsKey("name")) {
             personne.setName((String) attributes.get("name"));
         }
@@ -314,6 +407,11 @@ public class PersonneService {
         }
         if (attributes.containsKey("tree_id")) {
             personne.setTreeId((Long) attributes.get("tree_id"));
+        }
+        if(attributes.containsKey("visibility")) {
+            String visibilityValue = (String) attributes.get("visibility");
+            PersonneVisibility visibility = PersonneVisibility.valueOf(visibilityValue);
+            personne.setVisibility(visibility);
         }
     }
 
@@ -424,6 +522,8 @@ public class PersonneService {
         System.out.println("\nLIEN VALIDE\n");
         return true;
     }*/
+
+
 
 }
 
