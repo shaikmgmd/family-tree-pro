@@ -42,8 +42,8 @@ const SupervisionDashboard = () => {
     }, [allTestsResults.payload]);
 
     return (
-        <MainWrapper title="Dashboard de supervision - résultats des Tests"
-                     description="Voici un aperçu des résultats des tests d'API.">
+        <MainWrapper title="Résultats des Tests"
+                     description="Aperçu des derniers résultats des tests d'API.">
 
             {allTestsResults.payload ? (
                 <div className=" px-4 md:px-8">

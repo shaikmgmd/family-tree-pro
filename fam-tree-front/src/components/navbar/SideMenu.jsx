@@ -14,7 +14,10 @@ import {
     Gauge,
     User,
     SignOut,
-    ChartLine, Question
+    ChartLine,
+    Question,
+    TestTube,
+    Star
 } from "@phosphor-icons/react";
 import {getConnectedUserAction} from "../../store/features/slices/user";
 import {getAllTestsResultsAction} from "../../store/features/slices/tests";
@@ -132,15 +135,23 @@ const SideMenu = () => {
                                      style={{background: 'transparent'}}>
 
                             </SubMenu>*/}
-                            <Menu.Item key="/adhesion/dashboard">
+                            <Menu.Item key="/adhesion/dashboard" icon={<Gauge
+                                style={{color: location.pathname === '/adhesion/dashboard' ? selectedIconColor : 'white'}}/>}>
                                 <Link to="/adhesion/dashboard"
-                                      style={{color: location.pathname === '/adhesion/dashboard' ? '#333' : '#333'}}>Adhésion
-                                    Dashboard</Link>
+                                      style={{color: location.pathname === '/adhesion/dashboard' ? '#333' : 'white'}}>
+                                    Dashboard <Star style={{display: "inline", marginLeft: "43px"}} size={18}
+                                                    color="#FFD700"/>
+                                </Link>
                             </Menu.Item>
-                            <Menu.Item key="/supervision-dashboard" icon={<Clipboard
+
+                            <Menu.Item key="/supervision-dashboard" icon={<TestTube
                                 style={{color: location.pathname === '/supervision-dashboard' ? selectedIconColor : 'white'}}/>}>
-                                <Link to="/supervision-dashboard"
-                                      style={{color: location.pathname === '/supervision-dashboard' ? '#333' : 'white'}}>Supervision</Link>
+                                <Link to="/supervision-dashboard" style={{
+                                    color: location.pathname === '/supervision-dashboard' ? '#333' : 'white'
+                                }}>
+                                    Supervision <Star style={{display: "inline", marginLeft: "40px"}} size={18}
+                                                      color="#FFD700"/>
+                                </Link>
                             </Menu.Item>
 
                         </>
