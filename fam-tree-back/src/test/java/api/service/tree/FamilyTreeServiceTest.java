@@ -1,159 +1,147 @@
-/*
 package api.service.tree;
 
-import api.model.tree.*;
-import api.model.tree.relationship.AddMemberRequest;
-import api.model.tree.relationship.Relationship;
-import api.model.tree.relationship.RelationshipType;
-import api.repository.tree.FamilyMemberRepository;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+import api.model.tree.FamilyTree;
+import api.model.tree.Personne;
+import api.model.tree.Relation;
 import api.repository.tree.FamilyTreeRepository;
-import api.repository.tree.RelationshipRepository;
+import api.repository.tree.RelationRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.util.*;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class FamilyTreeServiceTest {
+
+    @InjectMocks
+    private FamilyTreeService familyTreeService;
 
     @Mock
     private FamilyTreeRepository familyTreeRepository;
 
     @Mock
-    private FamilyMemberRepository familyMemberRepository;
-
-    @Mock
-    private RelationshipRepository relationshipRepository;
-
-    @Mock
     private PersonneService personneService;
 
-    @InjectMocks
-    private FamilyTreeService familyTreeService;
+    @Mock
+    private RelationRepository relationRepository;
 
-    private FamilyTree familyTree;
-    private FamilyMember familyMember;
-    private AddMemberRequest addMemberRequest;
 
-    @BeforeEach
-    void setUp() {
-        familyTree = new FamilyTree();
-        familyTree.setId(1L);
+    @Test
+    public void getFamilyTreeByUserId_found() {
+        Long userId = 1L;
+        FamilyTree tree = new FamilyTree();
+        when(familyTreeRepository.findByUserId(userId)).thenReturn(Optional.of(tree));
 
-        familyMember = new FamilyMember();
-        familyMember.setId(1L);
-        familyMember.setTree(familyTree);
+        List<Map<String, Object>> mockPersonList = new ArrayList<>();
+        Map<String, Object> person1 = new HashMap<>();
+        person1.put("id", 1);
+        person1.put("name", "John Doe");
+        mockPersonList.add(person1);
 
-        addMemberRequest = new AddMemberRequest();
-        addMemberRequest.setName("New Member");
-        addMemberRequest.setBirthDate(LocalDate.now());
-        addMemberRequest.setType(RelationshipType.CHILD);
+        when(personneService.findByTreeId(tree.getId())).thenReturn(mockPersonList);
+
+        // action
+        var result = familyTreeService.getFamilyTreeByUserId(userId);
+
+        // vérification
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+        assertEquals(1, result.size());
+        assertEquals(mockPersonList, result);
     }
 
     @Test
-    void getFamilyTreeByUserId_Success() {
-        when(familyTreeRepository.findByUserId(1L)).thenReturn(Optional.of(familyTree));
-        when(personneService.findByTreeId(familyTree.getId())).thenReturn(new ArrayList<>());
+    public void getFamilyTreeByUserId_notFound() {
+        Long userId = 1L;
+        when(familyTreeRepository.findByUserId(userId)).thenReturn(Optional.empty());
 
-        List<Map<String, Object>> result = familyTreeService.getFamilyTreeByUserId(1L);
+        // action and verification
+        assertThrows(EntityNotFoundException.class, () -> familyTreeService.getFamilyTreeByUserId(userId));
+    }
+
+    @Test
+    public void traverseBFS_withValidRootPerson_returnsVisited() {
+        Personne rootPerson = new Personne();
+        rootPerson.setId(1L);
+
+        List<Relation> mockRelations = new ArrayList<>();
+        when(relationRepository.findByPerson_Id(rootPerson.getId())).thenReturn(Optional.of(mockRelations));
+
+        // action
+        var result = familyTreeService.traverseBFS(rootPerson);
+
+        // vérification
+        assertNotNull(result);
+    }
+
+
+    @Test
+    public void traverseBFS_withNullRootPerson_returnsEmptyList() {
+        // action
+        var result = familyTreeService.traverseBFS(null);
+
+        // vérification
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void traverseDFS_withValidRootPerson_returnsVisited() {
+        Personne rootPerson = new Personne();
+        rootPerson.setId(1L);
+
+        List<Relation> mockRelations = new ArrayList<>();
+        when(relationRepository.findByPerson_Id(rootPerson.getId())).thenReturn(Optional.of(mockRelations));
+
+        // action
+        var result = familyTreeService.traverseDFS(rootPerson);
+
+        // vérification
+        assertNotNull(result);
+    }
+
+    @Test
+    public void traverseDFS_withNullRootPerson_returnsEmptySet() {
+        // action
+        var result = familyTreeService.traverseDFS(null);
+
+        // vérification
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void getFamilyTreeByUserId_whenUserExists_returnsFamilyTree() {
+        Long userId = 1L;
+        FamilyTree tree = new FamilyTree();
+        when(familyTreeRepository.findByUserId(userId)).thenReturn(Optional.of(tree));
+
+        List<Map<String, Object>> mockPersonList = new ArrayList<>();
+        Map<String, Object> person1 = new HashMap<>();
+        person1.put("id", 1);
+        person1.put("name", "John Doe");
+        mockPersonList.add(person1);
+
+        when(personneService.findByTreeId(tree.getId())).thenReturn(mockPersonList);
+
+        var result = familyTreeService.getFamilyTreeByUserId(userId);
 
         assertNotNull(result);
-        verify(familyTreeRepository).findByUserId(1L);
-        verify(personneService).findByTreeId(familyTree.getId());
+        assertFalse(result.isEmpty());
+        assertEquals(mockPersonList, result);
     }
 
     @Test
-    void getFamilyTreeByUserId_NotFound() {
-        when(familyTreeRepository.findByUserId(1L)).thenReturn(Optional.empty());
+    public void getFamilyTreeByUserId_whenUserDoesNotExist_throwsEntityNotFoundException() {
+        Long userId = 1L;
+        when(familyTreeRepository.findByUserId(userId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> {
-            familyTreeService.getFamilyTreeByUserId(1L);
-        });
-    }
-
-    @Test
-    void addMemberToTree_Success() {
-        when(familyMemberRepository.findById(1L)).thenReturn(Optional.of(familyMember));
-
-        familyTreeService.addMemberToTree(1L, 1L, addMemberRequest);
-
-        verify(familyMemberRepository).save(any(FamilyMember.class));
-        verify(relationshipRepository).save(any(Relationship.class));
-    }
-
-    @Test
-    void addMemberToTree_SourceMemberNotFound() {
-        when(familyMemberRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> {
-            familyTreeService.addMemberToTree(1L, 1L, addMemberRequest);
-        });
-    }
-
-    @Test
-    void updateMemberToTree_Success() {
-        when(familyMemberRepository.findById(1L)).thenReturn(Optional.of(familyMember));
-        when(familyMemberRepository.save(any(FamilyMember.class))).thenReturn(familyMember);
-
-        FamilyMember result = familyTreeService.updateMemberToTree(1L, addMemberRequest);
-
-        assertNotNull(result);
-        verify(familyMemberRepository).findById(1L);
-        verify(familyMemberRepository).save(any(FamilyMember.class));
-    }
-
-    @Test
-    void updateMemberToTree_MemberNotFound() {
-        when(familyMemberRepository.findById(1L)).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class, () -> {
-            familyTreeService.updateMemberToTree(1L, addMemberRequest);
-        });
-    }
-
-    @Test
-    void deleteMemberToTree_Success() {
-        when(familyMemberRepository.existsById(1L)).thenReturn(true);
-
-        familyTreeService.deleteMemberToTree(1L);
-
-        verify(familyMemberRepository).deleteById(1L);
-        verify(relationshipRepository).deleteBySourceMemberId(1L);
-        verify(relationshipRepository).deleteByTargetMemberId(1L);
-    }
-
-    @Test
-    void deleteMemberToTree_MemberNotFound() {
-        when(familyMemberRepository.existsById(1L)).thenReturn(false);
-
-        assertThrows(EntityNotFoundException.class, () -> {
-            familyTreeService.deleteMemberToTree(1L);
-        });
-    }
-
-    @Test
-    void deleteRelatedRelations_Success() {
-        List<Relationship> mockRelations = Collections.emptyList();
-        when(relationshipRepository.findByPerson_Id(1L)).thenReturn(mockRelations);
-        when(relationshipRepository.findByMother_Id(1L)).thenReturn(mockRelations);
-        when(relationshipRepository.findByPartner_Id(1L)).thenReturn(mockRelations);
-
-        familyTreeService.deleteRelatedRelations(1L);
-
-        verify(relationshipRepository).findByPerson_Id(1L);
-        verify(relationshipRepository).findByMother_Id(1L);
-        verify(relationshipRepository).findByPartner_Id(1L);
-        verify(relationshipRepository, times(3)).deleteAll(mockRelations);
+        assertThrows(EntityNotFoundException.class, () -> familyTreeService.getFamilyTreeByUserId(userId));
     }
 
 }
-*/
