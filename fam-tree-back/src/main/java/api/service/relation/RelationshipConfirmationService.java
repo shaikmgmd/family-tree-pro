@@ -1,6 +1,7 @@
 package api.service.relation;
 
 import api.model.tree.Personne;
+import api.model.tree.Relation;
 import api.model.tree.RelationshipConfirmation;
 import api.model.user.User;
 import api.repository.tree.PersonneRepository;
@@ -103,16 +104,26 @@ public class RelationshipConfirmationService {
         Optional<Personne> optTargetPersonne = personneRepository.findByEmail(targetMember.getEmail());
         if(optTargetPersonne.isPresent()) {
             Personne targetPersonne = optTargetPersonne.get();
+            deleteRelatedRelations(targetPersonne.getId());
             relationRepository.deleteByPerson_Id(targetPersonne.getId());
             relationshipConfirmationRepository.delete(relationshipConfirmation);
             personneRepository.delete(targetPersonne);
             String notificationMessage = targetPersonne.getEmail() + " a refusé votre demande pour intégrer votre arbre généalogique.";
             simpMessagingTemplate.convertAndSend("/topic/notifications", notificationMessage);
         }
-
-
     }
 
+    private void deleteRelatedRelations(Long personId) {
+        Optional<List<Relation>> relationsAsPerson = relationRepository.findByPerson_Id(personId);
+        relationsAsPerson.ifPresent(relationRepository::deleteAll);
+
+        Optional<List<Relation>> relationsAsMother = relationRepository.findByMother_Id(personId);
+        relationsAsMother.ifPresent(relationRepository::deleteAll);
+
+        Optional<List<Relation>> relationsAsFather = relationRepository.findByPartner_Id(personId);
+        relationsAsFather.ifPresent(relationRepository::deleteAll);
+
+    }
     private RelationshipConfirmation retrieveConfirmation(String confirmationCode) {
         RelationshipConfirmation confirmation = relationshipConfirmationRepository.findByConfirmationCode(confirmationCode)
                 .orElseThrow(() -> new RuntimeException("Invalid or expired confirmation code"));

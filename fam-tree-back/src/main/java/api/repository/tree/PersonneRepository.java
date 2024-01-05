@@ -11,5 +11,10 @@ public interface PersonneRepository extends JpaRepository<Personne, Long> {
     Optional<Personne> findByEmail(String email);
     Optional<Personne> findByTempId(String tempId);
 
+    boolean existsByEmailAndTreeId(String email, Long treeId);
 
+    // Method to check if a person with the same email exists but with a different treeId
+    default boolean canAddPersonWithSameEmail(String email, Long treeId) {
+        return !existsByEmailAndTreeId(email, treeId);
+    }
 }

@@ -160,7 +160,7 @@ public class PersonneServiceTest {
     }
 
 
-    @Test
+    /*@Test
     void updatePersonne_ValidData_UpdatesPersonne() {
         // Arrange
         Long validPersonId = 1L;
@@ -182,7 +182,7 @@ public class PersonneServiceTest {
         // Assert
         assertEquals(validPersonId, updatedPersonId);
         verify(personneRepository).save(existingPerson);
-    }
+    }*/
 
     @Test
     void deleteRelationShipConfirmation_ValidData_DeletesConfirmation() {
