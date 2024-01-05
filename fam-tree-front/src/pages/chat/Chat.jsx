@@ -145,6 +145,19 @@ const Chat = () => {
         }
     };
 
+    function formatToDDMMYYYY(dateStr) {
+        // Créer un objet Date à partir de la chaîne
+        const date = new Date(dateStr);
+
+        // Extraire le jour, le mois et l'année
+        const day = date.getDate().toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() renvoie un index à partir de 0 pour janvier
+        const year = date.getFullYear();
+
+        // Construire et retourner la date formatée
+        return `${day}-${month}-${year}`;
+    }
+
     return (
         <>
             {user.payload ?
@@ -216,42 +229,25 @@ const Chat = () => {
                                         {message.senderName}
                                     </div>
 
-                                    {/* Structure flex pour le message et l'image */}
+                                    {/* Structure flex pour le message */}
                                     <div
-                                        className={`flex ${message.senderName === user?.payload.lastName ? "justify-end" : "justify-start"}`}>
-                                        {message.senderName !== user?.payload.lastName && (
-                                            <img
-                                                src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                                className="object-cover h-8 w-8 rounded-full mr-2"
-                                                alt=""
-                                            />
-                                        )}
-
+                                        className={`py-2 px-4 text-white rounded-3xl ${message.senderName === user.payload.lastName ? "bg-green-500 rounded-br-none" : "bg-gray-400 rounded-bl-none"}`}>
+                                        {/* Afficher le contenu du message ou l'image s'il s'agit d'un lien vers une image */}
                                         {message.message.startsWith("http://res.cloudinary.com/") ? (
-                                            <div
-                                                className={`py-2 px-4 text-white rounded-3xl ${message.senderName === user.payload.lastName ? "bg-green-500 rounded-br-none" : "bg-gray-400 rounded-bl-none"}`}>
-                                                <img
-                                                    src={message.message}
-                                                    alt="Contenu envoyé"
-                                                    className="h-15 w-15 object-cover rounded-3xl"
-                                                    style={{height: "50", width: "50"}}
-                                                />
-                                            </div>
-
-                                        ) : (
-                                            <div
-                                                className={`py-2 px-4 text-white rounded-3xl ${message.senderName === user.payload.lastName ? "bg-green-500 rounded-br-none" : "bg-gray-400 rounded-bl-none"}`}>
-                                                {message.message}
-                                            </div>
-                                        )}
-
-                                        {message.senderName === user.payload.lastName && (
                                             <img
-                                                src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                                className="object-cover h-8 w-8 rounded-full ml-2"
-                                                alt=""
+                                                src={message.message}
+                                                alt="Contenu envoyé"
+                                                className="h-15 w-15 object-cover rounded-3xl"
+                                                style={{height: "50", width: "50"}}
                                             />
+                                        ) : (
+                                            message.message
                                         )}
+                                    </div>
+
+                                    {/* Afficher la date formatée sous le message */}
+                                    <div className="text-xs text-gray-500 mt-1">
+                                        {formatToDDMMYYYY(message.date)}
                                     </div>
                                 </div>
                             ))}

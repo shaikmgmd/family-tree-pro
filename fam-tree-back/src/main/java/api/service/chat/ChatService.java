@@ -3,6 +3,7 @@ package api.service.chat;
 import api.model.chat.Chat;
 import api.model.chat.ChatMessage;
 import api.model.chat.ChatMessageDAO;
+import api.model.chat.ChatMessagePublishedDTO;
 import api.model.user.User;
 import api.repository.chat.ChatMessageRepository;
 import api.repository.chat.ChatRepository;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -52,9 +54,57 @@ public class ChatService {
         }
     }
 
-    public List<ChatMessage> getChatMessages(Long chatId) {
-        return chatMessageRepository.findByChatId(chatId);
+    public List<ChatMessagePublishedDTO> getChatMessages(Long chatId) {
+        List<ChatMessage> messages = chatMessageRepository.findByChatId(chatId);
+        List<ChatMessagePublishedDTO> messageDTOs = new ArrayList<>();
+
+        Optional<Chat> chatOpt = chatRepository.findById(chatId);
+        if (!chatOpt.isPresent()) {
+            return Collections.emptyList();
+        }
+
+        Chat chat = chatOpt.get();
+        Optional<User> userOpt1 = userRepository.findById(chat.getUserId1());
+        Optional<User> userOpt2 = userRepository.findById(chat.getUserId2());
+
+        // S'assurer que les deux utilisateurs existent
+        if (!userOpt1.isPresent() || !userOpt2.isPresent()) {
+            // Gérer l'absence d'utilisateurs ici
+            return Collections.emptyList();
+        }
+
+        User senderUser = userOpt1.get();
+        User receiverUser = userOpt2.get();
+
+        for (ChatMessage message : messages) {
+            ChatMessagePublishedDTO dto = getChatMessagePublishedDTO(message, senderUser, receiverUser);
+            messageDTOs.add(dto);
+        }
+
+        return messageDTOs;
     }
+
+    private static ChatMessagePublishedDTO getChatMessagePublishedDTO(ChatMessage message, User senderUser, User receiverUser) {
+        ChatMessagePublishedDTO dto = new ChatMessagePublishedDTO();
+        dto.setId(message.getId());
+        dto.setSenderName(message.getSenderName());
+        dto.setReceiverName(message.getReceiverName());
+        dto.setSenderId(senderUser.getId());
+        dto.setReceiverId(receiverUser.getId());
+        dto.setMessage(message.getMessage());
+        dto.setDate(message.getDate());
+        dto.setSenderPhotoPath(senderUser.getPhotoPath());
+        dto.setReceiverPhotoPath(receiverUser.getPhotoPath());
+//        if (message.getSenderName().equals(senderUser.getLastName())) {
+//            dto.setSenderPhotoPath(senderUser.getPhotoPath());
+//            dto.setReceiverPhotoPath(receiverUser.getPhotoPath());
+//        } else {
+//            dto.setSenderPhotoPath(receiverUser.getPhotoPath());
+//            dto.setReceiverPhotoPath(senderUser.getPhotoPath());
+//        }
+        return dto;
+    }
+
 
     public Chat createOrGetChat(Long userId1, Long userId2) {
         // Essayez d'abord de trouver le chat existant

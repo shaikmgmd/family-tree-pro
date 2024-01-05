@@ -48,7 +48,7 @@ public class RelationshipConfirmationService {
 
         Optional<RelationshipConfirmation> existingTargetMember = relationshipConfirmationRepository.findBySourceMemberAndTargetMember(sourceMember, targetMember.get());
 
-        if(existingTargetMember.isPresent()) {
+        if (existingTargetMember.isPresent()) {
             throw new RuntimeException("User already add");
         }
 
@@ -76,11 +76,11 @@ public class RelationshipConfirmationService {
         RelationshipConfirmation confirmation = retrieveConfirmation(confirmationCode);
 
         boolean isProcessed = confirmation.getIsProcessed();
-        if(isProcessed) {
+        if (isProcessed) {
             return "Confirmation déjà traité";
         }
         /*if (confirmation.getIsConfirmed()) {*/
-            handleConfirmedRelationship(confirmation);
+        handleConfirmedRelationship(confirmation);
         /*} else {
             handleDeniedRelationship(confirmation);
         }*/
@@ -102,7 +102,7 @@ public class RelationshipConfirmationService {
     private void deletePersonne(RelationshipConfirmation relationshipConfirmation) {
         User targetMember = relationshipConfirmation.getTargetMember();
         Optional<Personne> optTargetPersonne = personneRepository.findByEmail(targetMember.getEmail());
-        if(optTargetPersonne.isPresent()) {
+        if (optTargetPersonne.isPresent()) {
             Personne targetPersonne = optTargetPersonne.get();
             deleteRelatedRelations(targetPersonne.getId());
             relationRepository.deleteByPerson_Id(targetPersonne.getId());
@@ -124,6 +124,7 @@ public class RelationshipConfirmationService {
         relationsAsFather.ifPresent(relationRepository::deleteAll);
 
     }
+
     private RelationshipConfirmation retrieveConfirmation(String confirmationCode) {
         RelationshipConfirmation confirmation = relationshipConfirmationRepository.findByConfirmationCode(confirmationCode)
                 .orElseThrow(() -> new RuntimeException("Invalid or expired confirmation code"));
@@ -147,11 +148,11 @@ public class RelationshipConfirmationService {
         relationshipConfirmationRepository.save(confirmed);
 
         // Envoyer une notification WebSocket
-        if(user.isEmpty()) {
+        if (user.isEmpty()) {
             throw new RuntimeException("User not found");
         }
         // Si oui changer dans la bdd les infos de personne par ftp_pro_user
-        Optional<Personne> personne = personneRepository.findByEmail(user.get().getEmail());
+        Optional<Personne> personne = personneRepository.findByEmailAndTreeId(user.get().getEmail(), confirmation.getSourceMember().getId());
 
         // Assign the retrieved Personne object to a temporary variable for clarity and to avoid multiple calls to .get()
         Personne tmpPrsn = personne.get();
@@ -169,7 +170,7 @@ public class RelationshipConfirmationService {
         // tmpPrsn.setGender(user.get().getGender()); // This line is commented out, as in your original code
         tmpPrsn.setIs_registered(true);
 
-        String notificationMessage = fullName+" a accepté d'être présent sur votre arbre. Rechargez la page si vous êtes actuellement sur l'arbre pour le mettre à jour.";
+        String notificationMessage = fullName + " a accepté d'être présent sur votre arbre. Rechargez la page si vous êtes actuellement sur l'arbre pour le mettre à jour.";
         simpMessagingTemplate.convertAndSend("/topic/notifications", notificationMessage);
 
         // Save the updated Personne object to the repository

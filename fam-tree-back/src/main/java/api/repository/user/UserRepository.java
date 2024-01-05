@@ -1,5 +1,6 @@
 package api.repository.user;
 
+import java.util.List;
 import java.util.Optional;
 
 import api.model.user.User;
@@ -17,4 +18,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     Page<User> findAll(Pageable pageable);
 
+    List<User> findAllByEmail(String email);
 }

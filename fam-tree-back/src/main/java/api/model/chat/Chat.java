@@ -23,11 +23,6 @@ public class Chat {
     @Column(name = "user_id_2")
     private Long userId2;
 
-    /*
-        @OneToMany(mappedBy = "chat")
-        private List<ChatMessage> messages;
-    */
-
     @Override
     public String toString() {
         return "Chat{" +

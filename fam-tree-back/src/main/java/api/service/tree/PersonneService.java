@@ -14,10 +14,12 @@ import api.service.relation.RelationshipConfirmationService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,7 +57,6 @@ public class PersonneService {
     public Long createAndSaveNewPerson(Map<String, Object> personneData, Map<String, Long> idMapping, List<Map<String, Object>> updateNodesList) {
         Personne newPersonne = new Personne();
 
-        System.out.println("APPEL CREATION");
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currUser = userRepository.findByPrivateCode(currentPrivateCode);
         FamilyTree familyTree = familyTreeRepository.findByUserId(currUser.getId()).orElseThrow(() -> {
@@ -66,27 +67,22 @@ public class PersonneService {
         String email = "";
         if(!updateNodesList.isEmpty()) {
             Map<String, Object> firstNodeData = updateNodesList.get(0);
-            System.out.println("personneData =>"+personneData);
-            System.out.println("firstNodeData =>"+firstNodeData);
             email = (String) personneData.get("email");
-            System.out.println("email =>"+email);
         }
-        System.out.println("newPersonne =>"+newPersonne);
-        System.out.println("personneData2 =>"+personneData);
         /*newPersonne.setEmail(email);*/
         updatePersonneAttributes(newPersonne, personneData, true, null);
 
         // Récupérer l'ID bizarre ou utiliser l'ID réel si le tempId est null.
         String tempId = (String) personneData.get("id");
         if (tempId != null && !tempId.isEmpty()) {
-            newPersonne.setTempId(tempId); // Set the temporary ID only if it's not null and not empty
+            newPersonne.setTempId(tempId);
         }
 
         newPersonne = personneRepository.save(newPersonne);
 
-    /*if (!areParentChildRelationsValid(newPersonne.getTreeId())) {
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après création de la personne).");
-    }*/
+        if (!areParentChildRelationsValid(newPersonne.getTreeId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Relation parent-enfant invalide (après création de la personne).");
+        }
 
         return newPersonne.getId();
     }
@@ -175,7 +171,6 @@ public class PersonneService {
 
     public Long updatePersonne(Map<String, Object> nodeData, Map<String, Long> idMapping, List<Map<String, Object>> updateNodesList, boolean updateOnly) {
         Object idObject = nodeData.get("id");
-        System.out.println("APPEL UPDATED");
         Long realId = resolveId(idObject, idMapping);
         Personne personneToUpdate = personneRepository.findById(realId)
                 .orElseThrow(() -> new RuntimeException("Personne not found with ID: " + realId));
@@ -183,13 +178,9 @@ public class PersonneService {
         String email = "";
         if(!updateNodesList.isEmpty()) {
             Map<String, Object> firstNodeData = updateNodesList.get(0);
-            System.out.println("firstNodeData dans update: "+firstNodeData);
             email = (String) firstNodeData.get("email");
         }
 
-        System.out.println("email dans update: "+email);
-        // todo : si uniquement --> updateOnly : false
-        System.out.println("updateOnly: "+updateOnly);
         updatePersonneAttributes(personneToUpdate, nodeData, updateOnly, email);
         if (!ObjectUtils.isEmpty(idMapping)) {
             createRelationForNewPerson(realId, idMapping, nodeData);
@@ -283,7 +274,6 @@ public class PersonneService {
         formattedPersonne.put("country", personne.getCountry());
         formattedPersonne.put("email", personne.getEmail());
         formattedPersonne.put("phone", personne.getPhone());
-//        formattedPersonne.put("isRegistered", personne.getIs_registered());
         formattedPersonne.put("visibility", personne.getVisibility());
 
         if(result) {
@@ -291,10 +281,8 @@ public class PersonneService {
         } else {
             if(personne.getVisibility().equals(PersonneVisibility.PROTECTED)) {
                 if(currentUser.getEmail().equals(personne.getEmail())) {
-                    System.out.println("NON PROT");
                     formattedPersonne.put("protectedUser", true);
                 } else {
-                    System.out.println("PROT");
                     formattedPersonne.put("protectedUser", false);
                 }
             }
@@ -389,17 +377,11 @@ public class PersonneService {
     }
 
     private void updatePersonneAttributes(Personne personne, Map<String, Object> attributes, boolean updateOnly, String email) {
-        System.out.println("J'affiche attributes: "+attributes);
-        System.out.println("J'affiche le email: "+email);
         boolean isExisting = personneRepository.existsByEmailAndTreeId(email, personne.getTreeId());
         if(updateOnly) {
-            System.out.println("J'ajoute une nouvelle personne: " + personne);
             Optional<User> targetMember = userRepository.findByEmail(email);
-            System.out.println("Utilisateur avec cet email existe : " + targetMember.isPresent());
-            System.out.println("Une personne avec cet email et tree_id existe déjà : " + isExisting);
 
             if (targetMember.isPresent() && !isExisting) {
-                System.out.println("Demande de confirmation de relation pour : " + email);
                 relationshipConfirmationService.requestRelationshipConfirmation(email, personne.getId());
                 if(attributes.containsKey("visibility")) {
                     String visibilityValue = (String) attributes.get("visibility");
@@ -459,85 +441,10 @@ public class PersonneService {
         }
     }
 
-/*    // en cours de construction
-    public Map<Long, String> findRelationToRootPerson(Long treeId) {
-        String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User currUser = userRepository.findByPrivateCode(currentPrivateCode);
-
-        Optional<FamilyTree> optTree = familyTreeRepository.findByUserId(currUser.getId());
-        FamilyTree tree = optTree.get();
-
-        Long rootPersonId = getRootPersonIdByTreeId(tree.getId());
-        Map<Long, String> relations = new HashMap<>();
-        findRelation(rootPersonId, null, relations, treeId, 0);
-        return relations;
-    }*/
-
-/*    private void findRelation(Long currentPersonId, Long parentPersonId, Map<Long, String> relations, Long treeId, int level) {
-        if (currentPersonId == null) return;
-
-        String relationToRoot = calculateRelationToRoot(parentPersonId, level, relations.get(parentPersonId));
-        System.out.println("relationToRoot "+relationToRoot);
-        relations.put(currentPersonId, relationToRoot);
-
-        List<Relation> partnerRelations = relationRepository.findByPerson_Id(currentPersonId).orElse(Collections.emptyList());
-        for (Relation rel : partnerRelations) {
-            System.out.println("Checking partner for person ID: " + currentPersonId);
-
-            Personne partner = rel.getPartner();
-            if (partner != null && partner.getTreeId().equals(treeId) && !relations.containsKey(partner.getId())) {
-                relations.put(partner.getId(), "Partner of " + relationToRoot);
-            }
-        }
-
-        List<Relation> childRelations = relationRepository.findByMother_IdOrFather_Id(currentPersonId, currentPersonId).orElse(Collections.emptyList());
-        for (Relation relation : childRelations) {
-            System.out.println("Checking child for person ID: " + currentPersonId);
-
-            Personne child = relation.getPerson();
-            if (child != null && child.getTreeId().equals(treeId)) {
-                findRelation(child.getId(), currentPersonId, relations, treeId, level + 1);
-            }
-        }
-    }*/
-
-/*    private String calculateRelationToRoot(Long parentPersonId, int level, String parentRelation) {
-        if (parentPersonId == null) {
-            return "Root";
-        }
-        switch (level) {
-            case 0:
-                return "Self";
-            case 1:
-                return "Child";
-            case 2:
-                if ("Root".equals(parentRelation)) {
-                    return "Grandchild";
-                } else if (parentRelation.startsWith("Child")) {
-                    return "Niece/Nephew";
-                }
-                return "Grandchild";
-            default:
-                return "Distant Descendant";
-        }
-    }
-
-
-    private Long getRootPersonIdByTreeId(Long treeId) {
-        return familyTreeRepository.findById(treeId)
-                .map(FamilyTree::getOwnerId)
-                .orElseThrow(() -> new RuntimeException("No tree found with ID: " + treeId));
-    }*/
-
-    // fin construction
-
-    /*private boolean isBirthDateValid(Personne parent, Personne child) {
-        System.out.println("date de naissance parent : " + parent.getBorn() + "\n");
-        System.out.println("date de naissance enfant : " + child.getBorn());
+    private boolean isBirthDateValid(Personne parent, Personne child) {
         return parent.getBorn().before(child.getBorn());
-    }*/
-
-    /*public boolean areParentChildRelationsValid(Long treeId) {
+    }
+    public boolean areParentChildRelationsValid(Long treeId) {
         List<Personne> personnes = personneRepository.findByTreeId(treeId);
         for (Personne personne : personnes) {
             Optional<List<Relation>> optionalRelations = relationRepository.findByPerson_Id(personne.getId());
@@ -545,21 +452,16 @@ public class PersonneService {
                 List<Relation> relations = optionalRelations.get();
                 for (Relation relation : relations) {
                     if (relation.getMother() != null && !isBirthDateValid(relation.getMother(), personne)) {
-                        System.out.println("\nLIEN INVALIDE\n");
                         return false;
                     }
                     if (relation.getFather() != null && !isBirthDateValid(relation.getFather(), personne)) {
-                        System.out.println("\nLIEN INVALIDE\n");
                         return false;
                     }
                 }
             }
         }
-        System.out.println("\nLIEN VALIDE\n");
         return true;
-    }*/
-
-
+    }
 
 }
 

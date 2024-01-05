@@ -1,6 +1,7 @@
 package api.model.tree;
 
 import api.model.user.User;
+import api.utils.CodeUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.Test;
@@ -8,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class FamilyTreeTest {
+public class FamilyTreeTest extends CodeUtils {
     @Test
     void testFamilyTreeId() {
         // Créer une instance de FamilyTree

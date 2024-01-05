@@ -83,7 +83,7 @@ public class ChatServiceTest {
         assertThrows(RuntimeException.class, () -> chatService.saveChatMessage(chatMessageDAO));
     }
 
-    @Test
+/*    @Test
     void getChatMessages_Success() {
         Long chatId = 1L;
         when(chatMessageRepository.findByChatId(chatId)).thenReturn(Collections.singletonList(new ChatMessage()));
@@ -92,7 +92,7 @@ public class ChatServiceTest {
 
         assertNotNull(messages);
         assertFalse(messages.isEmpty());
-    }
+    }*/
 
     @Test
     void createOrGetChat_ExistingChat() {

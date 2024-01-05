@@ -1,10 +1,12 @@
 package api.service.user;
 
+import api.model.chat.Chat;
 import api.model.tree.FamilyTree;
 import api.model.tree.Personne;
 import api.model.tree.Relation;
 import api.model.user.User;
 import api.model.user.UserUpdate;
+import api.repository.chat.ChatRepository;
 import api.repository.tree.FamilyTreeRepository;
 import api.repository.tree.PersonneRepository;
 import api.repository.tree.RelationRepository;
@@ -31,6 +33,7 @@ public class UserService {
     private final FamilyTreeRepository familyTreeRepository;
     private final PersonneRepository personneRepository;
     private final RelationRepository relationRepository;
+    private final ChatRepository chatRepository;
 
     public User getCurrentConnectedUser() {
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -77,25 +80,68 @@ public class UserService {
 
     // user presents dans l'arbre
     public List<User> findAllUsersExceptCurrentWoutPagination() {
+        // Récupérer le privateCode de l'utilisateur actuel
         String currentPrivateCode = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User currentUser = userRepository.findByPrivateCode(currentPrivateCode);
-        Personne currentPerson = personneRepository.findByEmail(currentUser.getEmail()).orElse(null);
 
-        Set<Long> treeIdsWithCurrentUser = new HashSet<>();
-        if (currentPerson != null) {
-            treeIdsWithCurrentUser.add(currentPerson.getTreeId());
+        // Vérifier si l'utilisateur actuel a été trouvé
+        if (currentUser == null) {
+            // Gérer le cas où l'utilisateur actuel n'est pas trouvé
+            return Collections.emptyList();
         }
 
-        Set<User> relatedUsersSet = treeIdsWithCurrentUser.stream()
-                .flatMap(treeId -> personneRepository.findByTreeId(treeId).stream())
-                .distinct()
-                .map(personne -> userRepository.findByEmail(personne.getEmail()))
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .filter(user -> !user.getPrivateCode().equals(currentUser.getPrivateCode()))
-                .collect(Collectors.toSet());
+        // Essayer la première méthode (basée sur les treeIds)
+        Set<User> relatedUsersSet = tryFirstMethod(currentUser);
 
+        // Si la première méthode ne retourne aucun résultat, essayer la deuxième méthode (basée sur les chats)
+        if (relatedUsersSet.isEmpty()) {
+            relatedUsersSet = trySecondMethod(currentUser);
+        }
+
+        // Convertir le set en liste et la retourner
         return new ArrayList<>(relatedUsersSet);
+    }
+
+    private Set<User> tryFirstMethod(User currentUser) {
+        String currentPrivateCode = currentUser.getPrivateCode();
+        Personne currentPerson = personneRepository.findByEmailAndTreeId(currentUser.getEmail(), currentUser.getId()).orElse(null);
+
+        // Préparer un ensemble pour les utilisateurs associés
+        Set<User> relatedUsersSet = new HashSet<>();
+
+        // Vérifier si l'utilisateur actuel a un treeId associé
+        if (currentPerson != null) {
+            Long currentTreeId = currentPerson.getTreeId();
+
+            // Récupérer toutes les personnes dans le même arbre que l'utilisateur actuel
+            List<Personne> personnesInSameTree = personneRepository.findByTreeId(currentTreeId);
+
+            // Pour chaque personne dans le même arbre
+            for (Personne personne : personnesInSameTree) {
+                // Trouver tous les utilisateurs correspondant à l'email de la personne
+                List<User> users = userRepository.findAllByEmail(personne.getEmail());
+
+                // Filtrer les utilisateurs pour ne conserver que ceux qui sont dans le même arbre et qui ne sont pas l'utilisateur actuel
+                users.stream()
+                        .filter(user -> user.getId().equals(currentTreeId) && !user.getPrivateCode().equals(currentPrivateCode))
+                        .forEach(relatedUsersSet::add);
+            }
+        }
+
+        return relatedUsersSet;
+    }
+
+
+    private Set<User> trySecondMethod(User currentUser) {
+        List<Chat> chats = chatRepository.findAllByUserId1OrUserId2(currentUser.getId(), currentUser.getId());
+        Set<User> relatedUsersSet = new HashSet<>();
+
+        for (Chat chat : chats) {
+            Long otherUserId = chat.getUserId1().equals(currentUser.getId()) ? chat.getUserId2() : chat.getUserId1();
+            userRepository.findById(otherUserId).ifPresent(relatedUsersSet::add);
+        }
+
+        return relatedUsersSet;
     }
 
 

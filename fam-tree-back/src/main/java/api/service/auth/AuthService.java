@@ -107,6 +107,7 @@ public class AuthService {
         personne.setGender(request.getGender());
         personne.setCity(request.getCity());
         personne.setCountry(request.getCountry());
+        personne.setIs_registered(true);
 
         personneRepository.save(personne);
         emailService.sendCodesByEmail(user.getEmail(), user.getPublicCode(), user.getPrivateCode());

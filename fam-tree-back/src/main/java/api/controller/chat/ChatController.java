@@ -4,6 +4,7 @@ import api.common.ApiResponse;
 import api.model.chat.Chat;
 import api.model.chat.ChatMessage;
 import api.model.chat.ChatMessageDAO;
+import api.model.chat.ChatMessagePublishedDTO;
 import api.service.chat.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,8 +34,8 @@ public class ChatController {
     }
 
     @GetMapping("/{chatId}/messages")
-    public ResponseEntity<ApiResponse<List<ChatMessage>>> getChatMessages(@PathVariable Long chatId) {
-        ApiResponse<List<ChatMessage>> messages = new ApiResponse<>(chatService.getChatMessages(chatId));
+    public ResponseEntity<ApiResponse<List<ChatMessagePublishedDTO>>> getChatMessages(@PathVariable Long chatId) {
+        ApiResponse<List<ChatMessagePublishedDTO>> messages = new ApiResponse<>(chatService.getChatMessages(chatId));
         return new ResponseEntity<>(messages, HttpStatus.OK);
     }
 
