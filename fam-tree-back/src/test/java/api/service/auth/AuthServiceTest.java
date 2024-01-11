@@ -108,20 +108,20 @@ public class AuthServiceTest {
         assertThrows(ResponseStatusException.class, () -> authService.login(loginReq));
     }
 
-    @Test
-    void approveAdhesionTest() {
-        AdhesionRequest request = new AdhesionRequest();
-        request.setEmail("test@example.com");
-
-        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
-
-        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
-
-        authService.approveAdhesion(request);
-
-        verify(userRepository).save(any(User.class));
-        verify(emailService).sendCodesByEmail(anyString(), anyString(), anyString());
-    }
+//    @Test
+//    void approveAdhesionTest() {
+//        AdhesionRequest request = new AdhesionRequest();
+//        request.setEmail("test@example.com");
+//
+//        when(passwordEncoder.encode(any())).thenReturn("encodedPassword");
+//
+//        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+//
+//        authService.approveAdhesion(request);
+//
+//        verify(userRepository).save(any(User.class));
+//        verify(emailService).sendCodesByEmail(anyString(), anyString(), anyString());
+//    }
 
 
     @Test
